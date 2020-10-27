@@ -1,0 +1,35 @@
+INFO | 25-May-2020 03:26:51:928 | - (ConnectionToken.java:68) - Authentication user: ****
+INFO | 25-May-2020 03:26:52:872 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance
+INFO | 25-May-2020 03:26:53:003 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#Write
+INFO | 25-May-2020 03:26:53:282 | - (NmsRecipientHelper.java:666) - Recipient with ID 11590 is created.
+INFO | 25-May-2020 03:26:53:431 | - (SOAPutils.java:434) - HEADER ACTION xtk:builder#InstallPackage
+INFO | 25-May-2020 03:26:55:262 | - (XMLUtils.java:223) - XML package has been successfully imported.
+INFO | 25-May-2020 03:26:55:495 | - (SOAPutils.java:434) - HEADER ACTION xtk:jobInterface#SubmitSoapCall
+INFO | 25-May-2020 03:26:57:283 | - (SOAPutils.java:434) - HEADER ACTION nms:delivery#PrepareFromId
+ERROR | 25-May-2020 03:26:58:092 | - (SOAPTools.java:165) - Found errors in SOAP call :SOP-330011 Error while executing the method 'PrepareFromId' of service 'nms:delivery'.
+INFO | 25-May-2020 03:26:58:737 | - (ConnectionToken.java:68) - Authentication user: ****
+INFO | 25-May-2020 03:26:58:988 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance
+INFO | 25-May-2020 03:29:25:432 | - (XtkWorkflowHelper.java:2604) - XML Message = 
+<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="urn:xtk:queryDef" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SOAP-ENV:Body>
+<ExecuteQueryResponse xmlns="urn:xtk:queryDef" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<pdomOutput SOAP-ENV:encodingStyle="http://xml.apache.org/xml-soap/literalxml" xsi:type="ns:Element">
+<workflowLog-collection>
+<workflowLog activity="deliveryEmail" id="5150" logDate="2020-05-25 15:28:23.315Z" logType="0" message="WKF-560038 Error when performing action 'Prepare' on delivery 'DeliveryLabel6498' (of identifier 11652). Please refer to the journal of this delivery for more information (object associated with the workflow task)."/>
+<workflowLog activity="offerSelection" id="5149" logDate="2020-05-25 15:28:19.276Z" logType="2" message="Standardize offer weight"/>
+<workflowLog activity="offerSelection" id="5148" logDate="2020-05-25 15:28:19.275Z" logType="2" message="7 proposition(s) kept, 0 deleted"/>
+<workflowLog activity="offerSelection" id="5147" logDate="2020-05-25 15:28:19.209Z" logType="2" message="Keeping the best context for each proposition"/>
+<workflowLog activity="offerSelection" id="5146" logDate="2020-05-25 15:28:19.208Z" logType="2" message="7 proposition(s) generated for offer 'CatalogLabel6498 (CatalogName6498)' (context 'New')"/>
+<workflowLog activity="offerSelection" id="5145" logDate="2020-05-25 15:28:19.201Z" logType="2" message="Category 'Offer catalog', number of targets: 10"/>
+<workflowLog activity="offerSelection" id="5144" logDate="2020-05-25 15:28:19.199Z" logType="2" message="Category 'Environment - Recipient', number of targets: 10"/>
+<workflowLog activity="query" id="5143" logDate="2020-05-25 15:28:18.905Z" logType="2" message="10 record(s) selected for the query 'Result' (step 'Last Name equal to 'Reeves6498'')"/>
+<workflowLog activity="query" id="5142" logDate="2020-05-25 15:28:18.884Z" logType="2" message="Executing query 'Result' (step 'Last Name equal to 'Reeves6498'')"/>
+<workflowLog activity="" id="5141" logDate="2020-05-25 15:28:18.847Z" logType="2" message="Starting workflow (operator 'Administrator (****)')"/>
+<workflowLog activity="" id="5140" logDate="2020-05-25 15:28:18.843Z" logType="2" message="Workflow 'WFInternalName6498' is being run"/>
+</workflowLog-collection>
+</pdomOutput>
+</ExecuteQueryResponse>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+== 
+INFO | 25-May-2020 03:29:25:670 | - (ConnectionToken.java:68) - Authentication user: ****

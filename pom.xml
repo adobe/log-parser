@@ -2,7 +2,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.logparser</groupId>
+    <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>log-parser</name>
@@ -17,7 +17,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            
             <!-- License information -->
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
@@ -57,7 +56,8 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -68,13 +68,12 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>
-                                            com.mycila.maven-license-plugin
+                                            com.mycila.maven-license-plugin 
                                         </groupId>
                                         <artifactId>
-                                            maven-license-plugin
+                                            maven-license-plugin 
                                         </artifactId>
-                                        <versionRange>
-                                            [1.10.b1,)
+                                        <versionRange> [1.10.b1,) 
                                         </versionRange>
                                         <goals>
                                             <goal>format</goal>
@@ -137,11 +136,18 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <version>2.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <version>2.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
+    <parent>
+        <groupId>com.adobe.campaign</groupId>
+        <artifactId>parent</artifactId>
+        <version>1</version>
+    </parent>
 </project>

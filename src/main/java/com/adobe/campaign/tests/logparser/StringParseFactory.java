@@ -674,207 +674,191 @@
  * Public License instead of this License.  But first, please read
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
-package com.logparser;
+package com.adobe.campaign.tests.logparser;
 
-public class ParseDefinition {
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-    private String title;
-    private String start;
-    private String end;
-    private boolean caseSensitive = true;
-    private boolean trimQuotes = false;
-    private boolean toPreserve = true;
+public class StringParseFactory {
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getStart() {
-        return start;
-    }
-
-    public void setStart(String start) {
-        this.start = start;
-    }
-
-    public String getEnd() {
-        return end;
-    }
+    protected static final Logger log = LogManager.getLogger();
 
     /**
-     * If the end string is null we will consider the the end to be the end of
-     * tthe line/string
+     * This method transforms the contents of a list of log file and returns a
+     * map of LogEntryResults
      *
      * Author : gandomi
      *
-     * @param end
+     * @param in_logFiles
+     * @param in_parseDefinitionList
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      *
      */
-    public void setEnd(String end) {
-        this.end = end;
-    }
+    public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(final V in_logFiles,
+            List<ParseDefinitionEntry> in_parseDefinitionList, Class<T> classTarget)
+            throws InstantiationException, IllegalAccessException {
+        Map<String, T> l_entries = new HashMap<String, T>();
+        int i = 0;
 
-    /**
-     * Provides the start position of the 'start' string in the given start.
-     * This returns -1 if there is no occurence of the start string
-     *
-     * Author : gandomi
-     *
-     * @param in_stringValue
-     * @return the index of the first occurrence of the specified substring, or
-     *         -1 if there is no such occurrence.
-     *
-     */
-    public int fetchStartPosition(String in_stringValue) {
-        if (isStartStartOfLine()) {
-            return 0;
-        }
+        //Fetch File
+        try {
+            for (String l_currentLogFile : in_logFiles) {
 
-        int l_startLocation = fetchAppliedSensitivity(in_stringValue)
-                .indexOf(fetchAppliedSensitivity(this.getStart()));
+                Scanner scanner = new Scanner(new File(l_currentLogFile));
 
-        if (l_startLocation < 0) {
-            return l_startLocation;
-        } else {
+                while (scanner.hasNextLine()) {
 
-            int lr_startPosition = l_startLocation + this.getStart().length();
+                    final String lt_nextLine = scanner.nextLine();
+                    //Activate only if the log is not enough. Here we list each line we consider
+                    //log.debug("{}  -  {}", i, lt_nextLine);
+                    if (isStringCompliant(lt_nextLine, in_parseDefinitionList)) {
+                        Map<String, String> lt_lineResult = StringParseFactory.parseString(lt_nextLine,
+                                in_parseDefinitionList);
 
-            if (isTrimQuotes()) {
-                while (in_stringValue.substring(lr_startPosition).startsWith("\"")) {
-                    lr_startPosition++;
+                        T lt_entry = classTarget.newInstance();
+                        lt_entry.setValuesFromMap(lt_lineResult,in_parseDefinitionList);
+                        //lt_entry.setValuesFromMap(lt_lineResult);
+
+                        final String lt_currentKey = lt_entry.makeKey();
+                        
+                        if (l_entries.containsKey(lt_currentKey)) {
+                            l_entries.get(lt_currentKey).incrementUsage();
+                            
+                        } else {
+                            l_entries.put(lt_currentKey, lt_entry);
+                        }
+
+                    } else {
+                        log.debug("Skipping line {} - {}", i, lt_nextLine);
+                    }
+                    i++;
+
                 }
+                scanner.close();
             }
-
-            return lr_startPosition;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
+        return l_entries;
     }
 
     /**
-     * Provides the end position of the 'end' string in the given start. This
-     * returns -1 if there is no occurence of the start string
+     * This method parses a string given a definition
      *
      * Author : gandomi
      *
-     * @param in_stringValue
-     * @return the index of the first occurrence of the specified substring, or
-     *         -1 if there is no such occurrence.
+     * @param in_stringToParse
+     * @param in_parsRule
+     * @return
      *
      */
-    public int fetchEndPosition(String in_stringValue) {
-        if (this.isEndEOL()) {
-            return in_stringValue.length();
-        }
+    public static Map<String, String> parseString(String in_stringToParse, ParseDefinitionEntry in_parsRule) {
 
-        int lr_endPosition = fetchAppliedSensitivity(in_stringValue)
-                .indexOf(fetchAppliedSensitivity(this.getEnd()), this.fetchStartPosition(in_stringValue));
-
-        if ((lr_endPosition>=0) && isTrimQuotes()) {
-            while (in_stringValue.substring(this.fetchStartPosition(in_stringValue), lr_endPosition)
-                    .endsWith("\"")) {
-                lr_endPosition--;
-            }
-        }
-
-        return lr_endPosition;
+        return parseString(in_stringToParse, Arrays.asList(in_parsRule));
     }
 
     /**
-     * This method returns the following substring that allows for further
-     * parsing.
+     * This method parses a string given a definition
      *
      * Author : gandomi
      *
      * @param in_logString
+     * @param in_parsRuleList
      * @return
      *
      */
-    public String fetchFollowingSubstring(String in_logString) {
-        int l_currentEndPosition = this.fetchEndPosition(in_logString);
+    public static Map<String, String> parseString(String in_logString,
+            List<ParseDefinitionEntry> in_parsRuleList) {
 
-        if (l_currentEndPosition < 0) {
-            throw new IllegalArgumentException("The given string :\n " + in_logString
-                    + "\n does not contain the end search element " + this.getEnd() + ".");
+        Map<String, String> lr_stringParseResult = new HashMap<>();
+        String l_currentStringState = in_logString;
+
+        for (ParseDefinitionEntry lt_parseRule : in_parsRuleList) {
+
+            lr_stringParseResult.put(lt_parseRule.getTitle(), fetchValue(l_currentStringState, lt_parseRule));
+            l_currentStringState = lt_parseRule.fetchFollowingSubstring(l_currentStringState);
         }
 
-        return in_logString.substring(l_currentEndPosition);
+        return lr_stringParseResult;
     }
 
     /**
-     * When used we assum the parse definition to be the end of the string/line
+     * This method parses a string given a start and end character
      *
      * Author : gandomi
      *
-     *
-     */
-    public void setEndEOL() {
-        end = null;
-
-    }
-
-    /**
-     * This method lets us know if the definition is at the end of the line
-     *
-     * Author : gandomi
-     *
+     * @param in_stringValue
+     * @param in_parseDefinition
      * @return
      *
      */
-    public boolean isEndEOL() {
+    public static String fetchValue(String in_stringValue, ParseDefinitionEntry in_parseDefinition) {
 
-        return getEnd() == null;
-    }
+        //Fetch where to start looking from
+        final int l_startLocation = in_parseDefinition.fetchStartPosition(in_stringValue);
 
-    public boolean isCaseSensitive() {
-        return caseSensitive;
-    }
+        final int l_endLocation = in_parseDefinition.fetchEndPosition(in_stringValue);
 
-    public void setCaseSensitive(boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
+        if (l_startLocation < 0) {
+            throw new RuntimeException("Could not find the start location for "
+                    + in_parseDefinition.getTitle() + " \n" + in_stringValue + ".");
+        }
+
+        if (l_endLocation < 0) {
+            throw new RuntimeException("Could not find the end location for " + in_parseDefinition.getTitle()
+                    + " in string \n" + in_stringValue + ".");
+        }
+
+        return in_stringValue.substring(l_startLocation, l_endLocation).trim();
+
     }
 
     /**
-     * This method transforms a given string to lowercase if the definition is
-     * case sensitive
+     * This method lets us know if the given string is compliant with the given
+     * definitions
      *
      * Author : gandomi
      *
-     * @param in_string
+     * @param in_logString
+     * @param in_definitionList
      * @return
      *
      */
-    String fetchAppliedSensitivity(String in_string) {
+    public static boolean isStringCompliant(String in_logString, List<ParseDefinitionEntry> in_definitionList) {
+        String l_workingString = in_logString;
+        //For every definition start and end. Check that the index follows
+        for (ParseDefinitionEntry lt_parseDefinitionItem : in_definitionList) {
 
-        return isCaseSensitive() ? in_string : in_string.toLowerCase();
-    }
+            final int lt_startPosition = lt_parseDefinitionItem.fetchStartPosition(l_workingString);
 
-    public boolean isStartStartOfLine() {
+            if (lt_startPosition < 0) {
+                return false;
+            }
 
-        return getStart() == null;
-    }
+            final int lt_endPosition = lt_parseDefinitionItem.fetchEndPosition(l_workingString);
+            if (lt_endPosition < 0) {
+                return false;
+            }
 
-    public void setStartStartOfLine() {
-        setStart(null);
+            //The delta is only relevant if we are preserving the value
+            if ((lt_startPosition >= lt_endPosition) && lt_parseDefinitionItem.isToPreserve()) {
+                return false;
+            }
 
-    }
+            l_workingString = lt_parseDefinitionItem.fetchFollowingSubstring(l_workingString);
 
-    public boolean isTrimQuotes() {
-        return trimQuotes;
-    }
-
-    public void setTrimQuotes(boolean trimQuotes) {
-        this.trimQuotes = trimQuotes;
-    }
-
-    public boolean isToPreserve() {
-        return toPreserve;
-    }
-
-    public void setToPreserve(boolean preserve) {
-        this.toPreserve = preserve;
+        }
+        return true;
     }
 
 }

@@ -674,62 +674,207 @@
  * Public License instead of this License.  But first, please read
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
-package com.logparser;
+package com.adobe.campaign.tests.logparser;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+public class ParseDefinitionEntry {
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+    private String title;
+    private String start;
+    private String end;
+    private boolean caseSensitive = true;
+    private boolean trimQuotes = false;
+    private boolean toPreserve = true;
 
-import org.testng.annotations.Test;
-
-public class TestSimpleLog {
-
-    
-    @Test
-    public void testSimpleLog() {
-       
-            String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap    Client request:#012<soapenv:Envelope#012#011xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"#012#011xmlns:urn=\"urn:xtk:session\">#012#011<soapenv:Header />#012#011<soapenv:Body>#012#011#011<urn:Logon>#012#011#011#011<urn:sessiontoken></urn:sessiontoken>#012#011#011#011<urn:strLogin>admin</urn:strLogin>#012#011#011#011<urn:strPassword>adminrd-dev54</urn:strPassword>#012#011#011#011<urn:elemParameters></urn:elemParameters>#012#011#011</urn:Logon>#012#011</soapenv:Body>#012</soapenv:Envelope>";
-
-            ParseDefinition l_timeStamp = new ParseDefinition();
-            l_timeStamp.setTitle("timeStamp");
-            l_timeStamp.setStartStartOfLine();
-            l_timeStamp.setEnd("    ");
-
-            
-            ParseDefinition l_verPart1 = new ParseDefinition();
-            l_verPart1.setTitle("A");
-            l_verPart1.setStart("Client request:");
-            l_verPart1.setEnd("<soapenv");
-
-            ParseDefinition l_verbDefinition2 = new ParseDefinition();
-
-            l_verbDefinition2.setTitle("data");
-            l_verbDefinition2.setStart("xmlns:urn=\"urn:");
-            l_verbDefinition2.setEnd("\"");
-            l_verbDefinition2.setCaseSensitive(false);
-
-            List<ParseDefinition> l_definitionList = new ArrayList<>();
-            l_definitionList.add(l_timeStamp);
-            l_definitionList.add(l_verPart1);
-            l_definitionList.add(l_verbDefinition2);
-
-
-
-            Map<String, String> l_searchMaps = StringParseFactory.parseString(logString, l_definitionList);
-            
-
-            assertThat(l_searchMaps.size(), is(equalTo(3)));
-            assertThat("We should have entries", l_searchMaps.get("timeStamp"), is(equalTo("2020-06-15T17:17:20.728Z")));
-
-        
+    public String getTitle() {
+        return title;
     }
-    
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    /**
+     * If the end string is null we will consider the the end to be the end of
+     * tthe line/string
+     *
+     * Author : gandomi
+     *
+     * @param end
+     *
+     */
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    /**
+     * Provides the start position of the 'start' string in the given start.
+     * This returns -1 if there is no occurence of the start string
+     *
+     * Author : gandomi
+     *
+     * @param in_stringValue
+     * @return the index of the first occurrence of the specified substring, or
+     *         -1 if there is no such occurrence.
+     *
+     */
+    public int fetchStartPosition(String in_stringValue) {
+        if (isStartStartOfLine()) {
+            return 0;
+        }
+
+        int l_startLocation = fetchAppliedSensitivity(in_stringValue)
+                .indexOf(fetchAppliedSensitivity(this.getStart()));
+
+        if (l_startLocation < 0) {
+            return l_startLocation;
+        } else {
+
+            int lr_startPosition = l_startLocation + this.getStart().length();
+
+            if (isTrimQuotes()) {
+                while (in_stringValue.substring(lr_startPosition).startsWith("\"")) {
+                    lr_startPosition++;
+                }
+            }
+
+            return lr_startPosition;
+        }
+    }
+
+    /**
+     * Provides the end position of the 'end' string in the given start. This
+     * returns -1 if there is no occurence of the start string
+     *
+     * Author : gandomi
+     *
+     * @param in_stringValue
+     * @return the index of the first occurrence of the specified substring, or
+     *         -1 if there is no such occurrence.
+     *
+     */
+    public int fetchEndPosition(String in_stringValue) {
+        if (this.isEndEOL()) {
+            return in_stringValue.length();
+        }
+
+        int lr_endPosition = fetchAppliedSensitivity(in_stringValue)
+                .indexOf(fetchAppliedSensitivity(this.getEnd()), this.fetchStartPosition(in_stringValue));
+
+        if ((lr_endPosition>=0) && isTrimQuotes()) {
+            while (in_stringValue.substring(this.fetchStartPosition(in_stringValue), lr_endPosition)
+                    .endsWith("\"")) {
+                lr_endPosition--;
+            }
+        }
+
+        return lr_endPosition;
+    }
+
+    /**
+     * This method returns the following substring that allows for further
+     * parsing.
+     *
+     * Author : gandomi
+     *
+     * @param in_logString
+     * @return
+     *
+     */
+    public String fetchFollowingSubstring(String in_logString) {
+        int l_currentEndPosition = this.fetchEndPosition(in_logString);
+
+        if (l_currentEndPosition < 0) {
+            throw new IllegalArgumentException("The given string :\n " + in_logString
+                    + "\n does not contain the end search element " + this.getEnd() + ".");
+        }
+
+        return in_logString.substring(l_currentEndPosition);
+    }
+
+    /**
+     * When used we assum the parse definition to be the end of the string/line
+     *
+     * Author : gandomi
+     *
+     *
+     */
+    public void setEndEOL() {
+        end = null;
+
+    }
+
+    /**
+     * This method lets us know if the definition is at the end of the line
+     *
+     * Author : gandomi
+     *
+     * @return
+     *
+     */
+    public boolean isEndEOL() {
+
+        return getEnd() == null;
+    }
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public void setCaseSensitive(boolean caseSensitive) {
+        this.caseSensitive = caseSensitive;
+    }
+
+    /**
+     * This method transforms a given string to lowercase if the definition is
+     * case sensitive
+     *
+     * Author : gandomi
+     *
+     * @param in_string
+     * @return
+     *
+     */
+    String fetchAppliedSensitivity(String in_string) {
+
+        return isCaseSensitive() ? in_string : in_string.toLowerCase();
+    }
+
+    public boolean isStartStartOfLine() {
+
+        return getStart() == null;
+    }
+
+    public void setStartStartOfLine() {
+        setStart(null);
+
+    }
+
+    public boolean isTrimQuotes() {
+        return trimQuotes;
+    }
+
+    public void setTrimQuotes(boolean trimQuotes) {
+        this.trimQuotes = trimQuotes;
+    }
+
+    public boolean isToPreserve() {
+        return toPreserve;
+    }
+
+    public void setToPreserve(boolean preserve) {
+        this.toPreserve = preserve;
+    }
+
 }

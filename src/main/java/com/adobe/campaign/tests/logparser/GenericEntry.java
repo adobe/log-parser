@@ -674,7 +674,7 @@
  * Public License instead of this License.  But first, please read
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
-package com.logparser;
+package com.adobe.campaign.tests.logparser;
 
 import java.util.Arrays;
 import java.util.HashMap;

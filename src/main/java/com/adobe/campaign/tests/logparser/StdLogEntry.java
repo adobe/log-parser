@@ -674,191 +674,109 @@
  * Public License instead of this License.  But first, please read
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
-package com.logparser;
+package com.adobe.campaign.tests.logparser;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class StringParseFactory {
+import org.apache.commons.lang.StringUtils;
 
-    protected static final Logger log = LogManager.getLogger();
+
+/**
+ * Abstract class for multiple definitions
+ *
+ *
+ * Author : gandomi
+ *
+ */
+public abstract class StdLogEntry {
+
+    private static final String CSV_SEPARATOR = ";";
+    private Integer frequence = 1;
+
+    public abstract void setValuesFromMap(Map<String, String> in_valueMap);
+
+    Map<String, Object> valuesMap = new HashMap<>();
+
+    public abstract String makeKey();
 
     /**
-     * This method transforms the contents of a list of log file and returns a
-     * map of LogEntryResults
+     * Fetches a print out for listing purposed
      *
      * Author : gandomi
      *
-     * @param in_logFiles
+     * @return
+     *
+     */
+    public String fetchPrintOut() {
+        List<String> l_printOutList = new ArrayList<>();
+        
+        final Map<String, Object> l_valueMap = this.fetchValueMap();
+        
+        for (String lt_header : this.fetchHeaders()) {
+
+            l_printOutList.add(l_valueMap.get(lt_header).toString());
+        }
+        return StringUtils.join(l_printOutList, CSV_SEPARATOR);
+    }
+
+    public abstract Set<String> fetchHeaders();
+
+    /**
+     * Transforms the data in the Log entry into a List of Strings
+     *
+     * Author : gandomi
+     *
+     * @return
+     *
+     */
+    public abstract Map<String, Object> fetchValueMap();
+
+    public void incrementUsage() {
+        addFrequence(1);
+
+    }
+
+    /**
+     * Adds the usage of the current entry by the given value
+     *
+     * Author : gandomi
+     *
+     * @param in_addedFrequence
+     *
+     */
+    public void addFrequence(int in_addedFrequence) {
+        frequence += in_addedFrequence;
+
+    }
+
+    public Integer getFrequence() {
+        return frequence;
+    }
+
+    /**
+     * This method updates the value maps
+     *
+     * Author : gandomi
+     *
+     * @param in_valueMap
      * @param in_parseDefinitionList
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
-    public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(final V in_logFiles,
-            List<ParseDefinition> in_parseDefinitionList, Class<T> classTarget)
-            throws InstantiationException, IllegalAccessException {
-        Map<String, T> l_entries = new HashMap<String, T>();
-        int i = 0;
+    public void setValuesFromMap(Map<String, String> in_valueMap,
+            List<ParseDefinitionEntry> in_parseDefinitionList) {
+        setValuesFromMap(in_valueMap);
+        for (ParseDefinitionEntry lt_definition : in_parseDefinitionList.stream().filter(pd -> pd.isToPreserve())
+                .collect(Collectors.toList())) {
 
-        //Fetch File
-        try {
-            for (String l_currentLogFile : in_logFiles) {
-
-                Scanner scanner = new Scanner(new File(l_currentLogFile));
-
-                while (scanner.hasNextLine()) {
-
-                    final String lt_nextLine = scanner.nextLine();
-                    //Activate only if the log is not enough. Here we list each line we consider
-                    //log.debug("{}  -  {}", i, lt_nextLine);
-                    if (isStringCompliant(lt_nextLine, in_parseDefinitionList)) {
-                        Map<String, String> lt_lineResult = StringParseFactory.parseString(lt_nextLine,
-                                in_parseDefinitionList);
-
-                        T lt_entry = classTarget.newInstance();
-                        lt_entry.setValuesFromMap(lt_lineResult,in_parseDefinitionList);
-                        //lt_entry.setValuesFromMap(lt_lineResult);
-
-                        final String lt_currentKey = lt_entry.makeKey();
-                        
-                        if (l_entries.containsKey(lt_currentKey)) {
-                            l_entries.get(lt_currentKey).incrementUsage();
-                            
-                        } else {
-                            l_entries.put(lt_currentKey, lt_entry);
-                        }
-
-                    } else {
-                        log.debug("Skipping line {} - {}", i, lt_nextLine);
-                    }
-                    i++;
-
-                }
-                scanner.close();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            valuesMap.put(lt_definition.getTitle(), in_valueMap.get(lt_definition.getTitle()));
         }
-        return l_entries;
-    }
+        
 
-    /**
-     * This method parses a string given a definition
-     *
-     * Author : gandomi
-     *
-     * @param in_stringToParse
-     * @param in_parsRule
-     * @return
-     *
-     */
-    public static Map<String, String> parseString(String in_stringToParse, ParseDefinition in_parsRule) {
-
-        return parseString(in_stringToParse, Arrays.asList(in_parsRule));
-    }
-
-    /**
-     * This method parses a string given a definition
-     *
-     * Author : gandomi
-     *
-     * @param in_logString
-     * @param in_parsRuleList
-     * @return
-     *
-     */
-    public static Map<String, String> parseString(String in_logString,
-            List<ParseDefinition> in_parsRuleList) {
-
-        Map<String, String> lr_stringParseResult = new HashMap<>();
-        String l_currentStringState = in_logString;
-
-        for (ParseDefinition lt_parseRule : in_parsRuleList) {
-
-            lr_stringParseResult.put(lt_parseRule.getTitle(), fetchValue(l_currentStringState, lt_parseRule));
-            l_currentStringState = lt_parseRule.fetchFollowingSubstring(l_currentStringState);
-        }
-
-        return lr_stringParseResult;
-    }
-
-    /**
-     * This method parses a string given a start and end character
-     *
-     * Author : gandomi
-     *
-     * @param in_stringValue
-     * @param in_parseDefinition
-     * @return
-     *
-     */
-    public static String fetchValue(String in_stringValue, ParseDefinition in_parseDefinition) {
-
-        //Fetch where to start looking from
-        final int l_startLocation = in_parseDefinition.fetchStartPosition(in_stringValue);
-
-        final int l_endLocation = in_parseDefinition.fetchEndPosition(in_stringValue);
-
-        if (l_startLocation < 0) {
-            throw new RuntimeException("Could not find the start location for "
-                    + in_parseDefinition.getTitle() + " \n" + in_stringValue + ".");
-        }
-
-        if (l_endLocation < 0) {
-            throw new RuntimeException("Could not find the end location for " + in_parseDefinition.getTitle()
-                    + " in string \n" + in_stringValue + ".");
-        }
-
-        return in_stringValue.substring(l_startLocation, l_endLocation).trim();
-
-    }
-
-    /**
-     * This method lets us know if the given string is compliant with the given
-     * definitions
-     *
-     * Author : gandomi
-     *
-     * @param in_logString
-     * @param in_definitionList
-     * @return
-     *
-     */
-    public static boolean isStringCompliant(String in_logString, List<ParseDefinition> in_definitionList) {
-        String l_workingString = in_logString;
-        //For every definition start and end. Check that the index follows
-        for (ParseDefinition lt_parseDefinitionItem : in_definitionList) {
-
-            final int lt_startPosition = lt_parseDefinitionItem.fetchStartPosition(l_workingString);
-
-            if (lt_startPosition < 0) {
-                return false;
-            }
-
-            final int lt_endPosition = lt_parseDefinitionItem.fetchEndPosition(l_workingString);
-            if (lt_endPosition < 0) {
-                return false;
-            }
-
-            //The delta is only relevant if we are preserving the value
-            if ((lt_startPosition >= lt_endPosition) && lt_parseDefinitionItem.isToPreserve()) {
-                return false;
-            }
-
-            l_workingString = lt_parseDefinitionItem.fetchFollowingSubstring(l_workingString);
-
-        }
-        return true;
     }
 
 }

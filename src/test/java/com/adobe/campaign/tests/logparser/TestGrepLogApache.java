@@ -674,7 +674,7 @@
  * Public License instead of this License.  But first, please read
  * <https://www.gnu.org/licenses/why-not-lgpl.html>.
  */
-package com.logparser;
+package com.adobe.campaign.tests.logparser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -682,15 +682,13 @@ import static org.testng.Assert.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javax.xml.bind.JAXBException;
-
 import org.testng.annotations.Test;
+
+import com.adobe.campaign.tests.logparser.GenericEntry;
+import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
+import com.adobe.campaign.tests.logparser.StringParseFactory;
 
 
 public class TestGrepLogApache {
@@ -701,7 +699,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_dateDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_dateDefinition = new ParseDefinitionEntry();
 
         l_dateDefinition.setTitle("logDate");
         l_dateDefinition.setStart("[");
@@ -729,7 +727,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_dateDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_dateDefinition = new ParseDefinitionEntry();
 
         l_dateDefinition.setTitle("logDate");
         l_dateDefinition.setStart("[");
@@ -746,7 +744,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
-        ParseDefinition l_dateDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_dateDefinition = new ParseDefinitionEntry();
 
         l_dateDefinition.setTitle("logDate");
         l_dateDefinition.setStart(" | ");
@@ -763,7 +761,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
@@ -779,7 +777,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("api");
         l_verbDefinition2.setStart(" /rest/head/");
@@ -796,7 +794,7 @@ public class TestGrepLogApache {
         String logString = "J_BfmC8mfw==|soapaction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591";
 
         //Create a parse definition
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart("soapAction:");
@@ -820,7 +818,7 @@ public class TestGrepLogApache {
         String logString = "J_BfmC8mfw==|soapAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591";
 
         //Create a parse definition
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart("SOAPACTION:");
@@ -846,19 +844,19 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:06:25:44 +0200] \"POST /rest/head/session HTTP/1.1\" 201 5385 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd(" ");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_verbDefinition2);
         l_definitionList.add(l_apiDefinition);
 
@@ -880,7 +878,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("api");
         l_verbDefinition2.setStart(" /rest/head/");
@@ -896,7 +894,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /xtk/logon.jssp HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("api");
         l_verbDefinition2.setStart(" /rest/head/");
@@ -912,7 +910,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /xtk/logon.jssp HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("api");
         l_verbDefinition2.setStart(" /xtk/");
@@ -928,7 +926,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("response");
         l_verbDefinition2.setStart("\" ");
@@ -942,7 +940,7 @@ public class TestGrepLogApache {
     public void testingStartOfLine() {
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap";
 
-        ParseDefinition l_definition = new ParseDefinition();
+        ParseDefinitionEntry l_definition = new ParseDefinitionEntry();
 
         l_definition.setTitle("Time");
         l_definition.setStart(null);
@@ -956,7 +954,7 @@ public class TestGrepLogApache {
         assertThat(StringParseFactory.fetchValue(logString, l_definition),
                 is(equalTo("2020-06-15T17:17:20.728Z")));
 
-        ParseDefinition l_definition2 = new ParseDefinition();
+        ParseDefinitionEntry l_definition2 = new ParseDefinitionEntry();
 
         l_definition2.setTitle("Time");
         l_definition2.setStartStartOfLine();
@@ -970,7 +968,7 @@ public class TestGrepLogApache {
     public void testingStartOfLine2() {
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap";
 
-        ParseDefinition l_definition = new ParseDefinition();
+        ParseDefinitionEntry l_definition = new ParseDefinitionEntry();
 
         l_definition.setTitle("Time");
         l_definition.setEnd("    ");
@@ -989,7 +987,7 @@ public class TestGrepLogApache {
     public void testingEndOfLine() {
         String l_resultString = " - Before driver instantiation";
 
-        ParseDefinition l_definition = new ParseDefinition();
+        ParseDefinitionEntry l_definition = new ParseDefinitionEntry();
 
         l_definition.setTitle("sourceFileLine");
         l_definition.setStart(" - ");
@@ -1009,19 +1007,19 @@ public class TestGrepLogApache {
     public void testStringCompliance() {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd("/");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_verbDefinition2);
         l_definitionList.add(l_apiDefinition);
 
@@ -1033,19 +1031,19 @@ public class TestGrepLogApache {
     public void testStringComplianceNegative1() {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.61 - - [02/Apr/2020:06:26:09 +0200] \"GET /xtk/logon.jssp?code=..--7--D4C89vHhLLCL_yJguuL3kiR3PRM0T-UaOCk_Q162y6HIbdL2YA9L1ErbA2NLnen-- HTTP/1.1\" 302 938 \"https://auth-stg1.services.adobe.com/en_US/index.html?callback=https%3A%2F%2Fims-na1-stg1.adobelogin.com%2Fims%2Fadobeid%2FCampaignRD1%2FAdobeID%2Fcode%3Fredirect_uri%3Dhttps%253A%252F%252Fafthost32.qa.campaign.adobe.com%252Fxtk%252Flogon.jssp&client_id=CampaignRD1&scope=AdobeID%2Cperson%2Csession%2Cadditional_info.projectedProductContext%2Cread_organizations%2Cadditional_info.user_image_url%2Cwrite_pc%2Copenid%2Ctriggers%2Caudiencemanager_api&denied_callback=https%3A%2F%2Fims-na1-stg1.adobelogin.com%2Fims%2Fdenied%2FCampaignRD1%3Fredirect_uri%3Dhttps%253A%252F%252Fafthost32.qa.campaign.adobe.com%252Fxtk%252Flogon.jssp%26response_type%3Dcode&relay=f1cff3df-18ac-44a2-bc5f-b89331c11084&locale=en_US&flow_type=code&idp_flow_type=login\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36\"";
 
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd("/");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_verbDefinition2);
         l_definitionList.add(l_apiDefinition);
 
@@ -1057,19 +1055,19 @@ public class TestGrepLogApache {
     public void testStringComplianceNegative_searchStringDifferentCase() {
         String l_apacheLogString = "-:443 10.10.247.65 - - [02/Apr/2020:07:11:04 +0200] \"-\" 408 4640 \"-\" \"-\"";
 
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd("/");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_verbDefinition2);
         l_definitionList.add(l_apiDefinition);
 
@@ -1082,19 +1080,19 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_dateDefinition1 = new ParseDefinition();
+        ParseDefinitionEntry l_dateDefinition1 = new ParseDefinitionEntry();
 
         l_dateDefinition1.setTitle("logDate");
         l_dateDefinition1.setStart("[");
         l_dateDefinition1.setEnd("]");
 
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_dateDefinition1);
         l_definitionList.add(l_verbDefinition2);
 
@@ -1118,25 +1116,25 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_dateDefinition1 = new ParseDefinition();
+        ParseDefinitionEntry l_dateDefinition1 = new ParseDefinitionEntry();
 
         l_dateDefinition1.setTitle("logDate");
         l_dateDefinition1.setStart("[");
         l_dateDefinition1.setEnd("]");
 
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart(" /");
         l_apiDefinition.setEnd(" ");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_dateDefinition1);
         l_definitionList.add(l_verbDefinition2);
         l_definitionList.add(l_apiDefinition);
@@ -1166,19 +1164,19 @@ public class TestGrepLogApache {
 
         //Create a parse definition
 
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
         l_verbDefinition2.setEnd(" /");
 
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd(" ");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_verbDefinition2);
         l_definitionList.add(l_apiDefinition);
 
@@ -1204,7 +1202,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
@@ -1223,7 +1221,7 @@ public class TestGrepLogApache {
         String logString = "+69802:5ee7914c:15|POST /nl/jsp/soaprouter.jsp HTTP/1.1|X-Security-Token:@tTD6JQ5HcTcxBqbuE1SqEpNNsMbnjOCaV_Kv5ern7fvljTyUK71i9TWy5d6HBrFgCxfzCWt5OkJcJ_BfmC8mfw==|soapaction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|Content-Type:text/plain; charset=ISO-8859-1|Host:rd-dev54.rd.campaign.adobe.com|Connection:Keep-Alive|User-Agent:Apache-HttpClient/4.5.2 (Java/1.8.0_171)|Cookie:__sessiontoken=___6fffa340-b973-4e90-a965-4ae88e713c11|Accept-Encoding:gzip,deflate";
 
         //Create a parse definition
-        ParseDefinition l_definitionCI = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
 
         l_definitionCI.setTitle("path");
         l_definitionCI.setStart("soapAction:");
@@ -1231,7 +1229,7 @@ public class TestGrepLogApache {
         l_definitionCI.setCaseSensitive(false);
 
         //Create a parse definition
-        ParseDefinition l_definitionCS = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCS = new ParseDefinitionEntry();
 
         l_definitionCS.setTitle("path");
         l_definitionCS.setStart("soapaction:");
@@ -1250,7 +1248,7 @@ public class TestGrepLogApache {
         String logString = "t5OkJcJ_BfmC8mfw==|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|Content-Type:text/plain; ";
 
         //Create a parse definition
-        ParseDefinition l_definitionCI = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
 
         l_definitionCI.setTitle("path");
         l_definitionCI.setStart("soapAction:");
@@ -1258,7 +1256,7 @@ public class TestGrepLogApache {
         l_definitionCI.setCaseSensitive(false);
 
         //Create a parse definition
-        ParseDefinition l_definitionCS = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCS = new ParseDefinitionEntry();
 
         l_definitionCS.setTitle("path");
         l_definitionCS.setStart("SOAPAction:");
@@ -1277,7 +1275,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
-        ParseDefinition l_verbDefinition2 = new ParseDefinition();
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
 
         l_verbDefinition2.setTitle("verb");
         l_verbDefinition2.setStart("\"");
@@ -1296,7 +1294,7 @@ public class TestGrepLogApache {
         String logString = "+69802:5ee7914c:15|POST /nl/jsp/soaprouter.jsp HTTP/1.1|X-Security-Token:@tTD6JQ5HcTcxBqbuE1SqEpNNsMbnjOCaV_Kv5ern7fvljTyUK71i9TWy5d6HBrFgCxfzCWt5OkJcJ_BfmC8mfw==|soapaction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|Content-Type:text/plain; charset=ISO-8859-1|Host:rd-dev54.rd.campaign.adobe.com|Connection:Keep-Alive|User-Agent:Apache-HttpClient/4.5.2 (Java/1.8.0_171)|Cookie:__sessiontoken=___6fffa340-b973-4e90-a965-4ae88e713c11|Accept-Encoding:gzip,deflate";
 
         //Create a parse definition
-        ParseDefinition l_definitionCI = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
 
         l_definitionCI.setTitle("path");
         l_definitionCI.setStart("X-Security-Token");
@@ -1305,7 +1303,7 @@ public class TestGrepLogApache {
         l_definitionCI.setCaseSensitive(false);
 
         //Create a parse definition
-        ParseDefinition l_definitionCS = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCS = new ParseDefinitionEntry();
 
         l_definitionCS.setTitle("path");
         l_definitionCS.setStart("X-Security-Token");
@@ -1324,7 +1322,7 @@ public class TestGrepLogApache {
         String logString = "HTTP/1.1|X-Security-Token:@tTD6JQ5HcTfzCWt5OkJcJ_BfmC8mfw==|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|";
 
         //Create a parse definition
-        ParseDefinition l_definitionCI = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
 
         l_definitionCI.setTitle("path");
         l_definitionCI.setStart("X-Security-Token");
@@ -1332,7 +1330,7 @@ public class TestGrepLogApache {
         l_definitionCI.setCaseSensitive(false);
 
         //Create a parse definition
-        ParseDefinition l_definitionCS = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCS = new ParseDefinitionEntry();
 
         l_definitionCS.setTitle("path");
         l_definitionCS.setStart("X-Security-Token");
@@ -1349,7 +1347,7 @@ public class TestGrepLogApache {
     @Test
     public void testApplySensitivity() {
         //Create a parse definition Case Insensitive
-        ParseDefinition l_definitionCI = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
 
         l_definitionCI.setTitle("path");
         l_definitionCI.setStart("X-Security-Token");
@@ -1360,7 +1358,7 @@ public class TestGrepLogApache {
         l_definitionCI.setCaseSensitive(false);
 
         //Create a parse definition Case Sensitive
-        ParseDefinition l_definitionCS = new ParseDefinition();
+        ParseDefinitionEntry l_definitionCS = new ParseDefinitionEntry();
 
         l_definitionCS.setTitle("path");
         l_definitionCI.setStart("X-Security-Token");
@@ -1377,7 +1375,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
-        ParseDefinition l_fileDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_fileDefinition = new ParseDefinitionEntry();
 
         l_fileDefinition.setTitle("sourceFile");
         l_fileDefinition.setStart("(");
@@ -1394,7 +1392,7 @@ public class TestGrepLogApache {
         String l_apacheLogString = "2330:DEBUG | 2020-";
 
         //Create a parse definition
-        ParseDefinition l_fileDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_fileDefinition = new ParseDefinitionEntry();
 
         l_fileDefinition.setTitle("sourceFile");
         l_fileDefinition.setStart(":");
@@ -1411,19 +1409,19 @@ public class TestGrepLogApache {
 
         //Create a parse definition
 
-        ParseDefinition l_fileDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_fileDefinition = new ParseDefinitionEntry();
 
         l_fileDefinition.setTitle("sourceFile");
         l_fileDefinition.setStart("(");
         l_fileDefinition.setEnd(":");
 
-        ParseDefinition l_fileLineDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_fileLineDefinition = new ParseDefinitionEntry();
 
         l_fileLineDefinition.setTitle("sourceFileLine");
         l_fileLineDefinition.setStart(":");
         l_fileLineDefinition.setEnd(")");
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_fileDefinition);
         l_definitionList.add(l_fileLineDefinition);
         Map<String, String> l_result = StringParseFactory.parseString(l_resultString, l_definitionList);
@@ -1462,7 +1460,7 @@ public class TestGrepLogApache {
         String logString = "SOAPAction:\"xtk%3aworkflow\"#DeleteResult|Content-Length:";
 
         //Create a parse definition
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart("soapaction:");
@@ -1475,7 +1473,7 @@ public class TestGrepLogApache {
 
         assertThat("", l_apiDefinition.fetchEndPosition(logString), is(equalTo(27)));
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_apiDefinition);
 
         assertThat("The String should be compatible",
@@ -1495,7 +1493,7 @@ public class TestGrepLogApache {
         String logString = "SOAPAction:\"xtk%3aworkflow\"#DeleteResult|Content-Length:";
 
         //Create a parse definition
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart("soapaction:");
@@ -1509,7 +1507,7 @@ public class TestGrepLogApache {
 
         assertThat("", l_apiDefinition.fetchEndPosition(logString), is(equalTo(26)));
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_apiDefinition);
 
         assertThat("The String should be compatible",
@@ -1529,7 +1527,7 @@ public class TestGrepLogApache {
         String logString = "DEBUG | 2020-06-18 16:06:44 | [main] parser.StringParseFactory (StringParseFactory.java:47) - 46472  -  +29043:5eeae354:3a5b|POST /nl/jsp/soaprouter.jsp HTTP/1.1|soapaction:atdvhwetsjlcafl|Content-Length:384|Content-Type:text/plain; charset=ISO-8859-1|Host:rd-dev59.rd.campaign.adobe.com|Connection:Keep-Alive|User-Agent:Apache-HttpClient/4.5.2 (Java/1.8.0_171)|Accept-Encoding:gzip,deflate";
 
         //Create a parse definition
-        ParseDefinition l_apiDefinition = new ParseDefinition();
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart("soapaction:");
@@ -1538,7 +1536,7 @@ public class TestGrepLogApache {
 
         l_apiDefinition.setTrimQuotes(true);
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_apiDefinition);
 
         assertThat("The String should not be compatible",
@@ -1550,7 +1548,7 @@ public class TestGrepLogApache {
     @Test
     public void testToPreserve() throws InstantiationException, IllegalAccessException {
 
-        ParseDefinition l_lineFinder = new ParseDefinition();
+        ParseDefinitionEntry l_lineFinder = new ParseDefinitionEntry();
 
         l_lineFinder.setTitle("lineBeginning");
         l_lineFinder.setStart("<soapCall");
@@ -1559,7 +1557,7 @@ public class TestGrepLogApache {
         l_lineFinder.setToPreserve(false);
         
 
-        ParseDefinition l_verb = new ParseDefinition();
+        ParseDefinitionEntry l_verb = new ParseDefinitionEntry();
 
         l_verb.setTitle("verb");
         l_verb.setStart("name=\"");
@@ -1568,20 +1566,18 @@ public class TestGrepLogApache {
         
         assertThat("We would by default be preserving entries",l_verb.isToPreserve());
         
-        ParseDefinition l_srcSchema = new ParseDefinition();
+        ParseDefinitionEntry l_srcSchema = new ParseDefinitionEntry();
 
         l_srcSchema.setTitle("path");
         l_srcSchema.setStart("service=\"");
         l_srcSchema.setEnd("\"");
         l_srcSchema.setCaseSensitive(false);
 
-        List<ParseDefinition> l_definitionList = new ArrayList<>();
+        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
         l_definitionList.add(l_lineFinder);
         l_definitionList.add(l_verb);
         l_definitionList.add(l_srcSchema);
 
-        final String apacheLogFile = "src/test/resources/acc/UICalls/taskWizard.xml";
-        
         //Check that the definition is correct 
         String l_line = "                <soapCall name=\"resetServiceMobileAppsCustomHook\" service=\"nms:mobileApp\">";
         Map<String,String> l_parseResult = StringParseFactory.parseString(l_line, l_definitionList);
