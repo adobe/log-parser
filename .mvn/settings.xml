@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xmlns="http://maven.apache.org/SETTINGS/1.1.0" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
+    <profiles>
+        <profile>
+            <id>artifactory</id>
+
+            <properties>
+                <releaseRepository-Id>central</releaseRepository-Id>
+                <releaseRepository-Name>Adobe Dev Releases</releaseRepository-Name>
+                <releaseRepository-URL>https://artifactory.corp.adobe.com/artifactory/maven-campaign-release-local</releaseRepository-URL>
+
+                <snapshotRepository-Id>snapshots</snapshotRepository-Id>
+                <snapshotRepository-Name>Adobe Dev Snapshots</snapshotRepository-Name>
+                <snapshotRepository-URL>https://artifactory.corp.adobe.com/artifactory/maven-campaign-snapshot-local</snapshotRepository-URL>
+            </properties>
+
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <name>maven-campaign-release</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-campaign-release</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>snapshots</id>
+                    <name>maven-campaign-snapshot</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-campaign-snapshot-local</url>
+                </repository>
+                <repository>
+                    <id>experienceplatform-release</id>
+                    <name>Experience Platform Release</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-experienceplatform-release/</url>
+                </repository>
+                <repository>
+                    <id>experienceplatform-snapshot</id>
+                    <name>Experience Platform Snapshot</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-experienceplatform-snapshot/</url>
+                </repository>
+                <repository>
+                    <id>experienceplatform-release-local</id>
+                    <name>Experience Platform Release Local</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-experienceplatform-release-local/</url>
+                </repository>
+                <repository>
+                    <id>experienceplatform-snapshot-local</id>
+                    <name>Experience Platform Snapshot Local</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-experienceplatform-snapshot-local/</url>
+                </repository>
+                <repository>
+                    <id>asr-snapshots</id>
+                    <name>ASR Snapshots</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-asr-snapshot</url>
+                </repository>
+                <repository>
+                    <id>asr-releases</id>
+                    <name>ASR Releases</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-asr-release</url>
+                </repository>
+            </repositories>
+
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>central</id>
+                    <name>plugins-release</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-campaign-release</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>snapshots</id>
+                    <name>plugins-snapshot</name>
+                    <url>https://artifactory.corp.adobe.com/artifactory/maven-campaign-snapshot-local</url>
+                    <snapshots />
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>artifactory</activeProfile>
+    </activeProfiles>
+
+    <servers>
+        <server>
+            <id>central</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>snapshots</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>maven-campaign-snapshot</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>experienceplatform-release</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>experienceplatform-snapshot</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>experienceplatform-release-local</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>experienceplatform-snapshot-local</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>asr-snapshots</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+        <server>
+            <id>asr-releases</id>
+            <username>${env.ARTIFACTORY_USER}</username>
+            <password>${env.ARTIFACTORY_API_TOKEN}</password>
+        </server>
+    </servers>
+</settings>
