@@ -179,7 +179,7 @@ public class ParseDefinitionEntry {
      * @return
      *
      */
-    String fetchAppliedSensitivity(String in_string) {
+    public String fetchAppliedSensitivity(String in_string) {
 
         return isCaseSensitive() ? in_string : in_string.toLowerCase();
     }
