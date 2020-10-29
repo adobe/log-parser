@@ -13,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.contains;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import com.adobe.campaign.tests.logparser.StringParseFactory;
 
 
 public class TestSimpleLog {
-
     
     @Test
     public void testSimpleLog() {
@@ -69,37 +69,133 @@ public class TestSimpleLog {
 
         
     }
+
+    
+    @Test
+    public void testParseDefinition() {
+       
+            String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap    Client request:#012<soapenv:Envelope#012#011xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"#012#011xmlns:urn=\"urn:xtk:session\">#012#011<soapenv:Header />#012#011<soapenv:Body>#012#011#011<urn:Logon>#012#011#011#011<urn:sessiontoken></urn:sessiontoken>#012#011#011#011<urn:strLogin>admin</urn:strLogin>#012#011#011#011<urn:strPassword>adminrd-dev54</urn:strPassword>#012#011#011#011<urn:elemParameters></urn:elemParameters>#012#011#011</urn:Logon>#012#011</soapenv:Body>#012</soapenv:Envelope>";
+            
+            ParseDefinition l_parseDefinition = new ParseDefinition("SOAP Log");
+            
+            assertThat("We should have the correct title", l_parseDefinition.getTitle(), is(equalTo("SOAP Log")));
+
+            ParseDefinitionEntry l_timeStamp = new ParseDefinitionEntry();
+            l_timeStamp.setTitle("timeStamp");
+            l_timeStamp.setStartStartOfLine();
+            l_timeStamp.setEnd("    ");
+            
+            l_parseDefinition.addEntry(l_timeStamp);
+
+            
+            ParseDefinitionEntry l_verPart1 = new ParseDefinitionEntry();
+            l_verPart1.setTitle("A");
+            l_verPart1.setStart("Client request:");
+            l_verPart1.setEnd("<soapenv");
+            
+            l_parseDefinition.addEntry(l_verPart1);
+
+
+            ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+            l_verbDefinition2.setTitle("data");
+            l_verbDefinition2.setStart("xmlns:urn=\"urn:");
+            l_verbDefinition2.setEnd("\"");
+            l_verbDefinition2.setCaseSensitive(false);
+            
+            l_parseDefinition.addEntry(l_verbDefinition2);
+
+            assertThat("We should have the same entries", l_parseDefinition.getDefinitionEntries().size(),is(equalTo(3)));
+
+
+            Map<String, String> l_searchMaps = StringParseFactory.parseString(logString, l_parseDefinition.getDefinitionEntries());
+            
+
+            assertThat(l_searchMaps.size(), is(equalTo(3)));
+            assertThat("We should have entries", l_searchMaps.get("timeStamp"), is(equalTo("2020-06-15T17:17:20.728Z")));
+
+    }
+    
+    @Test
+    public void testParseDefinition2() {
+       
+            String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap    Client request:#012<soapenv:Envelope#012#011xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"#012#011xmlns:urn=\"urn:xtk:session\">#012#011<soapenv:Header />#012#011<soapenv:Body>#012#011#011<urn:Logon>#012#011#011#011<urn:sessiontoken></urn:sessiontoken>#012#011#011#011<urn:strLogin>admin</urn:strLogin>#012#011#011#011<urn:strPassword>adminrd-dev54</urn:strPassword>#012#011#011#011<urn:elemParameters></urn:elemParameters>#012#011#011</urn:Logon>#012#011</soapenv:Body>#012</soapenv:Envelope>";
+            
+            ParseDefinition l_parseDefinition = new ParseDefinition("SOAP Log");
+            
+            assertThat("We should have the correct title", l_parseDefinition.getTitle(), is(equalTo("SOAP Log")));
+
+            ParseDefinitionEntry l_timeStamp = new ParseDefinitionEntry();
+            l_timeStamp.setTitle("timeStamp");
+            l_timeStamp.setStartStartOfLine();
+            l_timeStamp.setEnd("    ");
+            
+            l_parseDefinition.addEntry(l_timeStamp);
+
+            
+            ParseDefinitionEntry l_verPart1 = new ParseDefinitionEntry();
+            l_verPart1.setTitle("A");
+            l_verPart1.setStart("Client request:");
+            l_verPart1.setEnd("<soapenv");
+            
+            l_parseDefinition.addEntry(l_verPart1);
+
+
+            ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+            l_verbDefinition2.setTitle("data");
+            l_verbDefinition2.setStart("xmlns:urn=\"urn:");
+            l_verbDefinition2.setEnd("\"");
+            l_verbDefinition2.setCaseSensitive(false);
+            
+            l_parseDefinition.addEntry(l_verbDefinition2);
+
+            assertThat("We should have the same entries", l_parseDefinition.getDefinitionEntries().size(),is(equalTo(3)));
+
+
+            Map<String, String> l_searchMaps = StringParseFactory.parseString(logString, l_parseDefinition);
+            
+
+            assertThat(l_searchMaps.size(), is(equalTo(3)));
+            assertThat("We should have entries", l_searchMaps.get("timeStamp"), is(equalTo("2020-06-15T17:17:20.728Z")));
+
+    }
     
     @Test
     public void testIssueWithTracking() {
         String logString = "+41411:5ee88a26:0|POST /nl/jsp/soaprouter.jsp HTTP/1.1|Content-Type:application/soap+xml; action=nms%3aremoteTracking#GetTrackingLogs; charset=utf-8|Accept-Language:en|SOAPAction:nms%3aremoteTracking#GetTrackingLogs|Cookie:__sessiontoken=_-_fFZyJuDP9T1hV46cjTd1hFPCq7YBZ3YRg3WjSrhdyQ3TR/MPBgcy0lV15uSGq/apLM2b1RViEkJUIAIA|Host:rd-dev54.rd.campaign.adobe.com|Connection:keep-alive|Content-Length:720";
 
         //Create a parse definition
+        
+        ParseDefinition l_parseDefinition = new ParseDefinition("SOAP Log");
+        
         ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
 
         l_apiDefinition.setTitle("path");
         l_apiDefinition.setStart("soapaction:");
         l_apiDefinition.setEnd("#");
         l_apiDefinition.setCaseSensitive(false);
+        
+        l_parseDefinition.addEntry(l_apiDefinition);
 
         ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
 
         l_verbDefinition.setTitle("verb");
         l_verbDefinition.setStart("#");
         l_verbDefinition.setEnd("|");
+        
+        l_parseDefinition.addEntry(l_verbDefinition);
 
-        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
-        l_definitionList.add(l_apiDefinition);
-        l_definitionList.add(l_verbDefinition);
+        
 
         assertThat("The String should be compatible",
-                StringParseFactory.isStringCompliant(logString, l_definitionList));
+                StringParseFactory.isStringCompliant(logString, l_parseDefinition));
 
         assertThat("We should have found the correct path",
                 StringParseFactory.fetchValue(logString, l_apiDefinition),
                 is(equalTo("nms%3aremoteTracking")));
 
-        Map<String, String> l_entries = StringParseFactory.parseString(logString, l_definitionList);
+        Map<String, String> l_entries = StringParseFactory.parseString(logString, l_parseDefinition);
 
         assertThat("We should have the correct value for api", l_entries.get("path"),
                 is(equalTo("nms%3aremoteTracking")));

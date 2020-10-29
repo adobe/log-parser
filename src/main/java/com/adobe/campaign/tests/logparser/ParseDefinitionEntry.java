@@ -210,4 +210,48 @@ public class ParseDefinitionEntry {
         this.toPreserve = preserve;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (caseSensitive ? 1231 : 1237);
+        result = prime * result + ((end == null) ? 0 : end.hashCode());
+        result = prime * result + ((start == null) ? 0 : start.hashCode());
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + (toPreserve ? 1231 : 1237);
+        result = prime * result + (trimQuotes ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof ParseDefinitionEntry))
+            return false;
+        ParseDefinitionEntry other = (ParseDefinitionEntry) obj;
+        if (caseSensitive != other.caseSensitive)
+            return false;
+        if (end == null) {
+            if (other.end != null)
+                return false;
+        } else if (!end.equals(other.end))
+            return false;
+        if (start == null) {
+            if (other.start != null)
+                return false;
+        } else if (!start.equals(other.start))
+            return false;
+        if (title == null) {
+            if (other.title != null)
+                return false;
+        } else if (!title.equals(other.title))
+            return false;
+        if (toPreserve != other.toPreserve)
+            return false;
+        if (trimQuotes != other.trimQuotes)
+            return false;
+        return true;
+    }
+
 }

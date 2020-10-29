@@ -37,8 +37,8 @@ public class StringParseFactory {
      * @throws InstantiationException
      *
      */
-    public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(final V in_logFiles,
-            List<ParseDefinitionEntry> in_parseDefinitionList, Class<T> classTarget)
+    public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(
+            final V in_logFiles, List<ParseDefinitionEntry> in_parseDefinitionList, Class<T> classTarget)
             throws InstantiationException, IllegalAccessException {
         Map<String, T> l_entries = new HashMap<String, T>();
         int i = 0;
@@ -59,14 +59,14 @@ public class StringParseFactory {
                                 in_parseDefinitionList);
 
                         T lt_entry = classTarget.newInstance();
-                        lt_entry.setValuesFromMap(lt_lineResult,in_parseDefinitionList);
+                        lt_entry.setValuesFromMap(lt_lineResult, in_parseDefinitionList);
                         //lt_entry.setValuesFromMap(lt_lineResult);
 
                         final String lt_currentKey = lt_entry.makeKey();
-                        
+
                         if (l_entries.containsKey(lt_currentKey)) {
                             l_entries.get(lt_currentKey).incrementUsage();
-                            
+
                         } else {
                             l_entries.put(lt_currentKey, lt_entry);
                         }
@@ -83,6 +83,21 @@ public class StringParseFactory {
             e.printStackTrace();
         }
         return l_entries;
+    }
+
+    /**
+     * This method parses a string given a definition
+     *
+     * Author : gandomi
+     *
+     * @param in_logString
+     * @param in_parseDefinition
+     * @return
+     *
+     */
+    public static Map<String, String> parseString(String in_logString, ParseDefinition in_parseDefinition) {
+
+        return parseString(in_logString, in_parseDefinition.getDefinitionEntries());
     }
 
     /**
@@ -167,7 +182,8 @@ public class StringParseFactory {
      * @return
      *
      */
-    public static boolean isStringCompliant(String in_logString, List<ParseDefinitionEntry> in_definitionList) {
+    public static boolean isStringCompliant(String in_logString,
+            List<ParseDefinitionEntry> in_definitionList) {
         String l_workingString = in_logString;
         //For every definition start and end. Check that the index follows
         for (ParseDefinitionEntry lt_parseDefinitionItem : in_definitionList) {
@@ -192,6 +208,22 @@ public class StringParseFactory {
 
         }
         return true;
+    }
+
+    /**
+     * This method lets us know if the given string is compliant with the given
+     * parse Definition
+     *
+     * Author : gandomi
+     *
+     * @param in_logString
+     * @param in_parseDefinition
+     * @return
+     *
+     */
+    public static boolean isStringCompliant(String in_logString, ParseDefinition in_parseDefinition) {
+        // TODO Auto-generated method stub
+        return isStringCompliant(in_logString, in_parseDefinition.getDefinitionEntries());
     }
 
 }
