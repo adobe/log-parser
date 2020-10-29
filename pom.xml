@@ -145,6 +145,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <scm>
+        <url>https://git.corp.adobe.com/gandomi/log-parser/tree/master</url>
+        <connection>scm:git:git://git@git.corp.adobe.com:gandomi/log-parser.git</connection>
+        <developerConnection>scm:git:git://git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
+    </scm>
     <parent>
         <groupId>com.adobe.campaign</groupId>
         <artifactId>parent</artifactId>
