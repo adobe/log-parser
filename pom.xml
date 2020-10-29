@@ -144,8 +144,8 @@
         </dependency>
     </dependencies>
     <scm>
-        <connection>scm:git:git@fit.corp.adobe.com:account/gandomi/log-parser.git</connection>
-        <developerConnection>scm:git:git@fit.corp.adobe.com:gandomi/log-parser.git</developerConnection>
+        <connection>scm:git:git@git.corp.adobe.com:account/gandomi/log-parser.git</connection>
+        <developerConnection>scm:git:git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
         <url>https://git.corp.adobe.com/gandomi/log-parser</url>
       <tag>log-parser-0.0.1</tag>
   </scm>
