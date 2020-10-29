@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>log-parser</name>
     <description>A project that allows you to parse logs, and store them in a structured way</description>
     <build>
@@ -147,6 +147,6 @@
         <connection>scm:git:git@git.corp.adobe.com:account/gandomi/log-parser.git</connection>
         <developerConnection>scm:git:git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
         <url>https://git.corp.adobe.com/gandomi/log-parser</url>
-      <tag>log-parser-0.0.1b</tag>
+      <tag>log-parser-0.0.1</tag>
   </scm>
 </project>
