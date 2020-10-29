@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
@@ -144,14 +146,8 @@
         </dependency>
     </dependencies>
     <scm>
-        <url>https://git.corp.adobe.com/gandomi/log-parser/tree/master</url>
-        <connection>scm:git:git://git.corp.adobe.com:gandomi/log-parser.git</connection>
-        <developerConnection>scm:git:git://git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
-      <tag>log-parser-0.0.2</tag>
-  </scm>
-    <parent>
-        <groupId>com.adobe.campaign</groupId>
-        <artifactId>parent</artifactId>
-        <version>1</version>
-    </parent>
+        <connection>scm:git:git@fit.corp.adobe.com:account/gandomi/log-parser.git</connection>
+        <developerConnection>scm:git:git@fit.corp.adobe.com:gandomi/log-parser.git</developerConnection>
+        <url>https://git.corp.adobe.com/gandomi/log-parser</url>
+    </scm>
 </project>
