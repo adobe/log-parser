@@ -147,6 +147,11 @@
         <connection>scm:git:git@git.corp.adobe.com:account/gandomi/log-parser.git</connection>
         <developerConnection>scm:git:git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
         <url>https://git.corp.adobe.com/gandomi/log-parser</url>
-      <tag>log-parser-0.0.1</tag>
+      <tag>log-parser-0.0.1b</tag>
   </scm>
+      <parent>
+        <groupId>com.adobe.campaign</groupId>
+        <artifactId>parent</artifactId>
+        <version>1</version>
+    </parent>
 </project>

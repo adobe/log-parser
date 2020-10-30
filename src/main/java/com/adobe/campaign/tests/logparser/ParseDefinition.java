@@ -11,19 +11,25 @@ package com.adobe.campaign.tests.logparser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParseDefinition {
 
     private String title;
     private List<ParseDefinitionEntry> definitionEntries;
+    private String keyPadding = "#";
+    private List<ParseDefinitionEntry> keyOrder;
+    private String printOutPadding=";";
 
     public ParseDefinition(String in_title) {
         setTitle(in_title);
         definitionEntries = new ArrayList<>();
+        keyOrder = new ArrayList<>();
     }
 
     /**
-     * This method adds a definition entry to the definition entries of this parse definition
+     * This method adds a definition entry to the definition entries of this
+     * parse definition
      *
      * Author : gandomi
      *
@@ -32,7 +38,7 @@ public class ParseDefinition {
      */
     public void addEntry(ParseDefinitionEntry in_parseDefinitionEntry) {
         getDefinitionEntries().add(in_parseDefinitionEntry);
-        
+
     }
 
     @Override
@@ -68,12 +74,80 @@ public class ParseDefinition {
         return definitionEntries;
     }
 
+    /**
+     * @param definitionEntries
+     *        the definitionEntries to set
+     */
+    public void setDefinitionEntries(List<ParseDefinitionEntry> definitionEntries) {
+        this.definitionEntries = definitionEntries;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getKeyPadding() {
+        return keyPadding;
+    }
+
+    public void setKeyPadding(String keyPadding) {
+        this.keyPadding = keyPadding;
+    }
+
+    /**
+     * If the keyOrder is not set if will by default return all the values that are preserved
+     *
+     * Author : gandomi
+     *
+     * @return
+     *
+     */
+    public List<ParseDefinitionEntry> fetchKeyOrder() {
+        if (keyOrder.isEmpty()) {
+            return getDefinitionEntries().stream().filter(e -> e.isToPreserve()).collect(Collectors.toList());
+        }
+        return keyOrder;
+    }
+
+    /**
+     * Defines the order of the keys
+     *
+     * Author : gandomi
+     *
+     * @param in_keyOrderDefinitions
+     *
+     */
+    public void defineKeyOrder(List<ParseDefinitionEntry> in_keyOrderDefinitions) {
+        if (in_keyOrderDefinitions.stream().anyMatch(e -> e.isToPreserve() == false)) {
+            throw new IllegalArgumentException(
+                    "One of the key is flagged as 'not preserved' during log parsing, so this will not work.");
+        }
+
+        for (ParseDefinitionEntry lt_pdEntry : in_keyOrderDefinitions) {
+
+            if (getDefinitionEntries().contains(lt_pdEntry)) {
+                this.keyOrder.add(lt_pdEntry);
+
+            } else {
+                throw new IllegalArgumentException("The definition entry with the title "
+                        + lt_pdEntry.getTitle() + " was not defined for this parse definition.");
+
+            }
+
+        }
+
+    }
+
+    public String getPrintOutPadding() {
+        return printOutPadding;
+    }
+
+    public void setPrintOutPadding(String printOutPadding) {
+        this.printOutPadding = printOutPadding;
     }
 
 }

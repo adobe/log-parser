@@ -10,67 +10,42 @@
 package com.adobe.campaign.tests.logparser;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GenericEntry extends StdLogEntry {
 
-    private static final String KEY_APPENDER = "#";
-
-    public GenericEntry(Map<String, String> in_valueMap) {
-        setValuesFromMap(in_valueMap);
-
+    public GenericEntry(ParseDefinition in_definition) {
+        super(in_definition);
     }
-    
+
     public GenericEntry() {
-        
+        super(new ParseDefinition("Created By Default"));
     }
 
-    @Override
-    public void setValuesFromMap(Map<String, String> in_valueMap) {
-        for (String lt_key : in_valueMap.keySet()) {
-            valuesMap.put(lt_key, in_valueMap.get(lt_key));
-        }
-        
-    }
 
     @Override
     public String makeKey() {
-        
-        
-        StringBuilder l_builder = new StringBuilder();
-        Iterator<Object> values = valuesMap.values().iterator(); 
-        
-        l_builder.append(values.hasNext() ? values.next() : "");
-        
-        while (values.hasNext()) {
-            l_builder.append(KEY_APPENDER);
-            l_builder.append(values.next());
-        }
-        
-        return l_builder.toString();
-        
-       
+        return String.join(getParseDefinition().getKeyPadding(), getParseDefinition().fetchKeyOrder().stream()
+                .map(e -> valuesMap.get(e.getTitle()).toString()).collect(Collectors.toList()));
     }
 
     @Override
     public Set<String> fetchHeaders() {
         // TODO set to generic
         Set<String> lr_headerSet = new LinkedHashSet<>();
-        lr_headerSet.addAll(Arrays.asList("key","path","verb","frequence"));
+        lr_headerSet.addAll(Arrays.asList("key", "path", "verb", "frequence"));
         return lr_headerSet;
-        
+
     }
 
     @Override
     public Map<String, Object> fetchValueMap() {
-        Map<String,Object> lr_map = new HashMap<>(this.valuesMap);
-        lr_map.put("frequence", this.getFrequence());
-        lr_map.put("key", this.makeKey());
-        return lr_map;
+        
+        return valuesMap;
     }
+
 
 }

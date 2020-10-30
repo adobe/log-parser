@@ -189,18 +189,18 @@ public class TestGrepLogApache {
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd(" ");
 
-        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
-        l_definitionList.add(l_verbDefinition2);
-        l_definitionList.add(l_apiDefinition);
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2,l_apiDefinition));
 
         Map<String, String> l_currentValues = StringParseFactory.parseString(l_apacheLogString,
-                l_definitionList);
+                l_parseDefinition);
 
         assertThat("We should have two entries", l_currentValues.size(), is(equalTo(2)));
 
         assertThat("We should be able to find our path", l_currentValues.get("path"), is(equalTo("session")));
 
-        GenericEntry l_entry = new GenericEntry(l_currentValues);
+        GenericEntry l_entry = new GenericEntry(l_parseDefinition);
+        l_entry.setValuesFromMap(l_currentValues);
 
         assertThat("We should have the correct value for api", l_entry.fetchValueMap().get("path"), is(equalTo("session")));
 
@@ -509,14 +509,15 @@ public class TestGrepLogApache {
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd(" ");
 
-        List<ParseDefinitionEntry> l_definitionList = new ArrayList<>();
-        l_definitionList.add(l_verbDefinition2);
-        l_definitionList.add(l_apiDefinition);
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2,l_apiDefinition));
+        l_pDefinition.defineKeyOrder(Arrays.asList(l_apiDefinition,l_verbDefinition2));
+        
 
         final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
 
         Map<String, GenericEntry> l_entries = StringParseFactory
-                .fetchLogData(Arrays.asList(apacheLogFile), l_definitionList, GenericEntry.class);
+                .fetchLogData(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
 
         assertThat(l_entries, is(notNullValue()));
         assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));

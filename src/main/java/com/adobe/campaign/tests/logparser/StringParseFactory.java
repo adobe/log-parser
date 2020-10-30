@@ -31,14 +31,14 @@ public class StringParseFactory {
      * Author : gandomi
      *
      * @param in_logFiles
-     * @param in_parseDefinitionList
+     * @param in_parseDefinition
      * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
      *
      */
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(
-            final V in_logFiles, List<ParseDefinitionEntry> in_parseDefinitionList, Class<T> classTarget)
+            final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> classTarget)
             throws InstantiationException, IllegalAccessException {
         Map<String, T> l_entries = new HashMap<String, T>();
         int i = 0;
@@ -54,22 +54,8 @@ public class StringParseFactory {
                     final String lt_nextLine = scanner.nextLine();
                     //Activate only if the log is not enough. Here we list each line we consider
                     //log.debug("{}  -  {}", i, lt_nextLine);
-                    if (isStringCompliant(lt_nextLine, in_parseDefinitionList)) {
-                        Map<String, String> lt_lineResult = StringParseFactory.parseString(lt_nextLine,
-                                in_parseDefinitionList);
-
-                        T lt_entry = classTarget.newInstance();
-                        lt_entry.setValuesFromMap(lt_lineResult, in_parseDefinitionList);
-                        //lt_entry.setValuesFromMap(lt_lineResult);
-
-                        final String lt_currentKey = lt_entry.makeKey();
-
-                        if (l_entries.containsKey(lt_currentKey)) {
-                            l_entries.get(lt_currentKey).incrementUsage();
-
-                        } else {
-                            l_entries.put(lt_currentKey, lt_entry);
-                        }
+                    if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
+                        updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, l_entries, classTarget);
 
                     } else {
                         log.debug("Skipping line {} - {}", i, lt_nextLine);
@@ -83,6 +69,40 @@ public class StringParseFactory {
             e.printStackTrace();
         }
         return l_entries;
+    }
+
+    /**
+     * This method updated the given entry map by parsing the given log line 
+     *
+     * Author : gandomi
+     *
+     * @param in_logLine
+     * @param in_parseDefinition
+     * @param in_entries
+     * @param in_classTarget
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     *
+     */
+    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine, ParseDefinition in_parseDefinition,
+            Map<String, T> in_entries, Class<T> in_classTarget)
+            throws InstantiationException, IllegalAccessException {
+        Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine,
+                in_parseDefinition);
+
+        T lt_entry = in_classTarget.newInstance();
+        
+        lt_entry.setParseDefinition(in_parseDefinition);
+        lt_entry.setValuesFromMap(lt_lineResult);
+        
+        final String lt_currentKey = lt_entry.makeKey();
+
+        if (in_entries.containsKey(lt_currentKey)) {
+            in_entries.get(lt_currentKey).incrementUsage();
+
+        } else {
+            in_entries.put(lt_currentKey, lt_entry);
+        }
     }
 
     /**
@@ -110,7 +130,7 @@ public class StringParseFactory {
      * @return
      *
      */
-    public static Map<String, String> parseString(String in_stringToParse, ParseDefinitionEntry in_parsRule) {
+    protected static Map<String, String> parseString(String in_stringToParse, ParseDefinitionEntry in_parsRule) {
 
         return parseString(in_stringToParse, Arrays.asList(in_parsRule));
     }
@@ -125,7 +145,7 @@ public class StringParseFactory {
      * @return
      *
      */
-    public static Map<String, String> parseString(String in_logString,
+    protected static Map<String, String> parseString(String in_logString,
             List<ParseDefinitionEntry> in_parsRuleList) {
 
         Map<String, String> lr_stringParseResult = new HashMap<>();
@@ -182,7 +202,7 @@ public class StringParseFactory {
      * @return
      *
      */
-    public static boolean isStringCompliant(String in_logString,
+    protected static boolean isStringCompliant(String in_logString,
             List<ParseDefinitionEntry> in_definitionList) {
         String l_workingString = in_logString;
         //For every definition start and end. Check that the index follows
@@ -222,7 +242,6 @@ public class StringParseFactory {
      *
      */
     public static boolean isStringCompliant(String in_logString, ParseDefinition in_parseDefinition) {
-        // TODO Auto-generated method stub
         return isStringCompliant(in_logString, in_parseDefinition.getDefinitionEntries());
     }
 
