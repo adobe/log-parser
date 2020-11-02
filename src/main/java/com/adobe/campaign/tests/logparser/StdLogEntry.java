@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,17 +32,22 @@ public abstract class StdLogEntry {
     Map<String, Object> valuesMap = new HashMap<>();
 
     public abstract String makeKey();
-    
+
     public StdLogEntry(ParseDefinition in_definition) {
         this.parseDefinition = in_definition;
     }
 
+    public StdLogEntry() {
+        parseDefinition = new ParseDefinition("Created By Default");
+    }
+
     /**
-     * Fetches a print out for listing purposed
+     * Fetches a print out for listing purposed. It uses the header list as an
+     * index to fetch the correct order of the values
      *
      * Author : gandomi
      *
-     * @return
+     * @returns a String for the print out
      *
      */
     public String fetchPrintOut() {
@@ -55,13 +59,23 @@ public abstract class StdLogEntry {
 
             l_printOutList.add(l_valueMap.get(lt_header).toString());
         }
-        return StringUtils.join(l_printOutList,this.getParseDefinition().getPrintOutPadding());
+        return StringUtils.join(l_printOutList, this.getParseDefinition().getPrintOutPadding());
     }
 
-    public abstract Set<String> fetchHeaders();
+    /**
+     * Fetches the headers that you have defined for the log class. You need to
+     * be careful that the headers you have defined have been used in storing
+     * the values.
+     *
+     * Author : gandomi
+     *
+     * @return a list of header names.
+     *
+     */
+    public abstract List<String> fetchHeaders();
 
     /**
-     * Transforms the data in the Log entry into a List of Strings
+     * Returns a set of objects you have defined for your log class. When using Genric Object no changes are made to it.
      *
      * Author : gandomi
      *
@@ -70,7 +84,14 @@ public abstract class StdLogEntry {
      */
     public abstract Map<String, Object> fetchValueMap();
 
-    public void incrementUsage() {
+    /**
+     * Increments the frequence
+     *
+     * Author : gandomi
+     *
+     *
+     */
+    protected void incrementUsage() {
         addFrequence(1);
 
     }
@@ -126,8 +147,8 @@ public abstract class StdLogEntry {
             valuesMap.put(lt_definition.getTitle(), in_valueMap.get(lt_definition.getTitle()));
         }
 
-        valuesMap.put("frequence", this.getFrequence());
-        valuesMap.put("key", this.makeKey());
+        valuesMap.put(ParseDefinition.STD_DATA_FREQUENCE, this.getFrequence());
+        valuesMap.put(ParseDefinition.STD_DATA_KEY, this.makeKey());
 
     }
 

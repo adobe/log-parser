@@ -9,12 +9,19 @@
  */
 package com.adobe.campaign.tests.logparser;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The generic entry is a standard string based definition where the values are
+ * stored as is. I.e. strings. All definitions are based on the ParseDefinition
+ * class
+ *
+ *
+ * Author : gandomi
+ *
+ */
 public class GenericEntry extends StdLogEntry {
 
     public GenericEntry(ParseDefinition in_definition) {
@@ -25,7 +32,6 @@ public class GenericEntry extends StdLogEntry {
         super(new ParseDefinition("Created By Default"));
     }
 
-
     @Override
     public String makeKey() {
         return String.join(getParseDefinition().getKeyPadding(), getParseDefinition().fetchKeyOrder().stream()
@@ -33,19 +39,19 @@ public class GenericEntry extends StdLogEntry {
     }
 
     @Override
-    public Set<String> fetchHeaders() {
-        // TODO set to generic
-        Set<String> lr_headerSet = new LinkedHashSet<>();
-        lr_headerSet.addAll(Arrays.asList("key", "path", "verb", "frequence"));
-        return lr_headerSet;
+    public List<String> fetchHeaders() {
+
+        return getParseDefinition().fetchHeaders();
 
     }
-
+    
+    /**
+     * Returns the values map as it is without any manipulation
+     */
     @Override
     public Map<String, Object> fetchValueMap() {
-        
+
         return valuesMap;
     }
-
 
 }

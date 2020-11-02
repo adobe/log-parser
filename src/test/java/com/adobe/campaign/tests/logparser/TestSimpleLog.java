@@ -26,7 +26,6 @@ import java.util.Map;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-
 import com.adobe.campaign.tests.logparser.GenericEntry;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.StringParseFactory;
@@ -607,18 +606,17 @@ public class TestSimpleLog {
 
         assertThrows(IllegalStateException.class, () -> l_entry.setValuesFromMap(l_values));
     }
-    
-    
+
     @Test
     public void testingPrintOut() {
-        
+
         ParseDefinition l_pd = new ParseDefinition("ttt");
         ParseDefinitionEntry l_parseDefinitionEntry1 = new ParseDefinitionEntry();
         l_parseDefinitionEntry1.setTitle("verb");
-        
+
         ParseDefinitionEntry l_parseDefinitionEntry2 = new ParseDefinitionEntry();
         l_parseDefinitionEntry2.setTitle("path");
-        
+
         l_pd.addEntry(l_parseDefinitionEntry1);
         l_pd.addEntry(l_parseDefinitionEntry2);
         l_pd.setKeyPadding(" - ");
@@ -626,24 +624,79 @@ public class TestSimpleLog {
         l_pd.setPrintOutPadding(testPrintOutPadding);
 
         GenericEntry l_ale = new GenericEntry(l_pd);
-        
-        Map<String,String> l_valueMap = new HashMap<>();
+
+        Map<String, String> l_valueMap = new HashMap<>();
         l_valueMap.put("verb", "GET");
         l_valueMap.put("path", "abc");
-        
+
         l_ale.setValuesFromMap(l_valueMap);
-        
 
         assertThat("The keys should be the concatenation of verb and path", l_ale.makeKey(),
                 is(equalTo("GET - abc")));
 
-       
         assertThat(l_ale.fetchValueMap(), hasEntry("key", l_ale.makeKey()));
-        
-        assertThat("We should have the verb ", l_ale.fetchValueMap(), hasEntry("frequence", l_ale.getFrequence()));
-        assertThat(l_ale.fetchPrintOut(), is(equalTo(l_ale.makeKey() + testPrintOutPadding + l_ale.fetchValueMap().get("path") + testPrintOutPadding +l_ale.fetchValueMap().get("verb") + testPrintOutPadding +  1)));
-        
 
+        assertThat("We should have the verb ", l_ale.fetchValueMap(),
+                hasEntry("frequence", l_ale.getFrequence()));
+        assertThat(l_ale.fetchPrintOut(),
+                is(equalTo(l_ale.fetchValueMap().get("verb") + testPrintOutPadding
+                        + l_ale.fetchValueMap().get("path") + testPrintOutPadding + l_ale.makeKey()
+                        + testPrintOutPadding + 1)));
 
+    }
+
+    @Test
+    public void testFetchHeaders() {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("API");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+
+        ParseDefinition l_definition = new ParseDefinition("Soap Call");
+        l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+
+        assertThat(l_definition.fetchHeaders(), Matchers.contains("API", "verb", "key", "frequence"));
+
+        GenericEntry l_entry = new GenericEntry(l_definition);
+
+        assertThat("We should have the correct key", l_entry.fetchHeaders(),
+                Matchers.contains("API", "verb", "key", "frequence"));
+    }
+
+    @Test
+    public void testFetchHeaders_NotStored() {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("API");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+        l_verbDefinition.setToPreserve(false);
+
+        ParseDefinition l_definition = new ParseDefinition("Soap Call");
+        l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+
+        assertThat(l_definition.fetchHeaders(), Matchers.contains("API", "key", "frequence"));
+
+        GenericEntry l_entry = new GenericEntry(l_definition);
+
+        assertThat("We should have the correct key", l_entry.fetchHeaders(),
+                Matchers.contains("API", "key", "frequence"));
     }
 }

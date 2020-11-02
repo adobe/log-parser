@@ -19,7 +19,10 @@ public class ParseDefinition {
     private List<ParseDefinitionEntry> definitionEntries;
     private String keyPadding = "#";
     private List<ParseDefinitionEntry> keyOrder;
-    private String printOutPadding=";";
+    private String printOutPadding = ";";
+
+    protected static final String STD_DATA_FREQUENCE = "frequence";
+    protected static final String STD_DATA_KEY = "key";
 
     public ParseDefinition(String in_title) {
         setTitle(in_title);
@@ -99,7 +102,8 @@ public class ParseDefinition {
     }
 
     /**
-     * If the keyOrder is not set if will by default return all the values that are preserved
+     * If the keyOrder is not set if will by default return all the values that
+     * are preserved
      *
      * Author : gandomi
      *
@@ -148,6 +152,24 @@ public class ParseDefinition {
 
     public void setPrintOutPadding(String printOutPadding) {
         this.printOutPadding = printOutPadding;
+    }
+
+    /**
+     * Returns the headers (titles) of the stored definitions. We return each
+     * stored value in the order they were defined. And at the end we add both
+     * the key and the frequence
+     *
+     * Author : gandomi
+     *
+     * @return
+     *
+     */
+    public List<String> fetchHeaders() {
+        final List<String> l_definedHeaders = getDefinitionEntries().stream().filter(e -> e.isToPreserve())
+                .map(m -> m.getTitle()).collect(Collectors.toList());
+        l_definedHeaders.add(STD_DATA_KEY);
+        l_definedHeaders.add(STD_DATA_FREQUENCE);
+        return l_definedHeaders;
     }
 
 }
