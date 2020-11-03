@@ -4,3 +4,4 @@
 ac_test_output/
 target/
 test-output/
+.DS_Store
