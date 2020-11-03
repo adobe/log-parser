@@ -110,7 +110,7 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @return
+     * @return if no keyOrder was defined it will return a list of all of the preservable ParseDefinitionEntrys
      *
      */
     public List<ParseDefinitionEntry> fetchKeyOrder() {
@@ -125,7 +125,7 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @param in_keyOrderDefinitions
+     * @param in_keyOrderDefinitions A list of DefinitionEntries that define how the key should be built
      *
      */
     public void defineKeyOrder(List<ParseDefinitionEntry> in_keyOrderDefinitions) {
@@ -164,7 +164,7 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @return
+     * @return A sorted set of headers / keys used for storing the values 
      *
      */
     public Set<String> fetchHeaders() {

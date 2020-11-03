@@ -9,6 +9,14 @@
  */
 package com.adobe.campaign.tests.logparser.exceptions;
 
+/**
+ * This Exception covers all exceptions related to parsing of String using the
+ * log-parser logic
+ *
+ *
+ * Author : gandomi
+ *
+ */
 public class StringParseException extends Exception {
 
     /**

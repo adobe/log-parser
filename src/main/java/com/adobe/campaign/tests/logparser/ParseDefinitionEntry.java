@@ -57,7 +57,7 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param in_stringValue
+     * @param in_stringValue A string that is to be parsed using the current ParseDenfinitionEntry
      * @return the index of the first occurrence of the specified substring, or
      *         -1 if there is no such occurrence.
      *
@@ -122,7 +122,7 @@ public class ParseDefinitionEntry {
      * Author : gandomi
      *
      * @param in_logString
-     * @return
+     * @return A String that will be parsed by the subsequent ParseDefinitionEntry
      *
      */
     public String fetchFollowingSubstring(String in_logString) {
@@ -176,7 +176,7 @@ public class ParseDefinitionEntry {
      * Author : gandomi
      *
      * @param in_string
-     * @return
+     * @return The given string in lowercase whenever the definition is case insesitive, other wise the same String.
      *
      */
     public String fetchAppliedSensitivity(String in_string) {
