@@ -7,51 +7,17 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.exceptions;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+public class StringParseException extends Exception {
 
-/**
- * The generic entry is a standard string based definition where the values are
- * stored as is. I.e. strings. All definitions are based on the ParseDefinition
- * class
- *
- *
- * Author : gandomi
- *
- */
-public class GenericEntry extends StdLogEntry {
-
-    public GenericEntry(ParseDefinition in_definition) {
-        super(in_definition);
-    }
-
-    public GenericEntry() {
-        super(new ParseDefinition("Created By Default"));
-    }
-
-    @Override
-    public String makeKey() {
-        return String.join(getParseDefinition().getKeyPadding(), getParseDefinition().fetchKeyOrder().stream()
-                .map(e -> valuesMap.get(e.getTitle()).toString()).collect(Collectors.toList()));
-    }
-
-    @Override
-    public Set<String> fetchHeaders() {
-
-        return getParseDefinition().fetchHeaders();
-
-    }
-    
     /**
-     * Returns the values map as it is without any manipulation
+     * 
      */
-    @Override
-    public Map<String, Object> fetchValueMap() {
+    private static final long serialVersionUID = 1604668750865904244L;
 
-        return valuesMap;
+    public StringParseException(String in_message) {
+        super(in_message);
     }
 
 }

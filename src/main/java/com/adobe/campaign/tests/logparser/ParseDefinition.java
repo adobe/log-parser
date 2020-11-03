@@ -10,7 +10,10 @@
 package com.adobe.campaign.tests.logparser;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ParseDefinition {
@@ -112,7 +115,7 @@ public class ParseDefinition {
      */
     public List<ParseDefinitionEntry> fetchKeyOrder() {
         if (keyOrder.isEmpty()) {
-            return getDefinitionEntries().stream().filter(e -> e.isToPreserve()).collect(Collectors.toList());
+            return getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve).collect(Collectors.toList());
         }
         return keyOrder;
     }
@@ -126,7 +129,7 @@ public class ParseDefinition {
      *
      */
     public void defineKeyOrder(List<ParseDefinitionEntry> in_keyOrderDefinitions) {
-        if (in_keyOrderDefinitions.stream().anyMatch(e -> e.isToPreserve() == false)) {
+        if (in_keyOrderDefinitions.stream().anyMatch(e -> !e.isToPreserve())) {
             throw new IllegalArgumentException(
                     "One of the key is flagged as 'not preserved' during log parsing, so this will not work.");
         }
@@ -164,12 +167,12 @@ public class ParseDefinition {
      * @return
      *
      */
-    public List<String> fetchHeaders() {
-        final List<String> l_definedHeaders = getDefinitionEntries().stream().filter(e -> e.isToPreserve())
-                .map(m -> m.getTitle()).collect(Collectors.toList());
+    public Set<String> fetchHeaders() {
+        final Collection<String> l_definedHeaders = getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve)
+                .map(ParseDefinitionEntry::getTitle).collect(Collectors.toCollection(LinkedHashSet::new));
         l_definedHeaders.add(STD_DATA_KEY);
         l_definedHeaders.add(STD_DATA_FREQUENCE);
-        return l_definedHeaders;
+        return (Set<String>) l_definedHeaders;
     }
 
 }

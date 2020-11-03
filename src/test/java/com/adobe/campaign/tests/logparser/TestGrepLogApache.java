@@ -22,13 +22,14 @@ import org.testng.annotations.Test;
 import com.adobe.campaign.tests.logparser.GenericEntry;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.StringParseFactory;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 
 public class TestGrepLogApache {
     // private final String STD_GREP_STRING = IntegroGrepFactory.ACS_RestPath.regularExpression;
 
     @Test
-    public void testItems() {
+    public void testItems() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -56,7 +57,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testItemParseDefinitionOfASimpleDate() {
+    public void testItemParseDefinitionOfASimpleDate() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -73,7 +74,7 @@ public class TestGrepLogApache {
     }
 
     @Test(description = "A case where the separators are the same and larger than 1 character")
-    public void testItemParseDefinitionOfASimpleDateCase2() {
+    public void testItemParseDefinitionOfASimpleDateCase2() throws StringParseException {
         String l_apacheLogString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
@@ -90,7 +91,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testVerbDefinition() {
+    public void testVerbDefinition() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -106,7 +107,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testAPIDefinition() {
+    public void testAPIDefinition() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -123,7 +124,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testCaseSensitive() {
+    public void testCaseSensitive() throws StringParseException {
         String logString = "J_BfmC8mfw==|soapaction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591";
 
         //Create a parse definition
@@ -147,7 +148,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testCaseSensitive2() {
+    public void testCaseSensitive2() throws StringParseException {
         String logString = "J_BfmC8mfw==|soapAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591";
 
         //Create a parse definition
@@ -173,7 +174,7 @@ public class TestGrepLogApache {
 
 
     @Test(description = "In this case we check if the class ApacheLogEntry correctly stores a path with filters")
-    public void testAPIDefinition2() {
+    public void testAPIDefinition2() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:06:25:44 +0200] \"POST /rest/head/session HTTP/1.1\" 201 5385 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -207,7 +208,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testAPIDefinitionRestHead() {
+    public void testAPIDefinitionRestHead() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -233,7 +234,7 @@ public class TestGrepLogApache {
         l_verbDefinition2.setStart(" /rest/head/");
         l_verbDefinition2.setEnd("/");
 
-        assertThrows(RuntimeException.class,
+        assertThrows(StringParseException.class,
                 () -> StringParseFactory.fetchValue(l_apacheLogString, l_verbDefinition2));
 
     }
@@ -249,13 +250,13 @@ public class TestGrepLogApache {
         l_verbDefinition2.setStart(" /xtk/");
         l_verbDefinition2.setEnd("@");
 
-        assertThrows(RuntimeException.class,
+        assertThrows(StringParseException.class,
                 () -> StringParseFactory.fetchValue(l_apacheLogString, l_verbDefinition2));
 
     }
 
     @Test
-    public void testAnswer() {
+    public void testAnswer() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -270,7 +271,7 @@ public class TestGrepLogApache {
     }
 
     @Test(description = "Checking that we correctly identify the message")
-    public void testingStartOfLine() {
+    public void testingStartOfLine() throws StringParseException {
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap";
 
         ParseDefinitionEntry l_definition = new ParseDefinitionEntry();
@@ -298,7 +299,7 @@ public class TestGrepLogApache {
     }
 
     @Test(description = "Checking that we correctly identify the message")
-    public void testingStartOfLine2() {
+    public void testingStartOfLine2() throws StringParseException {
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap";
 
         ParseDefinitionEntry l_definition = new ParseDefinitionEntry();
@@ -317,7 +318,7 @@ public class TestGrepLogApache {
     }
 
     @Test(description = "Checking that we correctly identify the message")
-    public void testingEndOfLine() {
+    public void testingEndOfLine() throws StringParseException {
         String l_resultString = " - Before driver instantiation";
 
         ParseDefinitionEntry l_definition = new ParseDefinitionEntry();
@@ -409,7 +410,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testTwoItems() {
+    public void testTwoItems() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -445,7 +446,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testThreeItems() {
+    public void testThreeItems() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
         //Create a parse definition
@@ -493,7 +494,7 @@ public class TestGrepLogApache {
 
 
     @Test
-    public void testCreateApacheProfileFile() throws InstantiationException, IllegalAccessException {
+    public void testCreateApacheProfileFile() throws InstantiationException, IllegalAccessException, StringParseException {
 
         //Create a parse definition
 
@@ -738,7 +739,7 @@ public class TestGrepLogApache {
     }
 
     @Test(description = "Fixing bug where the patterns could be used elsewhere in the line")
-    public void testFetchValueDuplicatedStartEndPatterns() {
+    public void testFetchValueDuplicatedStartEndPatterns() throws StringParseException {
         String l_resultString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
@@ -790,7 +791,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testProblemContentsWithStringsAroundDefault() {
+    public void testProblemContentsWithStringsAroundDefault() throws StringParseException {
         String logString = "SOAPAction:\"xtk%3aworkflow\"#DeleteResult|Content-Length:";
 
         //Create a parse definition
@@ -823,7 +824,7 @@ public class TestGrepLogApache {
     }
 
     @Test
-    public void testProblemContentsWithStringsAroundTrimmed() {
+    public void testProblemContentsWithStringsAroundTrimmed() throws StringParseException {
         String logString = "SOAPAction:\"xtk%3aworkflow\"#DeleteResult|Content-Length:";
 
         //Create a parse definition
@@ -880,7 +881,7 @@ public class TestGrepLogApache {
     
     
     @Test
-    public void testToPreserve() throws InstantiationException, IllegalAccessException {
+    public void testToPreserve() throws InstantiationException, IllegalAccessException, StringParseException {
 
         ParseDefinitionEntry l_lineFinder = new ParseDefinitionEntry();
 

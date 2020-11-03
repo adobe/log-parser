@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
@@ -9,7 +11,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <!-- <version>3.5.1</version> -->
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -147,9 +149,9 @@
         <connection>scm:git:git@git.corp.adobe.com:account/gandomi/log-parser.git</connection>
         <developerConnection>scm:git:git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
         <url>https://git.corp.adobe.com/gandomi/log-parser</url>
-      <tag>log-parser-0.0.1b</tag>
-  </scm>
-      <parent>
+        <tag>log-parser-0.0.1b</tag>
+    </scm>
+    <parent>
         <groupId>com.adobe.campaign</groupId>
         <artifactId>parent</artifactId>
         <version>1</version>

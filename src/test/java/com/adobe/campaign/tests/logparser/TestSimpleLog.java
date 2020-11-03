@@ -29,11 +29,12 @@ import org.testng.annotations.Test;
 import com.adobe.campaign.tests.logparser.GenericEntry;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.StringParseFactory;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class TestSimpleLog {
 
     @Test
-    public void testSimpleLog() {
+    public void testSimpleLog() throws StringParseException {
 
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap    Client request:#012<soapenv:Envelope#012#011xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"#012#011xmlns:urn=\"urn:xtk:session\">#012#011<soapenv:Header />#012#011<soapenv:Body>#012#011#011<urn:Logon>#012#011#011#011<urn:sessiontoken></urn:sessiontoken>#012#011#011#011<urn:strLogin>admin</urn:strLogin>#012#011#011#011<urn:strPassword>adminrd-dev54</urn:strPassword>#012#011#011#011<urn:elemParameters></urn:elemParameters>#012#011#011</urn:Logon>#012#011</soapenv:Body>#012</soapenv:Envelope>";
 
@@ -68,7 +69,7 @@ public class TestSimpleLog {
     }
 
     @Test
-    public void testParseDefinition() {
+    public void testParseDefinition() throws StringParseException {
 
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap    Client request:#012<soapenv:Envelope#012#011xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"#012#011xmlns:urn=\"urn:xtk:session\">#012#011<soapenv:Header />#012#011<soapenv:Body>#012#011#011<urn:Logon>#012#011#011#011<urn:sessiontoken></urn:sessiontoken>#012#011#011#011<urn:strLogin>admin</urn:strLogin>#012#011#011#011<urn:strPassword>adminrd-dev54</urn:strPassword>#012#011#011#011<urn:elemParameters></urn:elemParameters>#012#011#011</urn:Logon>#012#011</soapenv:Body>#012</soapenv:Envelope>";
 
@@ -112,7 +113,7 @@ public class TestSimpleLog {
     }
 
     @Test
-    public void testParseDefinition2() {
+    public void testParseDefinition2() throws StringParseException {
 
         String logString = "2020-06-15T17:17:20.728Z    70011   70030   2   info    soap    Client request:#012<soapenv:Envelope#012#011xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"#012#011xmlns:urn=\"urn:xtk:session\">#012#011<soapenv:Header />#012#011<soapenv:Body>#012#011#011<urn:Logon>#012#011#011#011<urn:sessiontoken></urn:sessiontoken>#012#011#011#011<urn:strLogin>admin</urn:strLogin>#012#011#011#011<urn:strPassword>adminrd-dev54</urn:strPassword>#012#011#011#011<urn:elemParameters></urn:elemParameters>#012#011#011</urn:Logon>#012#011</soapenv:Body>#012</soapenv:Envelope>";
 
@@ -155,7 +156,7 @@ public class TestSimpleLog {
     }
 
     @Test
-    public void testIssueWithTracking() {
+    public void testIssueWithTracking() throws StringParseException {
         String logString = "+41411:5ee88a26:0|POST /nl/jsp/soaprouter.jsp HTTP/1.1|Content-Type:application/soap+xml; action=nms%3aremoteTracking#GetTrackingLogs; charset=utf-8|Accept-Language:en|SOAPAction:nms%3aremoteTracking#GetTrackingLogs|Cookie:__sessiontoken=_-_fFZyJuDP9T1hV46cjTd1hFPCq7YBZ3YRg3WjSrhdyQ3TR/MPBgcy0lV15uSGq/apLM2b1RViEkJUIAIA|Host:rd-dev54.rd.campaign.adobe.com|Connection:keep-alive|Content-Length:720";
 
         //Create a parse definition
@@ -193,7 +194,7 @@ public class TestSimpleLog {
     }
 
     @Test(description = "Checking that we correctly identify the date string")
-    public void testFetchDateStringSTDMETHOD() throws ParseException {
+    public void testFetchDateStringSTDMETHOD() throws ParseException, StringParseException {
         String l_resultString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
@@ -209,7 +210,7 @@ public class TestSimpleLog {
     }
 
     @Test(description = "Checking that we correctly identify the line in the file source")
-    public void testFetchFileLineSTDMETHOD() {
+    public void testFetchFileLineSTDMETHOD() throws StringParseException {
         String l_resultString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
@@ -224,7 +225,7 @@ public class TestSimpleLog {
     }
 
     @Test(description = "Checking that we correctly identify the file source")
-    public void testFetchFileSTDMETHOD() {
+    public void testFetchFileSTDMETHOD() throws StringParseException {
         String l_resultString = "2330:DEBUG | 2020-04-03 17:46:38 | [main] core.NextTests (NextTests.java:209) - Before driver instantiation";
 
         //Create a parse definition
@@ -239,9 +240,10 @@ public class TestSimpleLog {
 
     }
 
-    /******** Imported tests ; Harnesses *********/
+    /******** Imported tests ; Harnesses 
+     * @throws StringParseException *********/
     @Test
-    public void testFetchACCCoverageFromFile() throws InstantiationException, IllegalAccessException {
+    public void testFetchACCCoverageFromFile() throws InstantiationException, IllegalAccessException, StringParseException {
 
         //Create a parse definition
 
@@ -279,7 +281,7 @@ public class TestSimpleLog {
     }
 
     @Test
-    public void testItems() {
+    public void testItems() throws StringParseException {
         String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
 
         //Create a parse definition
@@ -314,7 +316,7 @@ public class TestSimpleLog {
     }
 
     @Test
-    public void testUpdateMap() throws InstantiationException, IllegalAccessException {
+    public void testUpdateMap() throws InstantiationException, IllegalAccessException, StringParseException {
 
         String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
 

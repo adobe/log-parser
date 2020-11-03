@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -72,7 +73,7 @@ public abstract class StdLogEntry {
      * @return a list of header names.
      *
      */
-    public abstract List<String> fetchHeaders();
+    public abstract Set<String> fetchHeaders();
 
     /**
      * Returns a set of objects you have defined for your log class. When using Genric Object no changes are made to it.
@@ -142,7 +143,7 @@ public abstract class StdLogEntry {
         }
 
         for (ParseDefinitionEntry lt_definition : getParseDefinition().getDefinitionEntries().stream()
-                .filter(pd -> pd.isToPreserve()).collect(Collectors.toList())) {
+                .filter(ParseDefinitionEntry::isToPreserve).collect(Collectors.toList())) {
 
             valuesMap.put(lt_definition.getTitle(), in_valueMap.get(lt_definition.getTitle()));
         }

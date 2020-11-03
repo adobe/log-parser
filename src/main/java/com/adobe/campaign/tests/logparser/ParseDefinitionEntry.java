@@ -77,7 +77,7 @@ public class ParseDefinitionEntry {
             int lr_startPosition = l_startLocation + this.getStart().length();
 
             if (isTrimQuotes()) {
-                while (in_stringValue.substring(lr_startPosition).startsWith("\"")) {
+                while (in_stringValue.indexOf('"', lr_startPosition)==lr_startPosition) {
                     lr_startPosition++;
                 }
             }

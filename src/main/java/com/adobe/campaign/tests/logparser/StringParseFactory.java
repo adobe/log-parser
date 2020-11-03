@@ -20,9 +20,15 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+
 public class StringParseFactory {
 
     protected static final Logger log = LogManager.getLogger();
+
+    private StringParseFactory() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * This method transforms the contents of a list of log file and returns a
@@ -35,19 +41,19 @@ public class StringParseFactory {
      * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
+     * @throws StringParseException
      *
      */
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> classTarget)
-            throws InstantiationException, IllegalAccessException {
-        Map<String, T> l_entries = new HashMap<String, T>();
+            throws InstantiationException, IllegalAccessException, StringParseException {
+        Map<String, T> l_entries = new HashMap<>();
         int i = 0;
 
         //Fetch File
-        try {
-            for (String l_currentLogFile : in_logFiles) {
+        for (String l_currentLogFile : in_logFiles) {
 
-                Scanner scanner = new Scanner(new File(l_currentLogFile));
+            try (Scanner scanner = new Scanner(new File(l_currentLogFile))) {
 
                 while (scanner.hasNextLine()) {
 
@@ -63,16 +69,16 @@ public class StringParseFactory {
                     i++;
 
                 }
-                scanner.close();
+            } catch (FileNotFoundException e) {
+                log.error("The given file {} could not be found.", l_currentLogFile);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+
         return l_entries;
     }
 
     /**
-     * This method updated the given entry map by parsing the given log line 
+     * This method updated the given entry map by parsing the given log line
      *
      * Author : gandomi
      *
@@ -82,19 +88,19 @@ public class StringParseFactory {
      * @param in_classTarget
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @throws StringParseException
      *
      */
-    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine, ParseDefinition in_parseDefinition,
-            Map<String, T> in_entries, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException {
-        Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine,
-                in_parseDefinition);
+    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine,
+            ParseDefinition in_parseDefinition, Map<String, T> in_entries, Class<T> in_classTarget)
+            throws InstantiationException, IllegalAccessException, StringParseException {
+        Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine, in_parseDefinition);
 
         T lt_entry = in_classTarget.newInstance();
-        
+
         lt_entry.setParseDefinition(in_parseDefinition);
         lt_entry.setValuesFromMap(lt_lineResult);
-        
+
         final String lt_currentKey = lt_entry.makeKey();
 
         if (in_entries.containsKey(lt_currentKey)) {
@@ -113,9 +119,11 @@ public class StringParseFactory {
      * @param in_logString
      * @param in_parseDefinition
      * @return
+     * @throws StringParseException
      *
      */
-    public static Map<String, String> parseString(String in_logString, ParseDefinition in_parseDefinition) {
+    public static Map<String, String> parseString(String in_logString, ParseDefinition in_parseDefinition)
+            throws StringParseException {
 
         return parseString(in_logString, in_parseDefinition.getDefinitionEntries());
     }
@@ -128,9 +136,11 @@ public class StringParseFactory {
      * @param in_stringToParse
      * @param in_parsRule
      * @return
+     * @throws StringParseException
      *
      */
-    protected static Map<String, String> parseString(String in_stringToParse, ParseDefinitionEntry in_parsRule) {
+    protected static Map<String, String> parseString(String in_stringToParse,
+            ParseDefinitionEntry in_parsRule) throws StringParseException {
 
         return parseString(in_stringToParse, Arrays.asList(in_parsRule));
     }
@@ -143,10 +153,11 @@ public class StringParseFactory {
      * @param in_logString
      * @param in_parsRuleList
      * @return
+     * @throws StringParseException
      *
      */
     protected static Map<String, String> parseString(String in_logString,
-            List<ParseDefinitionEntry> in_parsRuleList) {
+            List<ParseDefinitionEntry> in_parsRuleList) throws StringParseException {
 
         Map<String, String> lr_stringParseResult = new HashMap<>();
         String l_currentStringState = in_logString;
@@ -168,9 +179,11 @@ public class StringParseFactory {
      * @param in_stringValue
      * @param in_parseDefinition
      * @return
+     * @throws StringParseException
      *
      */
-    public static String fetchValue(String in_stringValue, ParseDefinitionEntry in_parseDefinition) {
+    public static String fetchValue(String in_stringValue, ParseDefinitionEntry in_parseDefinition)
+            throws StringParseException {
 
         //Fetch where to start looking from
         final int l_startLocation = in_parseDefinition.fetchStartPosition(in_stringValue);
@@ -178,13 +191,13 @@ public class StringParseFactory {
         final int l_endLocation = in_parseDefinition.fetchEndPosition(in_stringValue);
 
         if (l_startLocation < 0) {
-            throw new RuntimeException("Could not find the start location for "
+            throw new StringParseException("Could not find the start location for "
                     + in_parseDefinition.getTitle() + " \n" + in_stringValue + ".");
         }
 
         if (l_endLocation < 0) {
-            throw new RuntimeException("Could not find the end location for " + in_parseDefinition.getTitle()
-                    + " in string \n" + in_stringValue + ".");
+            throw new StringParseException("Could not find the end location for "
+                    + in_parseDefinition.getTitle() + " in string \n" + in_stringValue + ".");
         }
 
         return in_stringValue.substring(l_startLocation, l_endLocation).trim();
