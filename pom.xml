@@ -1,10 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>log-parser</name>
     <description>A project that allows you to parse logs, and store them in a structured way</description>
     <build>
@@ -149,7 +147,7 @@
         <connection>scm:git:git@git.corp.adobe.com:account/gandomi/log-parser.git</connection>
         <developerConnection>scm:git:git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
         <url>https://git.corp.adobe.com/gandomi/log-parser</url>
-        <tag>log-parser-0.0.1b</tag>
+        <tag>log-parser-1.0.0</tag>
     </scm>
     <parent>
         <groupId>com.adobe.campaign</groupId>
