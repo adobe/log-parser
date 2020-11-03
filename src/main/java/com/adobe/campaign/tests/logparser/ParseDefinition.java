@@ -16,6 +16,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The main class for analyzing logs. It gathers a list of Pars Definiton
+ * Entries and allows for defining high level definitions of how the gathered
+ * data are to be analyzed.
+ * 
+ * In this class you can also define how each gathered entry should be unique
+ * identified.
+ *
+ *
+ * Author : gandomi
+ *
+ */
 public class ParseDefinition {
 
     private String title;
@@ -27,6 +39,14 @@ public class ParseDefinition {
     protected static final String STD_DATA_FREQUENCE = "frequence";
     protected static final String STD_DATA_KEY = "key";
 
+    /**
+     * The main constructor for the ParseDefiition
+     * 
+     * @param in_title
+     *        The name of this parse definition group
+     *
+     *        Author : gandomi
+     */
     public ParseDefinition(String in_title) {
         setTitle(in_title);
         definitionEntries = new ArrayList<>();
@@ -40,6 +60,8 @@ public class ParseDefinition {
      * Author : gandomi
      *
      * @param in_parseDefinitionEntry
+     *        a ParseDefiinitionEntry which represents a step in the rules for
+     *        analyzing a line.
      *
      */
     public void addEntry(ParseDefinitionEntry in_parseDefinitionEntry) {
@@ -110,12 +132,14 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @return if no keyOrder was defined it will return a list of all of the preservable ParseDefinitionEntrys
+     * @return if no keyOrder was defined it will return a list of all of the
+     *         preservable ParseDefinitionEntrys
      *
      */
     public List<ParseDefinitionEntry> fetchKeyOrder() {
         if (keyOrder.isEmpty()) {
-            return getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve).collect(Collectors.toList());
+            return getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve)
+                    .collect(Collectors.toList());
         }
         return keyOrder;
     }
@@ -125,7 +149,9 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @param in_keyOrderDefinitions A list of DefinitionEntries that define how the key should be built
+     * @param in_keyOrderDefinitions
+     *        A list of DefinitionEntries that define how the key should be
+     *        built
      *
      */
     public void defineKeyOrder(List<ParseDefinitionEntry> in_keyOrderDefinitions) {
@@ -164,12 +190,13 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @return A sorted set of headers / keys used for storing the values 
+     * @return A sorted set of headers / keys used for storing the values
      *
      */
     public Set<String> fetchHeaders() {
-        final Collection<String> l_definedHeaders = getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve)
-                .map(ParseDefinitionEntry::getTitle).collect(Collectors.toCollection(LinkedHashSet::new));
+        final Collection<String> l_definedHeaders = getDefinitionEntries().stream()
+                .filter(ParseDefinitionEntry::isToPreserve).map(ParseDefinitionEntry::getTitle)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
         l_definedHeaders.add(STD_DATA_KEY);
         l_definedHeaders.add(STD_DATA_FREQUENCE);
         return (Set<String>) l_definedHeaders;

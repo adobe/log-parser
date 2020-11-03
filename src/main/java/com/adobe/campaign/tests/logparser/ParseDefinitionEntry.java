@@ -9,6 +9,14 @@
  */
 package com.adobe.campaign.tests.logparser;
 
+/**
+ * This class allows for the definition of one rule that allows you to extract
+ * one piece of data from a string.
+ *
+ *
+ * Author : gandomi
+ *
+ */
 public class ParseDefinitionEntry {
 
     private String title;
@@ -44,7 +52,7 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param end
+     * @param end 
      *
      */
     public void setEnd(String end) {
@@ -57,7 +65,9 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param in_stringValue A string that is to be parsed using the current ParseDenfinitionEntry
+     * @param in_stringValue
+     *        A string that is to be parsed using the current
+     *        ParseDenfinitionEntry
      * @return the index of the first occurrence of the specified substring, or
      *         -1 if there is no such occurrence.
      *
@@ -77,7 +87,7 @@ public class ParseDefinitionEntry {
             int lr_startPosition = l_startLocation + this.getStart().length();
 
             if (isTrimQuotes()) {
-                while (in_stringValue.indexOf('"', lr_startPosition)==lr_startPosition) {
+                while (in_stringValue.indexOf('"', lr_startPosition) == lr_startPosition) {
                     lr_startPosition++;
                 }
             }
@@ -105,7 +115,7 @@ public class ParseDefinitionEntry {
         int lr_endPosition = fetchAppliedSensitivity(in_stringValue)
                 .indexOf(fetchAppliedSensitivity(this.getEnd()), this.fetchStartPosition(in_stringValue));
 
-        if ((lr_endPosition>=0) && isTrimQuotes()) {
+        if ((lr_endPosition >= 0) && isTrimQuotes()) {
             while (in_stringValue.substring(this.fetchStartPosition(in_stringValue), lr_endPosition)
                     .endsWith("\"")) {
                 lr_endPosition--;
@@ -122,7 +132,8 @@ public class ParseDefinitionEntry {
      * Author : gandomi
      *
      * @param in_logString
-     * @return A String that will be parsed by the subsequent ParseDefinitionEntry
+     * @return A String that will be parsed by the subsequent
+     *         ParseDefinitionEntry
      *
      */
     public String fetchFollowingSubstring(String in_logString) {
@@ -149,11 +160,11 @@ public class ParseDefinitionEntry {
     }
 
     /**
-     * This method lets us know if the definition is at the end of the line
+     * This method lets us know if the definition ends at the end of the line
      *
      * Author : gandomi
      *
-     * @return
+     * @return true if we expect the string to end with EOL. (I.e. if end is null)
      *
      */
     public boolean isEndEOL() {
@@ -175,8 +186,9 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param in_string
-     * @return The given string in lowercase whenever the definition is case insesitive, other wise the same String.
+     * @param in_string A give parse string
+     * @return The given string in lowercase whenever the definition is case
+     *         insesitive, other wise the same String.
      *
      */
     public String fetchAppliedSensitivity(String in_string) {
@@ -184,6 +196,14 @@ public class ParseDefinitionEntry {
         return isCaseSensitive() ? in_string : in_string.toLowerCase();
     }
 
+    /**
+     * This method lets us know if the definition starts at the beginning of the line
+     *
+     * Author : gandomi
+     *
+     * @return true if we expect the string to start at the beginning of the line. (I.e. if start is null)
+     *
+     */
     public boolean isStartStartOfLine() {
 
         return getStart() == null;

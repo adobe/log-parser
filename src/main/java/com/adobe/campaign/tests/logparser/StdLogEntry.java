@@ -48,7 +48,7 @@ public abstract class StdLogEntry {
      *
      * Author : gandomi
      *
-     * @returns a String for the print out
+     * @return a String for the print out
      *
      */
     public String fetchPrintOut() {
@@ -80,7 +80,7 @@ public abstract class StdLogEntry {
      *
      * Author : gandomi
      *
-     * @return
+     * @return A Maps of extentions of StdLogEntry
      *
      */
     public abstract Map<String, Object> fetchValueMap();
@@ -102,7 +102,7 @@ public abstract class StdLogEntry {
      *
      * Author : gandomi
      *
-     * @param in_addedFrequence
+     * @param in_addedFrequence The amount we should add to the frequence
      *
      */
     public void addFrequence(int in_addedFrequence) {
