@@ -12,6 +12,7 @@
 package com.adobe.campaign.tests.logparser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -147,7 +148,7 @@ public class ParseDefinition {
     }
 
     /**
-     * Defines the order of the keys
+     * Defines the keys and their order
      *
      * Author : gandomi
      *
@@ -156,7 +157,7 @@ public class ParseDefinition {
      *        built
      *
      */
-    public void defineKeyOrder(List<ParseDefinitionEntry> in_keyOrderDefinitions) {
+    public void defineKeys(List<ParseDefinitionEntry> in_keyOrderDefinitions) {
         if (in_keyOrderDefinitions.stream().anyMatch(e -> !e.isToPreserve())) {
             throw new IllegalArgumentException(
                     "One of the key is flagged as 'not preserved' during log parsing, so this will not work.");
@@ -175,6 +176,20 @@ public class ParseDefinition {
 
         }
 
+    }
+
+    /**
+     * Defines a definition entry that will be the key
+     *
+     * Author : gandomi
+     *
+     * @param in_keyOrderDefinitions
+     *        A DefinitionEntry that functions as key
+     *
+     */
+    public void defineKeys(ParseDefinitionEntry in_ParseDefinitionAsKey) {
+        defineKeys(Arrays.asList(in_ParseDefinitionAsKey));
+        
     }
 
     public String getPrintOutPadding() {
