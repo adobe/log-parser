@@ -26,6 +26,14 @@ public class ParseDefinitionEntry {
     private boolean trimQuotes = false;
     private boolean toPreserve = true;
 
+    public ParseDefinitionEntry(String in_title) {
+        this.title = in_title;
+    }
+
+    public ParseDefinitionEntry() {
+        
+    }
+
     public String getTitle() {
         return title;
     }

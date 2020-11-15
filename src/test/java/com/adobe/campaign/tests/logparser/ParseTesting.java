@@ -25,7 +25,7 @@ import com.adobe.campaign.tests.logparser.StringParseFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 
-public class TestGrepLogApache {
+public class ParseTesting {
     // private final String STD_GREP_STRING = IntegroGrepFactory.ACS_RestPath.regularExpression;
 
     @Test
@@ -512,7 +512,7 @@ public class TestGrepLogApache {
 
         ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
         l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2,l_apiDefinition));
-        l_pDefinition.defineKeyOrder(Arrays.asList(l_apiDefinition,l_verbDefinition2));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition,l_verbDefinition2));
         
 
         final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";

@@ -152,5 +152,44 @@ public abstract class StdLogEntry {
         valuesMap.put(ParseDefinition.STD_DATA_KEY, this.makeKey());
 
     }
+    
+    
+    public void put(String in_dataTitle, String in_value) {
+        this.fetchValueMap().put(in_dataTitle, in_value);
+        
+    }
+
+    public Object get(String in_dataTitle) {
+        return this.fetchValueMap().get(in_dataTitle);
+    }
+
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        StdLogEntry other = (StdLogEntry) obj;
+        if (frequence == null) {
+            if (other.frequence != null)
+                return false;
+        } else if (!frequence.equals(other.frequence))
+            return false;
+        if (parseDefinition == null) {
+            if (other.parseDefinition != null)
+                return false;
+        } else if (!parseDefinition.equals(other.parseDefinition))
+            return false;
+        if (valuesMap == null) {
+            if (other.valuesMap != null)
+                return false;
+        } else if (!valuesMap.equals(other.valuesMap))
+            return false;
+        return true;
+    }
 
 }

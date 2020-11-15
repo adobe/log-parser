@@ -54,5 +54,5 @@ public class GenericEntry extends StdLogEntry {
 
         return valuesMap;
     }
-
+    
 }
