@@ -1,4 +1,4 @@
-package com.adobe.campaign.tests.cubemanager;
+package com.adobe.campaign.tests.logparser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -11,12 +11,13 @@ import static org.testng.Assert.assertThrows;
 
 import org.testng.annotations.Test;
 
+import com.adobe.campaign.tests.logparser.LogData;
 import com.adobe.campaign.tests.logparser.GenericEntry;
 import com.adobe.campaign.tests.logparser.ParseDefinition;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionTitleException;
 
-public class CubeDataTest {
+public class LogDataTest {
 
     /**
      * Testing that we correctly create a cube
@@ -41,7 +42,7 @@ public class CubeDataTest {
         l_inputData.fetchValueMap().put("BAU", "13");
         l_inputData.fetchValueMap().put("DAT", "AA");
 
-        CubeData<GenericEntry> l_cubeData = new CubeData<>(l_inputData);
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
         assertThat("We should have initiated the values", l_cubeData.getCubeData().size(), is(equalTo(1)));
 
@@ -75,7 +76,7 @@ public class CubeDataTest {
         l_inputData.fetchValueMap().put("BAU", "13");
         l_inputData.fetchValueMap().put("DAT", "AA");
 
-        CubeData<GenericEntry> l_cubeData = new CubeData<>(l_inputData);
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
         assertThat("We should be able to get the values", l_cubeData.get("12", "ZZZ"), is(equalTo("14")));
 
@@ -99,7 +100,7 @@ public class CubeDataTest {
         l_inputData.fetchValueMap().put("BAU", "13");
         l_inputData.fetchValueMap().put("DAT", "AA");
 
-        CubeData<GenericEntry> l_cubeData = new CubeData<>(l_inputData);
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
         assertThat("We should not have a an entry here as there are no entries with the given key",l_cubeData.get("14", "ZZZ"),is(nullValue()));
 
@@ -123,7 +124,7 @@ public class CubeDataTest {
         l_inputData.fetchValueMap().put("BAU", "13");
         l_inputData.fetchValueMap().put("DAT", "AA");
 
-        CubeData<GenericEntry> l_cubeData = new CubeData<>(l_inputData);
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
         assertThrows(IncorrectParseDefinitionTitleException.class, () -> l_cubeData.get("12", "NONo"));
 
