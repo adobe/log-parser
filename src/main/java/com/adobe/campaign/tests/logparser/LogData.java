@@ -1,14 +1,13 @@
-package com.adobe.campaign.tests.cubemanager;
+package com.adobe.campaign.tests.logparser;
 
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.adobe.campaign.tests.logparser.StdLogEntry;
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionTitleException;
 
-public class CubeData<T extends StdLogEntry> {
+public class LogData<T extends StdLogEntry> {
 
     protected static Logger log = LogManager.getLogger();
     /**
@@ -16,7 +15,7 @@ public class CubeData<T extends StdLogEntry> {
      */
     private Map<String, T> cubeData = new HashMap<>();
 
-    public CubeData(T in_stdLogEnDataData) {
+    public LogData(T in_stdLogEnDataData) {
         this.getCubeData().put(in_stdLogEnDataData.makeKey(), in_stdLogEnDataData);
     }
 
