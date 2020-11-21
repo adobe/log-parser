@@ -518,7 +518,7 @@ public class ParseTesting {
         final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
 
         Map<String, GenericEntry> l_entries = StringParseFactory
-                .fetchLogData(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
 
         assertThat(l_entries, is(notNullValue()));
         assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));

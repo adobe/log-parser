@@ -273,7 +273,7 @@ public class TestLogParsing {
 
         final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
 
-        Map<String, GenericEntry> l_entries = StringParseFactory.fetchLogData(Arrays.asList(apacheLogFile),
+        Map<String, GenericEntry> l_entries = StringParseFactory.extractLogEntryMap(Arrays.asList(apacheLogFile),
                 l_pDefinition, GenericEntry.class);
 
         assertThat(l_entries, is(notNullValue()));
