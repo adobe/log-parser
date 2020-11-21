@@ -19,6 +19,10 @@ public class LogData<T extends StdLogEntry> {
         this.getCubeData().put(in_stdLogEnDataData.makeKey(), in_stdLogEnDataData);
     }
 
+    public LogData(Map<String, T> in_logMap) {
+        this.setCubeData(in_logMap);
+    }
+
     public Map<String, T> getCubeData() {
         return cubeData;
     }
@@ -54,5 +58,22 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LogData<?> other = (LogData<?>) obj;
+        if (cubeData == null) {
+            if (other.cubeData != null)
+                return false;
+        } else if (!cubeData.equals(other.cubeData))
+            return false;
+        return true;
     }
 }

@@ -38,16 +38,20 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_logFiles A list of log file paths
-     * @param in_parseDefinition The parsing rules as defined in the class ParseDefinition
-     * @param in_classTarget The target class that will be storing the results
-     * @return A map of String and a Sub-class of StdLogEntry 
+     * @param in_logFiles
+     *        A list of log file paths
+     * @param in_parseDefinition
+     *        The parsing rules as defined in the class ParseDefinition
+     * @param in_classTarget
+     *        The target class that will be storing the results
+     * @return A map of String and a Sub-class of StdLogEntry
      * @throws IllegalAccessException
      * @throws InstantiationException
-     * @throws StringParseException When there are logical rules when parsing the given string
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
      *
      */
-    public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> fetchLogData(
+    public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> extractLogEntryMap(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> in_classTarget)
             throws InstantiationException, IllegalAccessException, StringParseException {
         Map<String, T> lr_entries = new HashMap<>();
@@ -64,7 +68,8 @@ public class StringParseFactory {
                     //Activate only if the log is not enough. Here we list each line we consider
                     //log.debug("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
-                        updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries, in_classTarget);
+                        updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
+                                in_classTarget);
 
                     } else {
                         log.debug("Skipping line {} - {}", i, lt_nextLine);
@@ -85,13 +90,18 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_logLine A string representing a log line
-     * @param in_parseDefinition The ParseDefinition rules for parsing the string
-     * @param in_entries The map of String and StdLogEntries
-     * @param in_classTarget The target class that will be storing the results
+     * @param in_logLine
+     *        A string representing a log line
+     * @param in_parseDefinition
+     *        The ParseDefinition rules for parsing the string
+     * @param in_entries
+     *        The map of String and StdLogEntries
+     * @param in_classTarget
+     *        The target class that will be storing the results
      * @throws InstantiationException
      * @throws IllegalAccessException
-     * @throws StringParseException When there are logical rules when parsing the given string
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
      *
      */
     static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine,
@@ -119,10 +129,13 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_logString A string that is to be parsed
-     * @param in_parseDefinition The parse definition rules for parsing the string
+     * @param in_logString
+     *        A string that is to be parsed
+     * @param in_parseDefinition
+     *        The parse definition rules for parsing the string
      * @return A Map of strings containing the parse results of one parsed line
-     * @throws StringParseException When there are logical rules when parsing the given string
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
      *
      */
     public static Map<String, String> parseString(String in_logString, ParseDefinition in_parseDefinition)
@@ -136,10 +149,13 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_stringToParse A string that is to be parsed
-     * @param in_parsRule A single parse definition item
+     * @param in_stringToParse
+     *        A string that is to be parsed
+     * @param in_parsRule
+     *        A single parse definition item
      * @return A Map of strings containing the parse results of one parsed line
-     * @throws StringParseException When there are logical rules when parsing the given string
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
      *
      */
     protected static Map<String, String> parseString(String in_stringToParse,
@@ -153,10 +169,13 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_logString A string that is to be parsed
-     * @param in_parsRuleList A list of ParseDefinitionEntries
+     * @param in_logString
+     *        A string that is to be parsed
+     * @param in_parsRuleList
+     *        A list of ParseDefinitionEntries
      * @return A Map of strings containing the parse results of one parsed line
-     * @throws StringParseException When there are logical rules when parsing the given string
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
      *
      */
     protected static Map<String, String> parseString(String in_logString,
@@ -179,10 +198,14 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_stringValue A string that is to be parsed
-     * @param in_parseDefinition A parse definition entry to parse the given string
-     * @return A string representing the value corresponding to the ParseDefinition 
-     * @throws StringParseException Whenever the start and end markers are not found
+     * @param in_stringValue
+     *        A string that is to be parsed
+     * @param in_parseDefinition
+     *        A parse definition entry to parse the given string
+     * @return A string representing the value corresponding to the
+     *         ParseDefinition
+     * @throws StringParseException
+     *         Whenever the start and end markers are not found
      *
      */
     public static String fetchValue(String in_stringValue, ParseDefinitionEntry in_parseDefinition)
@@ -213,9 +236,13 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_logString A string that is to be parsed
-     * @param in_definitionList A list of parse definitions that will be used to fetch the values in the given string
-     * @return true if the Parse Definition rules can be applied to the given string
+     * @param in_logString
+     *        A string that is to be parsed
+     * @param in_definitionList
+     *        A list of parse definitions that will be used to fetch the values
+     *        in the given string
+     * @return true if the Parse Definition rules can be applied to the given
+     *         string
      *
      */
     protected static boolean isStringCompliant(String in_logString,
@@ -252,9 +279,13 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
-     * @param in_logString A string that is to be parsed
-     * @param in_parseDefinition A list of parse definitions that will be used to fetch the values in the given string
-     * @return  true if the Parse Definition rules can be applied to the given string
+     * @param in_logString
+     *        A string that is to be parsed
+     * @param in_parseDefinition
+     *        A list of parse definitions that will be used to fetch the values
+     *        in the given string
+     * @return true if the Parse Definition rules can be applied to the given
+     *         string
      *
      */
     public static boolean isStringCompliant(String in_logString, ParseDefinition in_parseDefinition) {
