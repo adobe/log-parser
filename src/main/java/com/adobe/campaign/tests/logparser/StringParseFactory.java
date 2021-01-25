@@ -52,6 +52,11 @@ public class StringParseFactory {
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> extractLogEntryMap(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> in_classTarget)
             throws InstantiationException, IllegalAccessException, StringParseException {
+        
+        if (in_logFiles.isEmpty()) {
+            log.warn("The given list of log files 'in_logFiles' was empty. There will be no results available for the ParseDefinition '{}'",in_parseDefinition.getTitle());
+        }
+        
         Map<String, T> lr_entries = new HashMap<>();
         int i = 0;
 
