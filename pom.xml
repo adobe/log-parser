@@ -5,8 +5,23 @@
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
     <version>1.0.1-SNAPSHOT</version>
-    <name>log-parser</name>
+    <name>${project.groupId}:${project.artifactId}</name>
     <description>A project that allows you to parse logs, and store them in a structured way</description>
+    <url>https://github.com/adobe/log-parser</url>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+        <name>Baubak Gandomi</name>
+        <email>Baubak@Gandomi.com</email>
+        <organization>Adobe</organization>
+        <url>https://www.linkedin.com/in/baubakgandomi/</url>
+        </developer>
+    </developers>
     <build>
         <plugins>
             <plugin>
