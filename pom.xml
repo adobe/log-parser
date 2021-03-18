@@ -5,6 +5,7 @@
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
     <version>1.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A project that allows you to parse logs, and store them in a structured way</description>
     <url>https://github.com/adobe/log-parser</url>
@@ -16,17 +17,32 @@
     </licenses>
     <developers>
         <developer>
-        <name>Baubak Gandomi</name>
-        <email>Baubak@Gandomi.com</email>
-        <organization>Adobe</organization>
-        <url>https://www.linkedin.com/in/baubakgandomi/</url>
+            <name>Baubak Gandomi</name>
+            <email>Baubak@Gandomi.com</email>
+            <organization>Adobe</organization>
+            <url>https://www.linkedin.com/in/baubakgandomi/</url>
         </developer>
     </developers>
+    <scm>
+        <connection>scm:git:git://github.com/adobe/log-parser.git</connection>
+        <developerConnection>scm:git:ssh://github.com:adobe/log-parser.git</developerConnection>
+        <url>https://github.com/adobe/log-parser/tree/master</url>
+    </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <!-- Under consideration -->
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <!-- <version>3.5.1</version> -->
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -67,6 +83,17 @@
                         <version>1</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -195,15 +222,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <scm>
-        <connection>scm:git:git@git.corp.adobe.com:account/gandomi/log-parser.git</connection>
-        <developerConnection>scm:git:git@git.corp.adobe.com:gandomi/log-parser.git</developerConnection>
-        <url>https://git.corp.adobe.com/gandomi/log-parser</url>
-        <tag>log-parser-1.0.0</tag>
-    </scm>
-    <parent>
-        <groupId>com.adobe.campaign</groupId>
-        <artifactId>parent</artifactId>
-        <version>1</version>
-    </parent>
 </project>

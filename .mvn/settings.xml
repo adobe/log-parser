@@ -129,5 +129,14 @@
             <username>${env.ARTIFACTORY_USER}</username>
             <password>${env.ARTIFACTORY_API_TOKEN}</password>
         </server>
+        <server>
+            <id>ossrh</id>
+            <!--
+            <username>your-jira-id</username>
+            <password>your-jira-pwd</password>
+            -->
+            <username>${env.OSSRH_ARTIFACTORY_USER}</username>
+            <password>${env.OSSRH_ARTIFACTORY_API_TOKEN}</password>
+        </server>
     </servers>
 </settings>
