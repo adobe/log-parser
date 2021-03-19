@@ -30,6 +30,6 @@ jobs:
     - name: Publish to Apache Maven Central
       run: mvn deploy
       env:
-        MAVEN_USERNAME: ${{ OSSRH_ARTIFACTORY_USER }}
+        MAVEN_USERNAME: ${{ secrets.OSSRH_ARTIFACTORY_USER }}
         MAVEN_CENTRAL_TOKEN: ${{ secrets.OSSRH_ARTIFACTORY_API_TOKEN }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_DEVELOPMENT_BGA_PASSPHRASE }}
