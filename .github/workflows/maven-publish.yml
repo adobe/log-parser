@@ -31,4 +31,6 @@ jobs:
       env:
         OSSRH_ARTIFACTORY_USER: ${{ secrets.OSSRH_ARTIFACTORY_USER }}
         OSSRH_ARTIFACTORY_API_TOKEN: ${{ secrets.OSSRH_ARTIFACTORY_API_TOKEN }}
-        GPG_DEVELOPMENT_BGA_PASSPHRASE: $${{ secrets.GPG_DEVELOPMENT_BGA_PASSPHRASE }}
+        gpg_private_key: ${{ secrets.GPG_DEVELOPMENT_BGA_PRIVATE_KEY }}
+        gpg_passphrase: ${{ secrets.GPG_DEVELOPMENT_BGA_PASSPHRASE }}
+
