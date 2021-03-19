@@ -7,7 +7,7 @@
     <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A project that allows you to parse logs, and store them in a structured way</description>
+    <description>A project that allows you to parse logs, and store them in a structured way.</description>
     <url>https://github.com/adobe/log-parser</url>
     <licenses>
         <license>
