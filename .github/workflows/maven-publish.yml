@@ -22,6 +22,9 @@ jobs:
         java-version: 1.8
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
+        gpg-private-key: ${{ secrets.GPG_DEVELOPMENT_BGA_PRIVATE_KEY }} # Value of the GPG private key to import
+        gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+
 
     - name: Build with Maven
       run: mvn -B package --file pom.xml
@@ -31,6 +34,5 @@ jobs:
       env:
         OSSRH_ARTIFACTORY_USER: ${{ secrets.OSSRH_ARTIFACTORY_USER }}
         OSSRH_ARTIFACTORY_API_TOKEN: ${{ secrets.OSSRH_ARTIFACTORY_API_TOKEN }}
-        gpg_private_key: ${{ secrets.GPG_DEVELOPMENT_BGA_PRIVATE_KEY }}
-        gpg_passphrase: ${{ secrets.GPG_DEVELOPMENT_BGA_PASSPHRASE }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_DEVELOPMENT_BGA_PASSPHRASE }}
 
