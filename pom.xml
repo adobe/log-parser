@@ -24,8 +24,8 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/adobe/log-parser.git</connection>
-        <developerConnection>scm:git:ssh://github.com:adobe/log-parser.git</developerConnection>
+        <connection>scm:git::https://github.com/adobe/log-parser.git</connection>
+        <developerConnection>scm:git:https://github.com/adobe/log-parser.git</developerConnection>
         <url>https://github.com/adobe/log-parser/tree/master</url>
     </scm>
     <distributionManagement>
