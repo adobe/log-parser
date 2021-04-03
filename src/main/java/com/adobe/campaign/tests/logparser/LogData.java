@@ -48,10 +48,10 @@ public class LogData<T extends StdLogEntry> {
      *
      * Author : gandomi
      *
-     * @param in_dataEntryKey
-     * @param in_valueKey
-     * @return
-     * @throws IncorrectParseDefinitionTitleException 
+     * @param in_dataEntryKey The key with which the data has been stored
+     * @param in_valueKey The identity of the value.
+     * @return The key value for the given entry. null if not found
+     * @throws IncorrectParseDefinitionTitleException If the given valueKey was not found in the definition
      *
      */
     public Object get(String in_dataEntryKey, String in_valueKey) throws IncorrectParseDefinitionTitleException {

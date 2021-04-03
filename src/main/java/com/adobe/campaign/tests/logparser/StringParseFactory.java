@@ -54,11 +54,13 @@ public class StringParseFactory {
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> extractLogEntryMap(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> in_classTarget)
             throws InstantiationException, IllegalAccessException, StringParseException {
-        
+
         if (in_logFiles.isEmpty()) {
-            log.warn("The given list of log files 'in_logFiles' was empty. There will be no results available for the ParseDefinition '{}'",in_parseDefinition.getTitle());
+            log.warn(
+                    "The given list of log files 'in_logFiles' was empty. There will be no results available for the ParseDefinition '{}'",
+                    in_parseDefinition.getTitle());
         }
-        
+
         Map<String, T> lr_entries = new HashMap<>();
         int i = 0;
 
@@ -104,7 +106,12 @@ public class StringParseFactory {
      * @param in_classTarget
      *        The target class that will be storing the results
      * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
      * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
