@@ -42,10 +42,15 @@ public class LogDataFactory {
      * @param in_parseDefinition
      *        A ParseDefinition Object defining the parsing rules
      * @return A LogData Object containing the found entries from the logs
+     * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     public static LogData<GenericEntry> generateLogData(List<String> in_filePathList,
@@ -69,6 +74,7 @@ public class LogDataFactory {
      * @param in_logEntryClass
      *        A log entry class that defines how the found data is to be
      *        transformed
+     * @param <T> The type of entry we want to be generated while parsing logs. The type should be a child of {@link StdLogEntry}
      * @return A LogData Object containing the found entries from the logs
      * @throws InstantiationException
      *         if this {@code Class} represents an abstract class, an interface,

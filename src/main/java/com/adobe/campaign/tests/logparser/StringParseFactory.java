@@ -39,14 +39,21 @@ public class StringParseFactory {
      * Author : gandomi
      *
      * @param in_logFiles
-     *        A list of log file paths
+     *        A collection of log file paths
      * @param in_parseDefinition
      *        The parsing rules as defined in the class ParseDefinition
      * @param in_classTarget
      *        The target class that will be storing the results
-     * @return A map of String and a Sub-class of StdLogEntry
-     * @throws IllegalAccessException
+     * @param <T> The type of data (subclass of {@link StdLogEntry}) we want to create and store
+     * @param <V> The collection type with which we receive the {@param in_logFiles}
+     * @return A map of String and a Sub-class of {@link StdLogEntry}
      * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *

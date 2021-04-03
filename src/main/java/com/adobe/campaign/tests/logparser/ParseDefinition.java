@@ -63,7 +63,7 @@ public class ParseDefinition {
      * Author : gandomi
      *
      * @param in_parseDefinitionEntry
-     *        a ParseDefiinitionEntry which represents a step in the rules for
+     *        a {@link ParseDefinitionEntry} which represents a step in the rules for
      *        analyzing a line.
      *
      */
@@ -183,12 +183,12 @@ public class ParseDefinition {
      *
      * Author : gandomi
      *
-     * @param in_keyOrderDefinitions
-     *        A DefinitionEntry that functions as key
+     * @param in_parseDefinitionAsKey
+     *        A {@link ParseDefinitionEntry} that functions as key
      *
      */
-    public void defineKeys(ParseDefinitionEntry in_ParseDefinitionAsKey) {
-        defineKeys(Arrays.asList(in_ParseDefinitionAsKey));
+    public void defineKeys(ParseDefinitionEntry in_parseDefinitionAsKey) {
+        defineKeys(Arrays.asList(in_parseDefinitionAsKey));
         
     }
 
