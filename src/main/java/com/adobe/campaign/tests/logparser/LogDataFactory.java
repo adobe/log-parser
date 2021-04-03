@@ -25,7 +25,7 @@ import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
  *
  */
 public class LogDataFactory {
-    
+
     protected LogDataFactory() {
         throw new IllegalStateException("Utility class");
     }
@@ -42,20 +42,22 @@ public class LogDataFactory {
      * @param in_parseDefinition
      *        A ParseDefinition Object defining the parsing rules
      * @return A LogData Object containing the found entries from the logs
-     * @throws StringParseException  When there are logical rules when parsing the given string
-     * @throws IllegalAccessException 
-     * @throws InstantiationException 
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      *
      */
     public static LogData<GenericEntry> generateLogData(List<String> in_filePathList,
-            ParseDefinition in_parseDefinition) throws InstantiationException, IllegalAccessException, StringParseException {
-    
+            ParseDefinition in_parseDefinition)
+            throws InstantiationException, IllegalAccessException, StringParseException {
+
         return LogDataFactory.generateLogData(in_filePathList, in_parseDefinition, GenericEntry.class);
     }
 
     /**
-     * A factory method for LogData. Given a
-     * list of files, and a ParseDefinition, and a LogEntryClass it generates a LogDataObject
+     * A factory method for LogData. Given a list of files, and a
+     * ParseDefinition, and a LogEntryClass it generates a LogDataObject
      * containing all the data the log parser finds
      *
      * Author : gandomi
@@ -68,15 +70,23 @@ public class LogDataFactory {
      *        A log entry class that defines how the found data is to be
      *        transformed
      * @return A LogData Object containing the found entries from the logs
-     * @throws StringParseException When there are logical rules when parsing the given string
-     * @throws IllegalAccessException 
-     * @throws InstantiationException 
+     * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
+     * @throws StringParseException
+     *         When there are logical rules when parsing the given string
      *
      */
     public static <T extends StdLogEntry> LogData<T> generateLogData(List<String> in_filePathList,
-            ParseDefinition in_parseDefinition, Class<T> in_logEntryClass) throws InstantiationException, IllegalAccessException, StringParseException {
-        
-        return new LogData<>(StringParseFactory.extractLogEntryMap(in_filePathList, in_parseDefinition, in_logEntryClass));
+            ParseDefinition in_parseDefinition, Class<T> in_logEntryClass)
+            throws InstantiationException, IllegalAccessException, StringParseException {
+
+        return new LogData<>(
+                StringParseFactory.extractLogEntryMap(in_filePathList, in_parseDefinition, in_logEntryClass));
     }
 
 }
