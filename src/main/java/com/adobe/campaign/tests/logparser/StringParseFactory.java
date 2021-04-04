@@ -45,7 +45,7 @@ public class StringParseFactory {
      * @param in_classTarget
      *        The target class that will be storing the results
      * @param <T> The type of data (subclass of {@link StdLogEntry}) we want to create and store
-     * @param <V> The collection type with which we receive the {@param in_logFiles}
+     * @param <V> The collection type with which we receive the parameter in_logFiles
      * @return A map of String and a Sub-class of {@link StdLogEntry}
      * @throws InstantiationException
      *         if this {@code Class} represents an abstract class, an interface,
