@@ -5,6 +5,9 @@ This project was created to allow us to parse and analyze log files in order to 
 
 The basic method for using this library is, that you create a definition for your parsing. This definition allows you to parse a set of log files and extract all entries that match this pattern.
 
+![The Processes](diagrams/Log_Parser-Processes.png)
+<a href="https://github.com/adobe/log-parser/diagrams/edit-diagram.html?repo=log-parser&path=Log_Parser-Processes.png" target="_blank">Edit</a> | <a href="https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Fadobe%2Flog-parser%2Fmaster%2FLog_Parser-Processes.png" target="_blank">Edit As New</a> | <a href="https://app.diagrams.net/#Hadobe%2Flog-parser%2Fmaster%2FLog_Parser-Processes.png" target="_blank">Edit in diagrams.net</a>
+
 ## Defining a Parsing
 Each Parse Definition consists of :
 - Title
@@ -20,9 +23,6 @@ Each entry for a Parse Definition allows us to define:
 - Case Sensitive search
 - Is to be kept. In some cases we just need to find a line with certain particularities, but we don't actually want to store the value
 
-
-
-
 ## Using the Standard Method
 By default each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
 - Key
@@ -33,3 +33,8 @@ By default each entry for your lag parsing will be stored as a Generic entry. Th
 Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors.
 
 In order to use this feature you need to define a class that extends the class StdLogEntry
+
+# Code Structure
+Below is a diagram representing the class structure:
+
+![The Class relationship](diagrams/Log_Parser-Classes.png)
