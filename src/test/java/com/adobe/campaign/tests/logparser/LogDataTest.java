@@ -318,7 +318,7 @@ public class LogDataTest {
                 l_cubeData.getEntries().containsKey(l_inputData.get("AAZ")));
 
         assertThat("We should have the correct value",
-                l_cubeData.get(l_inputData.get("AAZ").toString()).equalsBody(l_inputData));
+                l_cubeData.get(l_inputData.get("AAZ").toString()).fetchValueMap(), is(equalTo(l_inputData.fetchValueMap())));
 
         assertThat("The frequence should have been incremented",
                 l_cubeData.get(l_inputData.get("AAZ").toString()).getFrequence(), is(equalTo(2)));

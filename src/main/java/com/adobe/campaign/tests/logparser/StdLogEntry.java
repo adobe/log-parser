@@ -194,35 +194,6 @@ public abstract class StdLogEntry {
         return true;
     }
     
-    /**
-     * In this method we check if the two objects share everything except for the frequence 
-     *
-     * Author : gandomi
-     *
-     * @param obj
-     * @return
-     *
-     */
-    public boolean equalsBody(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        StdLogEntry other = (StdLogEntry) obj;
 
-        if (parseDefinition == null) {
-            if (other.parseDefinition != null)
-                return false;
-        } else if (!parseDefinition.equals(other.parseDefinition))
-            return false;
-        if (valuesMap == null) {
-            if (other.valuesMap != null)
-                return false;
-        } else if (!valuesMap.equals(other.valuesMap))
-            return false;
-        return true;
-    }
 
 }

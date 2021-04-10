@@ -76,8 +76,6 @@ public class LogData<T extends StdLogEntry> {
      * @param in_dataEntryKey
      *        The key with which the data has been stored
      * @return The StdLogEntry for the given entry. null if not found
-     * @throws IncorrectParseDefinitionTitleException
-     *         If the given valueKey was not found in the definition
      *
      */
     public T get(String in_dataEntryKey) {
@@ -150,7 +148,7 @@ public class LogData<T extends StdLogEntry> {
     public LogData<T> groupBy(String in_parseDefinitionEntryKey) throws IncorrectParseDefinitionTitleException {
         
        
-        LogData<T> lr_cubeData = new LogData<>();
+        LogData<GenericEntry> lr_cubeData = new LogData<GenericEntry>();
                 
         ParseDefinition l_cubeDefinition = new ParseDefinition("cube "+in_parseDefinitionEntryKey);
         l_cubeDefinition.addEntry(new ParseDefinitionEntry(in_parseDefinitionEntryKey));
@@ -163,11 +161,11 @@ public class LogData<T extends StdLogEntry> {
             Map<String, String> lt_cubeEntryValues = new HashMap<>();
             lt_cubeEntryValues.put(in_parseDefinitionEntryKey, lt_entry.get(in_parseDefinitionEntryKey).toString());
             
-            StdLogEntry lt_cubeEntry = new GenericEntry(l_cubeDefinition);
+            GenericEntry lt_cubeEntry = new GenericEntry(l_cubeDefinition);
             lt_cubeEntry.setValuesFromMap(lt_cubeEntryValues);
             
-            lr_cubeData.addEntry((T) lt_cubeEntry);           
+            lr_cubeData.addEntry(lt_cubeEntry);           
         }
-        return lr_cubeData;
+        return (LogData<T>) lr_cubeData;
     }
 }
