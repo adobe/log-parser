@@ -102,6 +102,36 @@ public class LogDataTest {
     }
 
     @Test
+    public void testSimpleAccessToDataMain() throws IncorrectParseDefinitionTitleException {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        l_definition.addEntry(new ParseDefinitionEntry("BAU"));
+        l_definition.addEntry(new ParseDefinitionEntry("DAT"));
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+
+        assertThat("We should be able to get the values", l_cubeData.get("12"), is(equalTo(l_inputData)));
+
+    }
+
+    @Test
     public void testSimpleAccessToData() throws IncorrectParseDefinitionTitleException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -200,8 +230,7 @@ public class LogDataTest {
                 l_pDefinition);
 
         assertThat(l_logData, is(notNullValue()));
-        assertThat("We should have the correct nr of entries", l_logData.getEntries().size(),
-                is(equalTo(5)));
+        assertThat("We should have the correct nr of entries", l_logData.getEntries().size(), is(equalTo(5)));
         assertThat("We should have the key for nms:delivery#PrepareFromId",
                 l_logData.getEntries().containsKey("nms:delivery#PrepareFromId"));
 
@@ -211,15 +240,15 @@ public class LogDataTest {
             System.out.println(lt_entry.fetchPrintOut());
         }
     }
-    
+
     /**
-     * Testing that we correctly create a cube
+     * Testing that we correctly add an entry to the log data
      *
      * Author : gandomi
      *
      */
     @Test
-    public void testGroupBy() {
+    public void testAddEntry() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
         final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
@@ -235,7 +264,8 @@ public class LogDataTest {
         l_inputData.fetchValueMap().put("BAU", "13");
         l_inputData.fetchValueMap().put("DAT", "AA");
 
-        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
 
         assertThat("We should have initiated the values", l_cubeData.getEntries().size(), is(equalTo(1)));
 
@@ -248,6 +278,105 @@ public class LogDataTest {
 
         assertThat("We should have the correct value", l_cubeData.getEntries().get(l_inputData.get("AAZ")),
                 is(equalTo(l_inputData)));
+
+    }
+
+    @Test
+    public void testAddEntryDuplicated() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        l_definition.addEntry(new ParseDefinitionEntry("BAU"));
+        l_definition.addEntry(new ParseDefinitionEntry("DAT"));
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "12");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData3);
+
+        assertThat("We should have initiated the values", l_cubeData.getEntries().size(), is(equalTo(1)));
+
+        GenericEntry l_valueList = l_cubeData.getEntries().values().iterator().next();
+
+        assertThat("There should be values", l_valueList, is(notNullValue()));
+
+        assertThat("We should have store the LogEntry with the correct key",
+                l_cubeData.getEntries().containsKey(l_inputData.get("AAZ")));
+
+        assertThat("We should have the correct value",
+                l_cubeData.get(l_inputData.get("AAZ").toString()).equalsBody(l_inputData));
+
+        assertThat("The frequence should have been incremented",
+                l_cubeData.get(l_inputData.get("AAZ").toString()).getFrequence(), is(equalTo(2)));
+
+    }
+
+    /**
+     * Testing that we can do a group by
+     *
+     * Author : gandomi
+     * @throws IncorrectParseDefinitionTitleException 
+     *
+     */
+    @Test
+    public void testgroupBy() throws IncorrectParseDefinitionTitleException {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        l_definition.addEntry(new ParseDefinitionEntry("BAU"));
+        l_definition.addEntry(new ParseDefinitionEntry("DAT"));
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        assertThrows(IncorrectParseDefinitionTitleException.class, () -> l_cubeData.groupBy("KAU"));
+        
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU");
+
+        assertThat("We should have two entries in the new cube one fore 13 and the other for 113",
+                l_myCube.getEntries().size(), is(equalTo(2)));
+
+        assertThat("The entry BAU for 13 should be 2", l_myCube.get("13").getFrequence(), is(equalTo(2)));
+        
+        assertThat("The entry BAU for 113 should be 1", l_myCube.get("113").getFrequence(), is(equalTo(1)));
 
     }
 
