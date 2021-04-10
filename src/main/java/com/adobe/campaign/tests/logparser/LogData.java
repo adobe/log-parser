@@ -24,22 +24,22 @@ public class LogData<T extends StdLogEntry> {
     /**
      * This value is both csv header, and a JSON selector
      */
-    private Map<String, T> cubeData = new HashMap<>();
+    private Map<String, T> entries = new HashMap<>();
 
     public LogData(T in_stdLogEnDataData) {
-        this.getCubeData().put(in_stdLogEnDataData.makeKey(), in_stdLogEnDataData);
+        this.getEntries().put(in_stdLogEnDataData.makeKey(), in_stdLogEnDataData);
     }
 
     public LogData(Map<String, T> in_logMap) {
-        this.setCubeData(in_logMap);
+        this.setEntries(in_logMap);
     }
 
-    public Map<String, T> getCubeData() {
-        return cubeData;
+    public Map<String, T> getEntries() {
+        return entries;
     }
 
-    public void setCubeData(Map<String, T> in_logMap) {
-        this.cubeData = in_logMap;
+    public void setEntries(Map<String, T> in_logMap) {
+        this.entries = in_logMap;
     }
 
     /**
@@ -56,7 +56,7 @@ public class LogData<T extends StdLogEntry> {
      */
     public Object get(String in_dataEntryKey, String in_valueKey) throws IncorrectParseDefinitionTitleException {
 
-        final T l_foundCubeEntry = this.getCubeData().get(in_dataEntryKey);
+        final T l_foundCubeEntry = this.getEntries().get(in_dataEntryKey);
 
         if (l_foundCubeEntry != null) {
             if (!l_foundCubeEntry.fetchHeaders().contains(in_valueKey)) {
@@ -80,10 +80,10 @@ public class LogData<T extends StdLogEntry> {
         if (getClass() != obj.getClass())
             return false;
         LogData<?> other = (LogData<?>) obj;
-        if (cubeData == null) {
-            if (other.cubeData != null)
+        if (entries == null) {
+            if (other.entries != null)
                 return false;
-        } else if (!cubeData.equals(other.cubeData))
+        } else if (!entries.equals(other.entries))
             return false;
         return true;
     }

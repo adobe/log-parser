@@ -58,16 +58,16 @@ public class LogDataTest {
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
-        assertThat("We should have initiated the values", l_cubeData.getCubeData().size(), is(equalTo(1)));
+        assertThat("We should have initiated the values", l_cubeData.getEntries().size(), is(equalTo(1)));
 
-        GenericEntry l_valueList = l_cubeData.getCubeData().values().iterator().next();
+        GenericEntry l_valueList = l_cubeData.getEntries().values().iterator().next();
 
         assertThat("There should be values", l_valueList, is(notNullValue()));
 
         assertThat("We should have store the LogEntry with the correct key",
-                l_cubeData.getCubeData().containsKey(l_inputData.get("AAZ")));
+                l_cubeData.getEntries().containsKey(l_inputData.get("AAZ")));
 
-        assertThat("We should have the correct value", l_cubeData.getCubeData().get(l_inputData.get("AAZ")),
+        assertThat("We should have the correct value", l_cubeData.getEntries().get(l_inputData.get("AAZ")),
                 is(equalTo(l_inputData)));
 
     }
@@ -200,15 +200,55 @@ public class LogDataTest {
                 l_pDefinition);
 
         assertThat(l_logData, is(notNullValue()));
-        assertThat("We should have the correct nr of entries", l_logData.getCubeData().size(),
+        assertThat("We should have the correct nr of entries", l_logData.getEntries().size(),
                 is(equalTo(5)));
         assertThat("We should have the key for nms:delivery#PrepareFromId",
-                l_logData.getCubeData().containsKey("nms:delivery#PrepareFromId"));
+                l_logData.getEntries().containsKey("nms:delivery#PrepareFromId"));
 
-        assertThat(l_logData.getCubeData().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
+        assertThat(l_logData.getEntries().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
 
-        for (GenericEntry lt_entry : l_logData.getCubeData().values()) {
+        for (GenericEntry lt_entry : l_logData.getEntries().values()) {
             System.out.println(lt_entry.fetchPrintOut());
         }
     }
+    
+    /**
+     * Testing that we correctly create a cube
+     *
+     * Author : gandomi
+     *
+     */
+    @Test
+    public void testGroupBy() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        l_definition.addEntry(new ParseDefinitionEntry("BAU"));
+        l_definition.addEntry(new ParseDefinitionEntry("DAT"));
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
+
+        assertThat("We should have initiated the values", l_cubeData.getEntries().size(), is(equalTo(1)));
+
+        GenericEntry l_valueList = l_cubeData.getEntries().values().iterator().next();
+
+        assertThat("There should be values", l_valueList, is(notNullValue()));
+
+        assertThat("We should have store the LogEntry with the correct key",
+                l_cubeData.getEntries().containsKey(l_inputData.get("AAZ")));
+
+        assertThat("We should have the correct value", l_cubeData.getEntries().get(l_inputData.get("AAZ")),
+                is(equalTo(l_inputData)));
+
+    }
+
 }
