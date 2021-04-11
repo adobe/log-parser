@@ -36,6 +36,7 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2.0.1
         with:
           generate-branches-badge: true
+          
       - name: Log coverage percentage
         run: |
           echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
