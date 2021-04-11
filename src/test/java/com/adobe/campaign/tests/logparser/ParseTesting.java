@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.GenericEntry;
@@ -920,6 +922,49 @@ public class ParseTesting {
         Map<String,String> l_parseResult = StringParseFactory.parseString(l_line, l_definitionList);
         assertThat("The given log should be compliant", StringParseFactory.isStringCompliant(l_line, l_definitionList));
         assertThat("We should have values", l_parseResult.size(), is(equalTo(3)));
+    }
+    
+    @Test
+    public void testParseDefinitionEquals1() {
+        ParseDefinition l_pd1 = new ParseDefinition("A");
+        ParseDefinition l_pd2 = new ParseDefinition("A");
+        
+        assertThat("The two classes should not be equal",l_pd1,not(equalTo(new GenericEntry())));
+        
+        l_pd1.setDefinitionEntries(null);
+        assertThat("The two classes should not be equal",l_pd1,not(equalTo(l_pd2)));
+        
+        l_pd2.setDefinitionEntries(null);
+        assertThat("The two classes should  be equal",l_pd1,is(equalTo(l_pd2)));
+        
+        
+        
+    }
+    
+    @Test
+    public void testParseDefinitionEquals2() {
+        ParseDefinition l_pd1 = new ParseDefinition("A");
+        ParseDefinition l_pd2 = new ParseDefinition("A");
+        l_pd2.addEntry(new ParseDefinitionEntry("B"));
+        
+        assertThat("The two classes should not be equal",l_pd1,not(equalTo(l_pd2)));
+        
+        l_pd1.addEntry(new ParseDefinitionEntry("B"));
+        assertThat("The two classes should  be equal",l_pd1,is(equalTo(l_pd2)));
+        
+        l_pd1.setTitle(null);
+        assertThat("The two classes should not be equal",l_pd1,not(equalTo(l_pd2)));
+        
+        l_pd2.setTitle(null);
+        assertThat("The two classes should  be equal",l_pd1,is(equalTo(l_pd2)));
+        
+        l_pd1.setTitle("A");
+        l_pd2.setTitle("B");
+        assertThat("The two classes should not be equal",l_pd1,not(equalTo(l_pd2)));
+        
+        
+        
+        
     }
 
 }
