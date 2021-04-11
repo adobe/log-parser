@@ -1,5 +1,6 @@
 # log-parser
 [![unit-tests](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml/badge.svg)](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml) 
+[![coverage](.github/badges/jacoco.svg)](.github/badges/jacoco.svg) 
 
 This project was created to allow us to parse and analyze log files in order to gather relevant data. It can be used as is or as an SDK. Where you can define your own parsing.
 
