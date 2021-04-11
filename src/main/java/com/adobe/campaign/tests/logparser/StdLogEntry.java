@@ -116,6 +116,20 @@ public abstract class StdLogEntry {
         return frequence;
     }
 
+    /**
+     * @param frequence the frequence to set
+     */
+    protected void setFrequence(Integer frequence) {
+        this.frequence = frequence;
+    }
+
+    /**
+     * @param valuesMap the valuesMap to set
+     */
+    protected void setValuesMap(Map<String, Object> valuesMap) {
+        this.valuesMap = valuesMap;
+    }
+
     public ParseDefinition getParseDefinition() {
         return parseDefinition;
     }

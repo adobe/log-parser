@@ -14,6 +14,9 @@ package com.adobe.campaign.tests.logparser;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+
+import java.util.HashMap;
 
 import org.testng.annotations.Test;
 
@@ -39,5 +42,62 @@ public class StdLogEntryTests {
         l_inputData2.put("AAZ", "12");
 
         assertThat(l_inputData2.get("AAZ"), is(equalTo("12")));
+    }
+    
+    @Test
+    public void testEqualsSimple() {
+        StdLogEntry l_myEntry = new GenericEntry();
+        
+        StdLogEntry l_myEntry2 = new GenericEntry();
+        
+        assertThat("Both should be equal", l_myEntry, is(equalTo(l_myEntry)));
+        assertThat("Both should be equal", l_myEntry, is(equalTo(l_myEntry2)));
+        
+        assertThat("One being null is not allowed", l_myEntry, not(equalTo(null)));
+        
+        assertThat("One bein null is not allowed", l_myEntry, not(equalTo(new LogData<>())));    
+        
+        l_myEntry.setFrequence(null);
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        
+        
+        l_myEntry2.setFrequence(null);
+        assertThat("Both should  be equal", l_myEntry, equalTo(l_myEntry2));
+        l_myEntry.setFrequence(1);
+        
+        l_myEntry2.setFrequence(2);
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        l_myEntry2.setFrequence(1);
+        
+        l_myEntry.setParseDefinition(null);
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        
+        l_myEntry2.setParseDefinition(null);
+        assertThat("Both should  be equal", l_myEntry, equalTo(l_myEntry2));
+        
+        l_myEntry.setParseDefinition(new ParseDefinition("A"));
+        l_myEntry2.setParseDefinition(new ParseDefinition("B"));
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        
+        l_myEntry.setParseDefinition(new ParseDefinition("B"));
+        
+        
+        l_myEntry.setValuesMap(null);
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        
+        l_myEntry2.setValuesMap(null);
+        assertThat("Both should  be equal", l_myEntry, equalTo(l_myEntry2));
+        
+        l_myEntry2.setValuesMap(new HashMap<String, Object>());
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        
+        l_myEntry.setValuesMap(new HashMap<>());
+        l_myEntry.put("A", "B");
+        
+        l_myEntry2.put("C", "D");
+        
+        assertThat("Both should not be equal", l_myEntry, not(equalTo(l_myEntry2)));
+        
+        
     }
 }
