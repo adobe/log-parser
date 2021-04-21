@@ -11,7 +11,9 @@
  */
 package com.adobe.campaign.tests.logparser;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -140,31 +142,61 @@ public class LogData<T extends StdLogEntry> {
      * Author : gandomi
      *
      * @param in_parseDefinitionEntryKey
-     *        The key name of of the parse definition perform the GroupBy on
-     * @return a new LogData Object containing the groupBy values 
-     * @throws IncorrectParseDefinitionTitleException If the key is not in the ParseDefinitions of the Log data entry
+     *        The key name of the parse definition perform the GroupBy on
+     * @return a new LogData Object containing the groupBy values
+     * @throws IncorrectParseDefinitionTitleException
+     *         If the key is not in the ParseDefinitions of the Log data entry
      *
      */
-    public LogData<T> groupBy(String in_parseDefinitionEntryKey) throws IncorrectParseDefinitionTitleException {
-        
+    public LogData<T> groupBy(String in_parseDefinitionEntryKey)
+            throws IncorrectParseDefinitionTitleException {
+
        
+        return (LogData<T>) groupBy(Arrays.asList(in_parseDefinitionEntryKey));
+    }
+
+    /**
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
+     * This method performs a groupby for the given value. The frequence will
+     * also take into account the original frequence
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionEntryKeyList
+     *        The list of key names of the parse definition perform the GroupBy
+     *        on
+     * @return a new LogData Object containing the groupBy values
+     * @throws IncorrectParseDefinitionTitleException
+     *         If the key is not in the ParseDefinitions of the Log data entry
+     *
+     */
+    public LogData<T> groupBy(List<String> in_parseDefinitionEntryKeyList)
+            throws IncorrectParseDefinitionTitleException {
         LogData<GenericEntry> lr_cubeData = new LogData<GenericEntry>();
-                
-        ParseDefinition l_cubeDefinition = new ParseDefinition("cube "+in_parseDefinitionEntryKey);
-        l_cubeDefinition.addEntry(new ParseDefinitionEntry(in_parseDefinitionEntryKey));
-        
+
+        ParseDefinition l_cubeDefinition = new ParseDefinition(
+                "cube " + String.join("-", in_parseDefinitionEntryKeyList));
+
+        for (String lt_keyName : in_parseDefinitionEntryKeyList) {
+            l_cubeDefinition.addEntry(new ParseDefinitionEntry(lt_keyName));
+        }
         for (StdLogEntry lt_entry : getEntries().values()) {
-            if (!lt_entry.getParseDefinition().fetchHeaders().contains(in_parseDefinitionEntryKey)) {
-                throw new IncorrectParseDefinitionTitleException("The given header name "+in_parseDefinitionEntryKey+" was not among the stored data");
-            }
-            
             Map<String, String> lt_cubeEntryValues = new HashMap<>();
-            lt_cubeEntryValues.put(in_parseDefinitionEntryKey, lt_entry.get(in_parseDefinitionEntryKey).toString());
-            
             GenericEntry lt_cubeEntry = new GenericEntry(l_cubeDefinition);
+
+            for (String lt_parseDefinitionEntryKey : in_parseDefinitionEntryKeyList) {
+                if (!lt_entry.getParseDefinition().fetchHeaders().contains(lt_parseDefinitionEntryKey)) {
+                    throw new IncorrectParseDefinitionTitleException("The given header name "
+                            + lt_parseDefinitionEntryKey + " was not among the stored data");
+                }
+
+                lt_cubeEntryValues.put(lt_parseDefinitionEntryKey,
+                        lt_entry.get(lt_parseDefinitionEntryKey).toString());
+
+            }
             lt_cubeEntry.setValuesFromMap(lt_cubeEntryValues);
-            
-            lr_cubeData.addEntry(lt_cubeEntry);           
+
+            lr_cubeData.addEntry(lt_cubeEntry);
         }
         return (LogData<T>) lr_cubeData;
     }
