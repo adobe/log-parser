@@ -15,7 +15,6 @@
 package com.adobe.campaign.tests.logparser;
 
 import java.util.List;
-
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 /**
@@ -74,7 +73,9 @@ public class LogDataFactory {
      * @param in_logEntryClass
      *        A log entry class that defines how the found data is to be
      *        transformed
-     * @param <T> The type of entry we want to be generated while parsing logs. The type should be a child of {@link StdLogEntry}
+     * @param <T>
+     *        The type of entry we want to be generated while parsing logs. The
+     *        type should be a child of {@link StdLogEntry}
      * @return A LogData Object containing the found entries from the logs
      * @throws InstantiationException
      *         if this {@code Class} represents an abstract class, an interface,

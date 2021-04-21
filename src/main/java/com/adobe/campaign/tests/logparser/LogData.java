@@ -53,19 +53,19 @@ public class LogData<T extends StdLogEntry> {
      *
      * Author : gandomi
      *
-     * @param in_stdLogEnDataData
+     * @param lt_cubeEntry
      *        An object of the type {@link StdLogEntry}
      *
      */
-    public void addEntry(T in_stdLogEnDataData) {
+    public void addEntry(T lt_cubeEntry) {
 
-        final String l_candidateKey = in_stdLogEnDataData.makeKey();
+        final String l_candidateKey = lt_cubeEntry.makeKey();
 
         if (entries.containsKey(l_candidateKey)) {
-            entries.get(l_candidateKey).addFrequence(in_stdLogEnDataData.getFrequence());
+            entries.get(l_candidateKey).addFrequence(lt_cubeEntry.getFrequence());
 
         } else {
-            entries.put(l_candidateKey, in_stdLogEnDataData);
+            entries.put(l_candidateKey, lt_cubeEntry);
         }
     }
 
@@ -143,16 +143,20 @@ public class LogData<T extends StdLogEntry> {
      *
      * @param in_parseDefinitionEntryKey
      *        The key name of the parse definition perform the GroupBy on
+     * @param in_transformationClass
+     *        The class to which we should transform the cube data
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionTitleException
      *         If the key is not in the ParseDefinitions of the Log data entry
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      *
      */
-    public LogData<T> groupBy(String in_parseDefinitionEntryKey)
-            throws IncorrectParseDefinitionTitleException {
+    public <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
+            Class<U> in_transformationClass)
+            throws IncorrectParseDefinitionTitleException, InstantiationException, IllegalAccessException {
 
-       
-        return (LogData<T>) groupBy(Arrays.asList(in_parseDefinitionEntryKey));
+        return groupBy(Arrays.asList(in_parseDefinitionEntryKey), in_transformationClass);
     }
 
     /**
@@ -165,24 +169,33 @@ public class LogData<T extends StdLogEntry> {
      * @param in_parseDefinitionEntryKeyList
      *        The list of key names of the parse definition perform the GroupBy
      *        on
+     * @param in_transformationClass
+     *        The class to which we should transform the cube data
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionTitleException
      *         If the key is not in the ParseDefinitions of the Log data entry
+     * @throws IllegalAccessException
+     * @throws InstantiationException
      *
      */
-    public LogData<T> groupBy(List<String> in_parseDefinitionEntryKeyList)
-            throws IncorrectParseDefinitionTitleException {
-        LogData<GenericEntry> lr_cubeData = new LogData<GenericEntry>();
+    public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
+            Class<U> in_transformationClass)
+            throws IncorrectParseDefinitionTitleException, InstantiationException, IllegalAccessException {
+        LogData<U> lr_cubeData = new LogData<U>();
 
+        //Creating new Definition
         ParseDefinition l_cubeDefinition = new ParseDefinition(
                 "cube " + String.join("-", in_parseDefinitionEntryKeyList));
 
         for (String lt_keyName : in_parseDefinitionEntryKeyList) {
             l_cubeDefinition.addEntry(new ParseDefinitionEntry(lt_keyName));
         }
-        for (StdLogEntry lt_entry : getEntries().values()) {
+
+        //Filling STDLogData
+        for (T lt_entry : getEntries().values()) {
             Map<String, String> lt_cubeEntryValues = new HashMap<>();
-            GenericEntry lt_cubeEntry = new GenericEntry(l_cubeDefinition);
+            U lt_cubeEntry = in_transformationClass.newInstance();
+            lt_cubeEntry.setParseDefinition(l_cubeDefinition);
 
             for (String lt_parseDefinitionEntryKey : in_parseDefinitionEntryKeyList) {
                 if (!lt_entry.getParseDefinition().fetchHeaders().contains(lt_parseDefinitionEntryKey)) {
@@ -198,6 +211,7 @@ public class LogData<T extends StdLogEntry> {
 
             lr_cubeData.addEntry(lt_cubeEntry);
         }
-        return (LogData<T>) lr_cubeData;
+        return lr_cubeData;
     }
+
 }

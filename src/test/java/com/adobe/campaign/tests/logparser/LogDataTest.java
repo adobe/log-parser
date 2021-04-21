@@ -20,7 +20,6 @@ import static org.testng.Assert.assertThrows;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.hamcrest.Matchers;
@@ -334,10 +333,12 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionTitleException
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
      *
      */
     @Test
-    public void testgroupBy() throws IncorrectParseDefinitionTitleException {
+    public void testgroupBy() throws IncorrectParseDefinitionTitleException, InstantiationException, IllegalAccessException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -372,9 +373,9 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        assertThrows(IncorrectParseDefinitionTitleException.class, () -> l_cubeData.groupBy("KAU"));
+        assertThrows(IncorrectParseDefinitionTitleException.class, () -> l_cubeData.groupBy("KAU",GenericEntry.class));
 
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU");
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU",GenericEntry.class);
 
         assertThat(l_myCube.getEntries().values().iterator().next().getParseDefinition()
                 .getDefinitionEntries().size(), is(equalTo(1)));
@@ -396,10 +397,12 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionTitleException
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
      *
      */
     @Test
-    public void testMultipleGroupBy() throws IncorrectParseDefinitionTitleException {
+    public void testMultipleGroupBy() throws IncorrectParseDefinitionTitleException, InstantiationException, IllegalAccessException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -435,12 +438,7 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        List<String> in_parseDefinitionEntryKeyList = Arrays.asList("BAU", "DAT");
-        LogData<GenericEntry> lr_cubeData = new LogData<GenericEntry>();
-
-        
-
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT"));
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT"), GenericEntry.class);
 
         final ParseDefinition l_gpParseDefinition = l_myCube.getEntries().values().iterator().next()
                 .getParseDefinition();
