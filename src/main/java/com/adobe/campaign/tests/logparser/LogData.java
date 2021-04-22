@@ -145,6 +145,7 @@ public class LogData<T extends StdLogEntry> {
      *        The key name of the parse definition perform the GroupBy on
      * @param in_transformationClass
      *        The class to which we should transform the cube data
+     * @param <U> The return type of the group by cube. 
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionTitleException
      *         If the key is not in the ParseDefinitions of the Log data entry
@@ -174,6 +175,7 @@ public class LogData<T extends StdLogEntry> {
      *        on
      * @param in_transformationClass
      *        The class to which we should transform the cube data
+     * @param <U> The return type of the group by cube. 
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionTitleException
      *         If the key is not in the ParseDefinitions of the Log data entry
