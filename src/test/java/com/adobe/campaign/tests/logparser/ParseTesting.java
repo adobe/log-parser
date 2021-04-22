@@ -26,8 +26,7 @@ import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.StringParseFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
-
-public class TestGrepLogApache {
+public class ParseTesting {
     // private final String STD_GREP_STRING = IntegroGrepFactory.ACS_RestPath.regularExpression;
 
     @Test
@@ -173,8 +172,6 @@ public class TestGrepLogApache {
 
     }
 
-
-
     @Test(description = "In this case we check if the class ApacheLogEntry correctly stores a path with filters")
     public void testAPIDefinition2() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:06:25:44 +0200] \"POST /rest/head/session HTTP/1.1\" 201 5385 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
@@ -193,7 +190,7 @@ public class TestGrepLogApache {
         l_apiDefinition.setEnd(" ");
 
         ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
-        l_parseDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2,l_apiDefinition));
+        l_parseDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
 
         Map<String, String> l_currentValues = StringParseFactory.parseString(l_apacheLogString,
                 l_parseDefinition);
@@ -205,7 +202,8 @@ public class TestGrepLogApache {
         GenericEntry l_entry = new GenericEntry(l_parseDefinition);
         l_entry.setValuesFromMap(l_currentValues);
 
-        assertThat("We should have the correct value for api", l_entry.fetchValueMap().get("path"), is(equalTo("session")));
+        assertThat("We should have the correct value for api", l_entry.fetchValueMap().get("path"),
+                is(equalTo("session")));
 
     }
 
@@ -493,10 +491,9 @@ public class TestGrepLogApache {
                 is(equalTo("rest/head/workflow/WKF193")));
     }
 
-
-
     @Test
-    public void testCreateApacheProfileFile() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testCreateApacheProfileFile()
+            throws InstantiationException, IllegalAccessException, StringParseException {
 
         //Create a parse definition
 
@@ -513,14 +510,13 @@ public class TestGrepLogApache {
         l_apiDefinition.setEnd(" ");
 
         ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
-        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2,l_apiDefinition));
-        l_pDefinition.defineKeyOrder(Arrays.asList(l_apiDefinition,l_verbDefinition2));
-        
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
 
         final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
 
         Map<String, GenericEntry> l_entries = StringParseFactory
-                .fetchLogData(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
 
         assertThat(l_entries, is(notNullValue()));
         assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
@@ -531,6 +527,54 @@ public class TestGrepLogApache {
         for (GenericEntry lt_entry : l_entries.values()) {
             System.out.println(lt_entry.fetchPrintOut());
         }
+
+    }
+
+    @Test
+    public void testCreateApacheProfileFile_Negative()
+            throws InstantiationException, IllegalAccessException, StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2));
+
+        Map<String, GenericEntry> l_entries = StringParseFactory.extractLogEntryMap(Arrays.asList(),
+                l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(equalTo(0)));
+
+    }
+
+    @Test
+    public void testCreateApacheProfileFile_Negative2()
+            throws InstantiationException, IllegalAccessException, StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2));
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/NonExistant.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(equalTo(0)));
 
     }
 
@@ -778,7 +822,6 @@ public class TestGrepLogApache {
     }
 
     /////////////////////////  RESULT PUBLISHER  ///////////////////////// 
- 
 
     @Test
     public void testIncrementation() {
@@ -880,8 +923,7 @@ public class TestGrepLogApache {
                 !StringParseFactory.isStringCompliant(logString, l_definitionList));
 
     }
-    
-    
+
     @Test
     public void testToPreserve() throws InstantiationException, IllegalAccessException, StringParseException {
 
@@ -892,7 +934,6 @@ public class TestGrepLogApache {
         l_lineFinder.setEnd(" ");
         l_lineFinder.setCaseSensitive(false);
         l_lineFinder.setToPreserve(false);
-        
 
         ParseDefinitionEntry l_verb = new ParseDefinitionEntry();
 
@@ -900,9 +941,9 @@ public class TestGrepLogApache {
         l_verb.setStart("name=\"");
         l_verb.setEnd("\"");
         l_verb.setCaseSensitive(false);
-        
-        assertThat("We would by default be preserving entries",l_verb.isToPreserve());
-        
+
+        assertThat("We would by default be preserving entries", l_verb.isToPreserve());
+
         ParseDefinitionEntry l_srcSchema = new ParseDefinitionEntry();
 
         l_srcSchema.setTitle("path");
@@ -917,9 +958,104 @@ public class TestGrepLogApache {
 
         //Check that the definition is correct 
         String l_line = "                <soapCall name=\"resetServiceMobileAppsCustomHook\" service=\"nms:mobileApp\">";
-        Map<String,String> l_parseResult = StringParseFactory.parseString(l_line, l_definitionList);
-        assertThat("The given log should be compliant", StringParseFactory.isStringCompliant(l_line, l_definitionList));
+        Map<String, String> l_parseResult = StringParseFactory.parseString(l_line, l_definitionList);
+        assertThat("The given log should be compliant",
+                StringParseFactory.isStringCompliant(l_line, l_definitionList));
         assertThat("We should have values", l_parseResult.size(), is(equalTo(3)));
+    }
+
+    @Test
+    public void testParseDefinitionEquals1() {
+        ParseDefinition l_pd1 = new ParseDefinition("A");
+        ParseDefinition l_pd2 = new ParseDefinition("A");
+
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(new GenericEntry())));
+
+        l_pd1.setDefinitionEntries(null);
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setDefinitionEntries(null);
+        assertThat("The two classes should  be equal", l_pd1, is(equalTo(l_pd2)));
+
+    }
+
+    @Test
+    public void testParseDefinitionEquals2() {
+        ParseDefinition l_pd1 = new ParseDefinition("A");
+        ParseDefinition l_pd2 = new ParseDefinition("A");
+        l_pd2.addEntry(new ParseDefinitionEntry("B"));
+
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd1.addEntry(new ParseDefinitionEntry("B"));
+        assertThat("The two classes should  be equal", l_pd1, is(equalTo(l_pd2)));
+
+        l_pd1.setTitle(null);
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setTitle(null);
+        assertThat("The two classes should  be equal", l_pd1, is(equalTo(l_pd2)));
+
+        l_pd1.setTitle("A");
+        l_pd2.setTitle("B");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+    }
+
+    @Test
+    public void testParseDefinitionEntryEquals1() {
+        ParseDefinitionEntry l_pd1 = new ParseDefinitionEntry("A");
+        ParseDefinitionEntry l_pd2 = new ParseDefinitionEntry("A");
+
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(new GenericEntry())));
+
+        l_pd1.setCaseSensitive(false);
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd1.setCaseSensitive(true);
+        l_pd2.setEnd("D");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd1.setEnd("B");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setEnd("B");
+        l_pd2.setStart("D");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd1.setStart("B");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setStart("B");
+
+        l_pd1.setTitle(null);
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setTitle(null);
+        assertThat("The two classes should not be equal", l_pd1, equalTo(l_pd2));
+
+        l_pd2.setTitle("D");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd1.setTitle("B");
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setTitle("B");
+
+        l_pd2.setToPreserve(false);
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+
+        l_pd2.setToPreserve(true);
+
+        l_pd2.setTrimQuotes(true);
+        assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+        
+        assertThat("The hashed should be different", l_pd1.hashCode(),not(equalTo(l_pd2.hashCode())));
+        
+        l_pd2.setTrimQuotes(false);
+        assertThat("The two classes should now be equal", l_pd1, is(equalTo(l_pd2)));
+        assertThat("The hashed should be the same", l_pd1.hashCode(),is(equalTo(l_pd2.hashCode())));
+
     }
 
 }

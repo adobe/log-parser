@@ -22,7 +22,7 @@ on:
 
 
 jobs:
-  release:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       # Check out Git repository

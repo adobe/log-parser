@@ -1,5 +1,7 @@
 # log-parser
 [![unit-tests](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml/badge.svg)](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml) 
+![coverage](./.github/badges/jacoco.svg)
+![branches](./.github/badges/branches.svg)
 
 This project was created to allow us to parse and analyze log files in order to gather relevant data. It can be used as is or as an SDK. Where you can define your own parsing.
 
@@ -33,7 +35,16 @@ Using the log parser as an SDK allow you to define your own transformations and 
 
 In order to use this feature you need to define a class that extends the class StdLogEntry
 
-# Code Structure
+## Code Structure
 Below is a diagram representing the class structure:
 
 ![The Class relationship](diagrams/Log_Parser-Classes.png)
+
+## Release Notes
+
+- 1.0.2
+  - Introduced the LogData Top Class. This encapsulates all results.
+  - Introduced the LogDataFactory
+  - Added the groupBy method to extract data from the results
+- 1.0.1
+  - Open source release.

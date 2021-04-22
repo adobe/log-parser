@@ -33,7 +33,14 @@ import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.StringParseFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
-public class TestSimpleLog {
+public class TestLogParsing {
+
+    @Test
+    public void testInstantiation() {
+        ParseDefinitionEntry l_entry1 = new ParseDefinitionEntry("my title");
+
+        assertThat("The constructor should set the title", l_entry1.getTitle(), is(equalTo("my title")));
+    }
 
     @Test
     public void testSimpleLog() throws StringParseException {
@@ -242,10 +249,14 @@ public class TestSimpleLog {
 
     }
 
-    /******** Imported tests ; Harnesses 
-     * @throws StringParseException *********/
+    /********
+     * Imported tests ; Harnesses
+     * 
+     * @throws StringParseException
+     *********/
     @Test
-    public void testFetchACCCoverageFromFile() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testFetchACCCoverageFromFile()
+            throws InstantiationException, IllegalAccessException, StringParseException {
 
         //Create a parse definition
 
@@ -267,8 +278,8 @@ public class TestSimpleLog {
 
         final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
 
-        Map<String, GenericEntry> l_entries = StringParseFactory.fetchLogData(Arrays.asList(apacheLogFile),
-                l_pDefinition, GenericEntry.class);
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
 
         assertThat(l_entries, is(notNullValue()));
         assertThat("We should have the correct nr of entries", l_entries.size(), is(equalTo(5)));
@@ -414,7 +425,7 @@ public class TestSimpleLog {
         ParseDefinition l_definition = new ParseDefinition("Soap Call");
         l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
         l_definition.setKeyPadding("@");
-        l_definition.defineKeyOrder(Arrays.asList(l_verbDefinition, l_apiDefinition));
+        l_definition.defineKeys(Arrays.asList(l_verbDefinition, l_apiDefinition));
 
         GenericEntry l_entry = new GenericEntry(l_definition);
 
@@ -452,7 +463,7 @@ public class TestSimpleLog {
         l_verbDefinition.setTitle("Nada");
 
         assertThrows(IllegalArgumentException.class, () -> l_definition
-                .defineKeyOrder(Arrays.asList(l_verbDefinition, l_apiDefinition, l_nonExistingDefinition)));
+                .defineKeys(Arrays.asList(l_verbDefinition, l_apiDefinition, l_nonExistingDefinition)));
 
     }
 
@@ -485,7 +496,7 @@ public class TestSimpleLog {
         l_definition.setKeyPadding("@");
 
         assertThrows(IllegalArgumentException.class, () -> l_definition
-                .defineKeyOrder(Arrays.asList(l_verbDefinition, l_apiDefinition, l_nonPreservedDefinition)));
+                .defineKeys(Arrays.asList(l_verbDefinition, l_apiDefinition, l_nonPreservedDefinition)));
 
     }
 
@@ -528,6 +539,35 @@ public class TestSimpleLog {
         l_entry.setValuesFromMap(l_values);
 
         assertThat("We should have the correct key", l_entry.makeKey(), is(equalTo("A#team")));
+    }
+
+    @Test(description = "Testing the case of just an entry value as key")
+    public void testKeySimple() {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("API");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+
+        ParseDefinition l_definition = new ParseDefinition("Soap Call");
+        l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+        l_definition.setKeyPadding("@");
+        l_definition.defineKeys(l_verbDefinition);
+
+        GenericEntry l_entry = new GenericEntry(l_definition);
+
+        l_entry.put("API", "A");
+        l_entry.put("verb", "team");
+
+        assertThat("We should have the correct key", l_entry.makeKey(), is(equalTo("team")));
     }
 
     @Test(description = "Checking that is to preserve is respected")

@@ -28,6 +28,14 @@ public class ParseDefinitionEntry {
     private boolean trimQuotes = false;
     private boolean toPreserve = true;
 
+    public ParseDefinitionEntry(String in_title) {
+        this.title = in_title;
+    }
+
+    public ParseDefinitionEntry() {
+
+    }
+
     public String getTitle() {
         return title;
     }
@@ -50,11 +58,14 @@ public class ParseDefinitionEntry {
 
     /**
      * If the end string is null we will consider the the end to be the end of
-     * tthe line/string
+     * the line/string
      *
      * Author : gandomi
      *
-     * @param end 
+     * @param end
+     *        The character series that signals the end of the value our entry
+     *        is looking for. If the end string is null we will consider the the
+     *        end to be the end of the line/string
      *
      */
     public void setEnd(String end) {
@@ -105,6 +116,7 @@ public class ParseDefinitionEntry {
      * Author : gandomi
      *
      * @param in_stringValue
+     *        A string to look for, and for which we return the last index of
      * @return the index of the first occurrence of the specified substring, or
      *         -1 if there is no such occurrence.
      *
@@ -133,7 +145,7 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param in_logString
+     * @param in_logString The string/log line which we are searching through
      * @return A String that will be parsed by the subsequent
      *         ParseDefinitionEntry
      *
@@ -166,7 +178,8 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @return true if we expect the string to end with EOL. (I.e. if end is null)
+     * @return true if we expect the string to end with EOL. (I.e. if end is
+     *         null)
      *
      */
     public boolean isEndEOL() {
@@ -188,7 +201,8 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param in_string A give parse string
+     * @param in_string
+     *        A give parse string
      * @return The given string in lowercase whenever the definition is case
      *         insesitive, other wise the same String.
      *
@@ -199,11 +213,13 @@ public class ParseDefinitionEntry {
     }
 
     /**
-     * This method lets us know if the definition starts at the beginning of the line
+     * This method lets us know if the definition starts at the beginning of the
+     * line
      *
      * Author : gandomi
      *
-     * @return true if we expect the string to start at the beginning of the line. (I.e. if start is null)
+     * @return true if we expect the string to start at the beginning of the
+     *         line. (I.e. if start is null)
      *
      */
     public boolean isStartStartOfLine() {
