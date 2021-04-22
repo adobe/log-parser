@@ -1049,6 +1049,12 @@ public class ParseTesting {
 
         l_pd2.setTrimQuotes(true);
         assertThat("The two classes should not be equal", l_pd1, not(equalTo(l_pd2)));
+        
+        assertThat("The hashed should be different", l_pd1.hashCode(),not(equalTo(l_pd2.hashCode())));
+        
+        l_pd2.setTrimQuotes(false);
+        assertThat("The two classes should now be equal", l_pd1, is(equalTo(l_pd2)));
+        assertThat("The hashed should be the same", l_pd1.hashCode(),is(equalTo(l_pd2.hashCode())));
 
     }
 

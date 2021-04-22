@@ -401,6 +401,8 @@ public class TestLogParsing {
         l_definition2.setDefinitionEntries(Arrays.asList(l_apiDefinition2, l_verbDefinition2));
 
         assertThat("The two definitions are the same", l_definition, is(equalTo(l_definition2)));
+        assertThat("The two hashes should be the same", l_definition.hashCode(),
+                is(equalTo(l_definition2.hashCode())));
 
     }
 

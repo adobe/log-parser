@@ -249,6 +249,19 @@ public class ParseDefinitionEntry {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (caseSensitive ? 1231 : 1237);
+        result = prime * result + ((end == null) ? 0 : end.hashCode());
+        result = prime * result + ((start == null) ? 0 : start.hashCode());
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + (toPreserve ? 1231 : 1237);
+        result = prime * result + (trimQuotes ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
