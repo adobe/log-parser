@@ -34,15 +34,14 @@ import com.adobe.campaign.tests.logparser.StringParseFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class TestLogParsing {
-    
+
     @Test
     public void testInstantiation() {
         ParseDefinitionEntry l_entry1 = new ParseDefinitionEntry("my title");
-        
-        assertThat("The constructor should set the title", l_entry1.getTitle(),is(equalTo("my title")));
+
+        assertThat("The constructor should set the title", l_entry1.getTitle(), is(equalTo("my title")));
     }
-    
-    
+
     @Test
     public void testSimpleLog() throws StringParseException {
 
@@ -250,10 +249,14 @@ public class TestLogParsing {
 
     }
 
-    /******** Imported tests ; Harnesses 
-     * @throws StringParseException *********/
+    /********
+     * Imported tests ; Harnesses
+     * 
+     * @throws StringParseException
+     *********/
     @Test
-    public void testFetchACCCoverageFromFile() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testFetchACCCoverageFromFile()
+            throws InstantiationException, IllegalAccessException, StringParseException {
 
         //Create a parse definition
 
@@ -275,8 +278,8 @@ public class TestLogParsing {
 
         final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
 
-        Map<String, GenericEntry> l_entries = StringParseFactory.extractLogEntryMap(Arrays.asList(apacheLogFile),
-                l_pDefinition, GenericEntry.class);
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
 
         assertThat(l_entries, is(notNullValue()));
         assertThat("We should have the correct nr of entries", l_entries.size(), is(equalTo(5)));
@@ -398,8 +401,6 @@ public class TestLogParsing {
         l_definition2.setDefinitionEntries(Arrays.asList(l_apiDefinition2, l_verbDefinition2));
 
         assertThat("The two definitions are the same", l_definition, is(equalTo(l_definition2)));
-        assertThat("The two hashes should be the same", l_definition.hashCode(),
-                is(equalTo(l_definition2.hashCode())));
 
     }
 
@@ -537,9 +538,7 @@ public class TestLogParsing {
 
         assertThat("We should have the correct key", l_entry.makeKey(), is(equalTo("A#team")));
     }
-    
-    
-    
+
     @Test(description = "Testing the case of just an entry value as key")
     public void testKeySimple() {
 
@@ -565,7 +564,6 @@ public class TestLogParsing {
 
         l_entry.put("API", "A");
         l_entry.put("verb", "team");
-        
 
         assertThat("We should have the correct key", l_entry.makeKey(), is(equalTo("team")));
     }
