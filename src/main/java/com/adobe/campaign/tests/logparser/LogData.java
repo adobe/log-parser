@@ -148,8 +148,11 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionTitleException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @throws IllegalAccessException if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
      *
      */
     public <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
@@ -174,8 +177,11 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionTitleException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     * @throws InstantiationException
+     * @throws IllegalAccessException if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
      *
      */
     public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
