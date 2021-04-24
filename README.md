@@ -42,7 +42,7 @@ Below is a diagram representing the class structure:
 
 ## Release Notes
 
-- 1.0.2
+- 1.0.3
   - Introduced the LogData Top Class. This encapsulates all results.
   - Introduced the LogDataFactory
   - Added the groupBy method to extract data from the results
