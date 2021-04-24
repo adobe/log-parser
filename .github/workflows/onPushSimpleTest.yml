@@ -37,7 +37,7 @@ jobs:
           echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
           echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
 
-      - name: public coverage onto codecov
+      - name: publish coverage onto codecov
         uses: codecov/codecov-action@v1
         with:
           file: ./**/target/site/jacoco/jacoco.xml
