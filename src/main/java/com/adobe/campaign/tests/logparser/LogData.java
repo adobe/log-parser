@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -323,12 +321,20 @@ public class LogData<T extends StdLogEntry> {
      * Author : gandomi
      *
      * @param in_filterProperties
-     * @return
+     *        A map of <String,Object> representation the values we want to find
+     * @return a new LogDataObject containing only the filtered values
      *
      */
-    public LogData<GenericEntry> filter(Properties in_filterProperties) {
+    public LogData<T> filter(Map<String, Object> in_filterKeyValues) {
+        LogData<T> lr_filteredLogData = new LogData<>();
 
-        return null;
+        for (String lt_logDataKey : this.getEntries().keySet()) {
+            if (this.get(lt_logDataKey).matches(in_filterKeyValues)) {
+                lr_filteredLogData.addEntry(this.get(lt_logDataKey));
+            }
+        }
+
+        return lr_filteredLogData;
     }
 
 }

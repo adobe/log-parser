@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract class for multiple definitions
@@ -28,7 +30,8 @@ import org.apache.commons.lang.StringUtils;
  *
  */
 public abstract class StdLogEntry {
-
+    protected static Logger log = LogManager.getLogger();
+    
     private Integer frequence = 1;
     private ParseDefinition parseDefinition;
 
@@ -199,6 +202,34 @@ public abstract class StdLogEntry {
     public Object get(String in_dataTitle) {
         return this.fetchValueMap().get(in_dataTitle);
     }
+    
+    /**
+     * Given a map of <String,Object> this method returns true if all of the map
+     * values can be found in the values map of this StdLogEntry. If any of the
+     * keys cannot be found in the valueMap, we provide a warning
+     *
+     * Author : gandomi
+     *
+     * @param in_filterMap
+     *        A map of filter values
+     * @return True if all of the values can be found in the valueMap
+     *
+     */
+    public boolean matches(Map<String, Object> in_filterMap) {
+
+        
+        for (String lt_filterKey : in_filterMap.keySet()) {
+            if (!this.fetchHeaders().contains(lt_filterKey)) {
+                log.warn("The filter key {} could not be found among the log entry headers.", lt_filterKey);
+                return false;
+            }
+            if (!this.get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 
     @Override
     public boolean equals(Object obj) {

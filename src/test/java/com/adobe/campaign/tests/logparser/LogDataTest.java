@@ -669,7 +669,7 @@ public class LogDataTest {
     }
 
     /**
-     * Testing that we can do a group by with two values
+     * Testing that we can do a filter
      *
      * Author : gandomi
      * 
@@ -678,7 +678,6 @@ public class LogDataTest {
      * @throws InstantiationException
      *
      */
-    /*
     @Test
     public void testFilter_Default() {
 
@@ -716,29 +715,32 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        Properties l_filterProperties = new Properties();
+        Map<String,Object> l_filterProperties = new HashMap<>();
         l_filterProperties.put("ZZZ", "114");
         LogData<GenericEntry> l_myCube = l_cubeData.filter(l_filterProperties);
 
-        final ParseDefinition l_gpParseDefinition = l_myCube.getEntries().values().iterator().next()
-                .getParseDefinition();
-        assertThat(l_gpParseDefinition.getDefinitionEntries().size(), is(equalTo(2)));
+        assertThat("We should have found one entry", l_myCube.getEntries().size(),is(equalTo(1)));
+        
+        assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("112"));
+        
+        
+        //Adding another filter
+        l_filterProperties.put("DAT", "AAA");
+        
+        LogData<GenericEntry> l_myCube2 = l_cubeData.filter(l_filterProperties);
 
-        assertThat("The key since not defined is the parse definition entries in the order of the group by",
-                l_gpParseDefinition.fetchKeyOrder(),
-                Matchers.contains(l_testParseDefinitionEntryBAU, l_testParseDefinitionEntryDAT));
+        assertThat("We should have found one entry", l_myCube2.getEntries().size(),is(equalTo(1)));
+        
+        assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("112"));
+        
+        //Negative test
+        l_filterProperties.put("DAT", "AA");
+        
+        LogData<GenericEntry> l_myCube3 = l_cubeData.filter(l_filterProperties);
 
-        assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
-                is(equalTo(l_testParseDefinitionEntryBAU)));
-
-        assertThat("We should have two entries in the new cube one fore 13 and the other for 113",
-                l_myCube.getEntries().size(), is(equalTo(2)));
-
-        assertThat("The entry BAU for 13 should be 2", l_myCube.get("13#AA").getFrequence(), is(equalTo(2)));
-
-        assertThat("The entry BAU for 113 should be 1", l_myCube.get("113#AAA").getFrequence(),
-                is(equalTo(1)));
+        assertThat("We should have found one entry", l_myCube3.getEntries().size(),is(equalTo(0)));
+        
 
     }
-    */
+    
 }
