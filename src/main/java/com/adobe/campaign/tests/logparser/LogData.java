@@ -15,10 +15,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionTitleException;
+import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 
 public class LogData<T extends StdLogEntry> {
 
@@ -37,6 +39,10 @@ public class LogData<T extends StdLogEntry> {
     }
 
     public LogData() {
+    }
+
+    public LogData(LogData<T> in_logData) {
+        this(in_logData.entries);
     }
 
     public Map<String, T> getEntries() {
@@ -95,18 +101,17 @@ public class LogData<T extends StdLogEntry> {
      * @param in_valueKey
      *        The identity of the value.
      * @return The key value for the given entry. null if not found
-     * @throws IncorrectParseDefinitionTitleException
+     * @throws IncorrectParseDefinitionException
      *         If the given valueKey was not found in the definition
      *
      */
-    public Object get(String in_dataEntryKey, String in_valueKey)
-            throws IncorrectParseDefinitionTitleException {
+    public Object get(String in_dataEntryKey, String in_valueKey) throws IncorrectParseDefinitionException {
 
         final T l_foundCubeEntry = this.get(in_dataEntryKey);
 
         if (l_foundCubeEntry != null) {
             if (!l_foundCubeEntry.fetchHeaders().contains(in_valueKey)) {
-                throw new IncorrectParseDefinitionTitleException("The key " + in_valueKey
+                throw new IncorrectParseDefinitionException("The key " + in_valueKey
                         + " was not defined in the parse definition for the ParseDefinition "
                         + l_foundCubeEntry.getParseDefinition().getTitle() + " you have configured.");
             }
@@ -115,6 +120,37 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return null;
+    }
+
+    /**
+     * This method allows you to change a specific value in the log data. For
+     * this, you need the key and the parse definition title to find the value
+     *
+     * Author : gandomi
+     *
+     * @param in_dataEntryKey
+     *        The key with which the data has been stored
+     * @param in_valueKey
+     *        The identity of the value.
+     * @param in_newValue
+     *        The new value of the entry value
+     * @throws IncorrectParseDefinitionException
+     *         When there is no entry for the given in_dataEntryKey and
+     *         in_valueKey
+     *
+     */
+    public void put(String in_dataEntryKey, String in_valueKey, Object in_newValue)
+            throws IncorrectParseDefinitionException {
+        if (get(in_dataEntryKey, in_valueKey) == null) {
+            throw new IncorrectParseDefinitionException("The given parse definition entry for key "
+                    + in_dataEntryKey + " and the ParsedefinitionEntry title " + in_valueKey
+                    + " could not be found. Operation failed.");
+        }
+
+        final T l_foundCubeEntry = this.get(in_dataEntryKey);
+
+        l_foundCubeEntry.fetchValueMap().put(in_valueKey, in_newValue);
+
     }
 
     @Override
@@ -145,12 +181,15 @@ public class LogData<T extends StdLogEntry> {
      *        The key name of the parse definition perform the GroupBy on
      * @param in_transformationClass
      *        The class to which we should transform the cube data
-     * @param <U> The return type of the group by cube. 
+     * @param <U>
+     *        The return type of the group by cube.
      * @return a new LogData Object containing the groupBy values
-     * @throws IncorrectParseDefinitionTitleException
+     * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException if this {@code Class} represents an abstract class, an interface,
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
      *         an array class, a primitive type, or void; or if the class has no
      *         nullary constructor; or if the instantiation fails for some other
      *         reason.
@@ -158,7 +197,7 @@ public class LogData<T extends StdLogEntry> {
      */
     public <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
             Class<U> in_transformationClass)
-            throws IncorrectParseDefinitionTitleException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
 
         return groupBy(Arrays.asList(in_parseDefinitionEntryKey), in_transformationClass);
     }
@@ -175,12 +214,15 @@ public class LogData<T extends StdLogEntry> {
      *        on
      * @param in_transformationClass
      *        The class to which we should transform the cube data
-     * @param <U> The return type of the group by cube. 
+     * @param <U>
+     *        The return type of the group by cube.
      * @return a new LogData Object containing the groupBy values
-     * @throws IncorrectParseDefinitionTitleException
+     * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException if this {@code Class} represents an abstract class, an interface,
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
      *         an array class, a primitive type, or void; or if the class has no
      *         nullary constructor; or if the instantiation fails for some other
      *         reason.
@@ -188,7 +230,7 @@ public class LogData<T extends StdLogEntry> {
      */
     public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
             Class<U> in_transformationClass)
-            throws IncorrectParseDefinitionTitleException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
         LogData<U> lr_cubeData = new LogData<U>();
 
         //Creating new Definition
@@ -207,7 +249,7 @@ public class LogData<T extends StdLogEntry> {
 
             for (String lt_parseDefinitionEntryKey : in_parseDefinitionEntryKeyList) {
                 if (!lt_entry.getParseDefinition().fetchHeaders().contains(lt_parseDefinitionEntryKey)) {
-                    throw new IncorrectParseDefinitionTitleException("The given header name "
+                    throw new IncorrectParseDefinitionException("The given header name "
                             + lt_parseDefinitionEntryKey + " was not among the stored data");
                 }
 
@@ -220,6 +262,73 @@ public class LogData<T extends StdLogEntry> {
             lr_cubeData.addEntry(lt_cubeEntry);
         }
         return lr_cubeData;
+    }
+
+    /**
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
+     * This method performs a groupby for the given value. The frequence will
+     * also take into account the original frequence
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionEntryKeyList
+     *        The list of key names of the parse definition perform the GroupBy
+     *        on
+     * @return a new LogData Object containing the groupBy values
+     * @throws IncorrectParseDefinitionException
+     *         If the key is not in the ParseDefinitions of the Log data entry
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
+     *
+     */
+    public LogData<GenericEntry> groupBy(List<String> in_parseDefinitionEntryKeyList)
+            throws InstantiationException, IllegalAccessException, IncorrectParseDefinitionException {
+        return groupBy(in_parseDefinitionEntryKeyList, GenericEntry.class);
+    }
+
+    /**
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
+     * This method performs a groupby for the given value. The frequence will
+     * also take into account the original frequence
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionEntryKey
+     *        The key name of the parse definition perform the GroupBy on
+     * @return a new LogData Object containing the groupBy values
+     * @throws IncorrectParseDefinitionException
+     *         If the key is not in the ParseDefinitions of the Log data entry
+     * @throws IllegalAccessException
+     *         if the class or its nullary constructor is not accessible.
+     * @throws InstantiationException
+     *         if this {@code Class} represents an abstract class, an interface,
+     *         an array class, a primitive type, or void; or if the class has no
+     *         nullary constructor; or if the instantiation fails for some other
+     *         reason.
+     *
+     */
+    public LogData<GenericEntry> groupBy(String in_parseDefinitionEntryKey)
+            throws InstantiationException, IllegalAccessException, IncorrectParseDefinitionException {
+        return groupBy(in_parseDefinitionEntryKey, GenericEntry.class);
+    }
+
+    /**
+     * This method filters the LogData with the given properties
+     *
+     * Author : gandomi
+     *
+     * @param in_filterProperties
+     * @return
+     *
+     */
+    public LogData<GenericEntry> filter(Properties in_filterProperties) {
+
+        return null;
     }
 
 }

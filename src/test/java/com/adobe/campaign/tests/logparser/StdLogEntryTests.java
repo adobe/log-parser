@@ -100,4 +100,41 @@ public class StdLogEntryTests {
         
         
     }
+    
+    @Test
+    public void testCopyConstructor() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+        
+        GenericEntry l_newEntry =l_inputData.copy();
+        
+        assertThat("The new entry should be the same as the old one", l_inputData,equalTo(l_newEntry));
+        
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "12");
+        l_inputData2.fetchValueMap().put("ZZZ", "34");
+        l_inputData2.fetchValueMap().put("BAU", "14");
+        l_inputData2.fetchValueMap().put("DAT", "DDD");
+        
+        GenericEntry l_newEntry2 = l_inputData2.copy();
+        assertThat("The new entry should be the same as the old one", l_inputData2,equalTo(l_newEntry2));
+        
+        assertThat("The new entries should not be the same", l_newEntry2,not(equalTo(l_newEntry)));
+        
+        
+    }
 }

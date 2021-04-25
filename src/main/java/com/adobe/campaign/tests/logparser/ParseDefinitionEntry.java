@@ -36,6 +36,15 @@ public class ParseDefinitionEntry {
 
     }
 
+    public ParseDefinitionEntry(ParseDefinitionEntry in_oldDefinitionEntry) {
+        this.title = in_oldDefinitionEntry.title;
+        this.start = in_oldDefinitionEntry.start;
+        this.end = in_oldDefinitionEntry.end;
+        this.caseSensitive = in_oldDefinitionEntry.caseSensitive;
+        this.trimQuotes = in_oldDefinitionEntry.trimQuotes;
+        this.toPreserve = in_oldDefinitionEntry.toPreserve;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -145,7 +154,8 @@ public class ParseDefinitionEntry {
      *
      * Author : gandomi
      *
-     * @param in_logString The string/log line which we are searching through
+     * @param in_logString
+     *        The string/log line which we are searching through
      * @return A String that will be parsed by the subsequent
      *         ParseDefinitionEntry
      *

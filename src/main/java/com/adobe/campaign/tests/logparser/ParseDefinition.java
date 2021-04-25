@@ -55,6 +55,15 @@ public class ParseDefinition {
         definitionEntries = new ArrayList<>();
         keyOrder = new ArrayList<>();
     }
+    
+    public ParseDefinition(ParseDefinition in_oldParseDefinition) {
+        super();
+        this.title = in_oldParseDefinition.title;
+        this.definitionEntries = in_oldParseDefinition.definitionEntries;
+        this.keyPadding = in_oldParseDefinition.keyPadding;
+        this.keyOrder = in_oldParseDefinition.keyOrder;
+        this.printOutPadding = in_oldParseDefinition.printOutPadding;
+    }
 
     /**
      * This method adds a definition entry to the definition entries of this

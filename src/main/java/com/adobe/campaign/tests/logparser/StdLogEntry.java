@@ -40,9 +40,27 @@ public abstract class StdLogEntry {
         this.parseDefinition = in_definition;
     }
 
+    public StdLogEntry(StdLogEntry in_oldLogEntry) {
+        super();
+        this.frequence = in_oldLogEntry.frequence;
+        this.parseDefinition = in_oldLogEntry.parseDefinition;
+        this.valuesMap = in_oldLogEntry.valuesMap;
+    }
+
     public StdLogEntry() {
         parseDefinition = new ParseDefinition("Created By Default");
     }
+
+    /**
+     * Creates a clone of the current LogEntry. This requires that each child
+     * defines a copy constructor
+     *
+     * Author : gandomi
+     *
+     * @return A new constructed LogEntry Object
+     *
+     */
+    public abstract StdLogEntry copy();
 
     /**
      * Fetches a print out for listing purposed. It uses the header list as an
@@ -78,7 +96,8 @@ public abstract class StdLogEntry {
     public abstract Set<String> fetchHeaders();
 
     /**
-     * Returns a set of objects you have defined for your log class. When using Genric Object no changes are made to it.
+     * Returns a set of objects you have defined for your log class. When using
+     * Genric Object no changes are made to it.
      *
      * Author : gandomi
      *
@@ -104,7 +123,8 @@ public abstract class StdLogEntry {
      *
      * Author : gandomi
      *
-     * @param in_addedFrequence The amount we should add to the frequence
+     * @param in_addedFrequence
+     *        The amount we should add to the frequence
      *
      */
     public void addFrequence(int in_addedFrequence) {
@@ -117,14 +137,16 @@ public abstract class StdLogEntry {
     }
 
     /**
-     * @param frequence the frequence to set
+     * @param frequence
+     *        the frequence to set
      */
     protected void setFrequence(Integer frequence) {
         this.frequence = frequence;
     }
 
     /**
-     * @param valuesMap the valuesMap to set
+     * @param valuesMap
+     *        the valuesMap to set
      */
     protected void setValuesMap(Map<String, Object> valuesMap) {
         this.valuesMap = valuesMap;
@@ -168,18 +190,15 @@ public abstract class StdLogEntry {
         valuesMap.put(ParseDefinition.STD_DATA_KEY, this.makeKey());
 
     }
-    
-    
+
     public void put(String in_dataTitle, String in_value) {
         this.fetchValueMap().put(in_dataTitle, in_value);
-        
+
     }
 
     public Object get(String in_dataTitle) {
         return this.fetchValueMap().get(in_dataTitle);
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -207,7 +226,5 @@ public abstract class StdLogEntry {
             return false;
         return true;
     }
-    
-
 
 }
