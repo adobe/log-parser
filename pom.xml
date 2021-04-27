@@ -87,11 +87,13 @@
                         <founder>${project.organization.name}</founder>
                         <year>${project.inceptionYear}</year>
                         <website>${founder-website}</website>
+                        
                     </properties>
                     <includes>
                         <include>src/main/java/**</include>
                         <include>src/test/java/**</include>
                     </includes>
+                    <strictCheck>true</strictCheck>
                 </configuration>
                 <executions>
                     <execution>
