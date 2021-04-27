@@ -316,8 +316,8 @@ public class LogData<T extends StdLogEntry> {
      *
      * Author : gandomi
      *
-     * @param in_filterProperties
-     *        A map of <String,Object> representation the values we want to find
+     * @param in_filterKeyValues
+     *        A map of &lt;String,Object&gt; representation the values we want to find
      * @return a new LogDataObject containing only the filtered values
      *
      */

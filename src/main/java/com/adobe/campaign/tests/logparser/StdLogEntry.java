@@ -204,7 +204,7 @@ public abstract class StdLogEntry {
     }
     
     /**
-     * Given a map of <String,Object> this method returns true if all of the map
+     * Given a map of &lt;String,Object&gt; this method returns true if all of the map
      * values can be found in the values map of this StdLogEntry. If any of the
      * keys cannot be found in the valueMap, we provide a warning
      *
