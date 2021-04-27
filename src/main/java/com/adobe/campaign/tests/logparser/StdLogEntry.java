@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Abstract class for multiple definitions
@@ -28,7 +30,8 @@ import org.apache.commons.lang.StringUtils;
  *
  */
 public abstract class StdLogEntry {
-
+    protected static Logger log = LogManager.getLogger();
+    
     private Integer frequence = 1;
     private ParseDefinition parseDefinition;
 
@@ -40,9 +43,27 @@ public abstract class StdLogEntry {
         this.parseDefinition = in_definition;
     }
 
+    public StdLogEntry(StdLogEntry in_oldLogEntry) {
+        super();
+        this.frequence = in_oldLogEntry.frequence;
+        this.parseDefinition = in_oldLogEntry.parseDefinition;
+        this.valuesMap = in_oldLogEntry.valuesMap;
+    }
+
     public StdLogEntry() {
         parseDefinition = new ParseDefinition("Created By Default");
     }
+
+    /**
+     * Creates a clone of the current LogEntry. This requires that each child
+     * defines a copy constructor
+     *
+     * Author : gandomi
+     *
+     * @return A new constructed LogEntry Object
+     *
+     */
+    public abstract StdLogEntry copy();
 
     /**
      * Fetches a print out for listing purposed. It uses the header list as an
@@ -78,7 +99,8 @@ public abstract class StdLogEntry {
     public abstract Set<String> fetchHeaders();
 
     /**
-     * Returns a set of objects you have defined for your log class. When using Genric Object no changes are made to it.
+     * Returns a set of objects you have defined for your log class. When using
+     * Genric Object no changes are made to it.
      *
      * Author : gandomi
      *
@@ -104,7 +126,8 @@ public abstract class StdLogEntry {
      *
      * Author : gandomi
      *
-     * @param in_addedFrequence The amount we should add to the frequence
+     * @param in_addedFrequence
+     *        The amount we should add to the frequence
      *
      */
     public void addFrequence(int in_addedFrequence) {
@@ -117,14 +140,16 @@ public abstract class StdLogEntry {
     }
 
     /**
-     * @param frequence the frequence to set
+     * @param frequence
+     *        the frequence to set
      */
     protected void setFrequence(Integer frequence) {
         this.frequence = frequence;
     }
 
     /**
-     * @param valuesMap the valuesMap to set
+     * @param valuesMap
+     *        the valuesMap to set
      */
     protected void setValuesMap(Map<String, Object> valuesMap) {
         this.valuesMap = valuesMap;
@@ -168,18 +193,43 @@ public abstract class StdLogEntry {
         valuesMap.put(ParseDefinition.STD_DATA_KEY, this.makeKey());
 
     }
-    
-    
+
     public void put(String in_dataTitle, String in_value) {
         this.fetchValueMap().put(in_dataTitle, in_value);
-        
+
     }
 
     public Object get(String in_dataTitle) {
         return this.fetchValueMap().get(in_dataTitle);
     }
+    
+    /**
+     * Given a map of &lt;String,Object&gt; this method returns true if all of the map
+     * values can be found in the values map of this StdLogEntry. If any of the
+     * keys cannot be found in the valueMap, we provide a warning
+     *
+     * Author : gandomi
+     *
+     * @param in_filterMap
+     *        A map of filter values
+     * @return True if all of the values can be found in the valueMap
+     *
+     */
+    public boolean matches(Map<String, Object> in_filterMap) {
 
-
+        
+        for (String lt_filterKey : in_filterMap.keySet()) {
+            if (!this.fetchHeaders().contains(lt_filterKey)) {
+                log.warn("The filter key {} could not be found among the log entry headers.", lt_filterKey);
+                return false;
+            }
+            if (!this.get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -207,7 +257,5 @@ public abstract class StdLogEntry {
             return false;
         return true;
     }
-    
-
 
 }

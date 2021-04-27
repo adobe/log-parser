@@ -34,6 +34,10 @@ public class GenericEntry extends StdLogEntry {
         super(new ParseDefinition("Created By Default"));
     }
 
+    private GenericEntry(GenericEntry l_inputData) {
+        super(l_inputData);
+    }
+
     @Override
     public String makeKey() {
         return String.join(getParseDefinition().getKeyPadding(), getParseDefinition().fetchKeyOrder().stream()
@@ -46,7 +50,6 @@ public class GenericEntry extends StdLogEntry {
         return getParseDefinition().fetchHeaders();
 
     }
-    
 
     /**
      * Returns the values map as it is without any manipulation
@@ -56,5 +59,11 @@ public class GenericEntry extends StdLogEntry {
 
         return valuesMap;
     }
-    
+
+    @Override
+    public GenericEntry copy() {
+        return new GenericEntry(this);
+    }
+
+
 }
