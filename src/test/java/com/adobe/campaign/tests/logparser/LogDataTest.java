@@ -678,32 +678,103 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        Map<String,Object> l_filterProperties = new HashMap<>();
+        Map<String, Object> l_filterProperties = new HashMap<>();
         l_filterProperties.put("ZZZ", "114");
         LogData<GenericEntry> l_myCube = l_cubeData.filter(l_filterProperties);
 
-        assertThat("We should have found one entry", l_myCube.getEntries().size(),is(equalTo(1)));
-        
+        assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(1)));
+
         assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("112"));
-        
-        
+
         //Adding another filter
         l_filterProperties.put("DAT", "AAA");
-        
+
         LogData<GenericEntry> l_myCube2 = l_cubeData.filter(l_filterProperties);
 
-        assertThat("We should have found one entry", l_myCube2.getEntries().size(),is(equalTo(1)));
-        
+        assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(1)));
+
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("112"));
-        
+
         //Negative test
         l_filterProperties.put("DAT", "AA");
-        
+
         LogData<GenericEntry> l_myCube3 = l_cubeData.filter(l_filterProperties);
 
-        assertThat("We should have found one entry", l_myCube3.getEntries().size(),is(equalTo(0)));
-        
+        assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(0)));
 
     }
-    
+
+    /**
+     * Testing that we can do a filter using multiple fields
+     *
+     * Author : gandomi
+     * 
+     * @throws IncorrectParseDefinitionException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     *
+     */
+    @Test
+    public void testFilter_Multi() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", "14");
+        l_filterProperties.put("BAU", "13");
+
+        LogData<GenericEntry> l_myCube = l_cubeData.filter(l_filterProperties);
+
+        assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(2)));
+
+        assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("120"));
+
+        l_filterProperties.remove("ZZZ");
+        LogData<GenericEntry> l_myCube2 = l_cubeData.filter(l_filterProperties);
+
+        assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(2)));
+
+        assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("120"));
+
+        l_filterProperties.put("DAT", "AAA");
+        LogData<GenericEntry> l_myCube3 = l_cubeData.filter(l_filterProperties);
+
+        assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(1)));
+
+        assertThat("We should have found the correct entry", l_myCube3.getEntries().containsKey("120"));
+
+    }
+
 }
