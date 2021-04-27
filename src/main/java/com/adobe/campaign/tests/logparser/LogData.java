@@ -39,10 +39,6 @@ public class LogData<T extends StdLogEntry> {
     public LogData() {
     }
 
-    public LogData(LogData<T> in_logData) {
-        this(in_logData.entries);
-    }
-
     public Map<String, T> getEntries() {
         return entries;
     }

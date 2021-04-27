@@ -631,42 +631,6 @@ public class LogDataTest {
 
     }
 
-    @Test
-    public void testCopyConstructor() throws IncorrectParseDefinitionException {
-
-        ParseDefinition l_definition = new ParseDefinition("tmp");
-        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
-        l_definition.addEntry(l_parseDefinitionEntryKey);
-        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
-        l_definition.addEntry(new ParseDefinitionEntry("BAU"));
-        l_definition.addEntry(new ParseDefinitionEntry("DAT"));
-        l_definition.defineKeys(l_parseDefinitionEntryKey);
-
-        GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
-
-        GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
-
-        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
-        l_cubeData.addEntry(l_inputData2);
-
-        LogData<GenericEntry> l_cubeDataNew = new LogData<GenericEntry>(l_cubeData);
-
-        assertThat("We should be able to get the values", l_cubeData, is(equalTo(l_cubeDataNew)));
-
-        l_cubeDataNew.put("112", "DAT", "QQQ");
-
-        assertThat("We should be able to get the values", l_cubeData, not(equalTo(l_cubeDataNew)));
-
-    }
-
     /**
      * Testing that we can do a filter
      *

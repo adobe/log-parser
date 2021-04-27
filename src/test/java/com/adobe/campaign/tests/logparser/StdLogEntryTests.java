@@ -130,6 +130,12 @@ public class StdLogEntryTests {
         assertThat("The new entry should be the same as the old one", l_inputData2, equalTo(l_newEntry2));
 
         assertThat("The new entries should not be the same", l_newEntry2, not(equalTo(l_newEntry)));
+        
+        l_newEntry2.fetchValueMap().put("BAU", "15");
+        
+        assertThat("The new entry should no longer be the same as the old one", l_inputData2, equalTo(l_newEntry2));
+
+        
     }
 
     @Test
