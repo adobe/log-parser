@@ -123,9 +123,26 @@ public class ParseDefinitionFactory {
     public static File exportParseDefinitionToJSON(ParseDefinition in_parseDefinition, File in_jsonFile)
             throws ParseDefinitionImportExportException {
         ObjectMapper mapper = new ObjectMapper();
+        
+        createParents(in_jsonFile);
 
         return exportParseDefinitionToJSON(in_parseDefinition, in_jsonFile, mapper);
 
+    }
+
+    /**
+     * A util method for ensuring the the parent directories
+     *
+     * Author : gandomi
+     *
+     * @param in_file A file that may or may not exist
+     *
+     */
+    protected static void createParents(File in_file) {
+        //Make sure that the parent directories exist
+        if (in_file.getParentFile()!=null && !in_file.getParentFile().exists()) {
+            in_file.getParentFile().mkdirs();
+        }
     }
 
     /**
@@ -150,7 +167,7 @@ public class ParseDefinitionFactory {
             mapper.writeValue(in_jsonFile, in_parseDefinition);
         } catch (IOException e) {
             throw new ParseDefinitionImportExportException(
-                    "Errror while exporting parse definition to file " + in_jsonFile.getPath(), e);
+                    "Error while exporting parse definition to file " + in_jsonFile.getPath(), e);
         }
 
         return in_jsonFile;
