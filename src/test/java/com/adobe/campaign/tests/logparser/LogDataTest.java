@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hamcrest.Matchers;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.LogData;
@@ -775,6 +776,11 @@ public class LogDataTest {
 
         assertThat("We should have found the correct entry", l_myCube3.getEntries().containsKey("120"));
 
+    }
+    
+    @Test
+    public void testIllegalConstrtuctorOfLogDataFactory() {
+        Assert.assertThrows(IllegalStateException.class,() -> new LogDataFactory());
     }
 
 }

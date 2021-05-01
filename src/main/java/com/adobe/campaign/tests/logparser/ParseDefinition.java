@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * The main class for analyzing logs. It gathers a list of Pars Definiton
  * Entries and allows for defining high level definitions of how the gathered
@@ -42,6 +44,10 @@ public class ParseDefinition {
     protected static final String STD_DATA_FREQUENCE = "frequence";
     protected static final String STD_DATA_KEY = "key";
 
+    public ParseDefinition() {
+        super();
+    }
+
     /**
      * The main constructor for the ParseDefiition
      * 
@@ -55,7 +61,7 @@ public class ParseDefinition {
         definitionEntries = new ArrayList<>();
         keyOrder = new ArrayList<>();
     }
-    
+
     public ParseDefinition(ParseDefinition in_oldParseDefinition) {
         super();
         this.title = in_oldParseDefinition.title;
@@ -72,8 +78,8 @@ public class ParseDefinition {
      * Author : gandomi
      *
      * @param in_parseDefinitionEntry
-     *        a {@link ParseDefinitionEntry} which represents a step in the rules for
-     *        analyzing a line.
+     *        a {@link ParseDefinitionEntry} which represents a step in the
+     *        rules for analyzing a line.
      *
      */
     public void addEntry(ParseDefinitionEntry in_parseDefinitionEntry) {
@@ -198,9 +204,10 @@ public class ParseDefinition {
      */
     public void defineKeys(ParseDefinitionEntry in_parseDefinitionAsKey) {
         defineKeys(Arrays.asList(in_parseDefinitionAsKey));
-        
+
     }
 
+    @JsonIgnore
     public String getPrintOutPadding() {
         return printOutPadding;
     }

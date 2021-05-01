@@ -16,7 +16,20 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.mockito.ArgumentMatchers;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ParseDefinitionTests {
 
@@ -46,7 +59,6 @@ public class ParseDefinitionTests {
                 not(equalTo(l_verbDefinition2)));
 
     }
-    
 
     @Test
     public void testcopyConstructorParseDefinition() {
@@ -67,11 +79,12 @@ public class ParseDefinitionTests {
         ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
         l_parseDefinition.addEntry(l_apiDefinition);
         l_parseDefinition.addEntry(l_verbDefinition);
-        
+
         ParseDefinition l_newParseDefinition = new ParseDefinition(l_parseDefinition);
-        
-        assertThat("The created parse definitions should be the same as the old one", l_parseDefinition, equalTo(l_newParseDefinition));
-        
+
+        assertThat("The created parse definitions should be the same as the old one", l_parseDefinition,
+                equalTo(l_newParseDefinition));
+
     }
 
     @Test
@@ -168,4 +181,152 @@ public class ParseDefinitionTests {
 
     }
 
+    @Test
+    public void testExportToJSONParrseDefinitionEntry()
+            throws JsonParseException, JsonMappingException, IOException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper2 = new ObjectMapper();
+
+        try {
+
+            // Java objects to JSON file
+            mapper.writeValue(new File("ac_test_output/firstDefinitionEntry.json"), l_apiDefinition);
+
+            // Java objects to JSON string - compact-print
+            mapper.writeValueAsString(l_apiDefinition);
+
+            // Java objects to JSON string - pretty-print
+            mapper.writerWithDefaultPrettyPrinter().writeValueAsString(l_parseDefinition);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Read JSON
+        ParseDefinitionEntry fetchedJSON = mapper2
+                .readValue(new File("ac_test_output/firstDefinitionEntry.json"), ParseDefinitionEntry.class);
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_apiDefinition));
+
+    }
+
+    @Test
+    public void testExportToJSON() throws JsonParseException, JsonMappingException, IOException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+
+            // Java objects to JSON file
+            mapper.writeValue(new File("ac_test_output/firstDefinition.json"), l_parseDefinition);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ObjectMapper mapper2 = new ObjectMapper();
+
+        //Read JSON
+        ParseDefinition fetchedJSON = mapper2.readValue(new File("ac_test_output/firstDefinition.json"),
+                ParseDefinition.class);
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+
+    }
+
+    @Test
+    public void testImportExportToJSON() throws ParseDefinitionImportExportException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+
+        final String l_jsonPath = "ac_test_output/firstDefinition.json";
+
+        File l_storedJSON = ParseDefinitionFactory.exportParseDefinitionToJSON(l_parseDefinition, l_jsonPath);
+
+        ParseDefinition fetchedJSON = ParseDefinitionFactory
+                .importParseDefinition(l_storedJSON.getAbsolutePath());
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testImportExportToJSON_negative() throws ParseDefinitionImportExportException,
+            JsonGenerationException, JsonMappingException, IOException {
+        ObjectMapper mapper = Mockito.mock(ObjectMapper.class);
+        Mockito.doThrow(IOException.class).when(mapper).writeValue(ArgumentMatchers.any(File.class),
+                ArgumentMatchers.any(ParseDefinition.class));
+        
+        Mockito.doThrow(IOException.class).when(mapper).readValue(ArgumentMatchers.any(File.class),
+                ArgumentMatchers.any(Class.class));
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_verbDefinition);
+
+        final String l_jsonPath = "ac_test_output/firstDefinition.json";
+
+        Assert.assertThrows(ParseDefinitionImportExportException.class, () -> ParseDefinitionFactory
+                .exportParseDefinitionToJSON(l_parseDefinition, new File(l_jsonPath), mapper));
+
+        Assert.assertThrows(ParseDefinitionImportExportException.class, () -> ParseDefinitionFactory
+                .importParseDefinition(new File(l_jsonPath), mapper));
+
+    }
 }
