@@ -41,11 +41,13 @@ Below is a diagram representing the class structure:
 
 ## Release Notes
 - 1.0.4 Snapshot
-  - #8  Added the filter function
-  - #13 Added copy constructors
-  - #13 Added a copy method in the StdLogEntry (#13)
+  - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
+  - #8 & #18  Added the filter function.
+  - #13 Added copy constructors.
+  - #13 Added a copy method in the StdLogEntry (#13).
   - #14 Added a set method to LogData. This allows you to change a Log data given a key value and ParseDefinition entry title
-  - Renamed exception IncorrectParseDefinitionTitleException to IncorrectParseDefinitionException
+  - Renamed exception IncorrectParseDefinitionTitleException to IncorrectParseDefinitionException.
+  - 
 - 1.0.3
   - Introduced the LogData Top Class. This encapsulates all results.
   - Introduced the LogDataFactory
