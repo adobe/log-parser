@@ -47,7 +47,7 @@ Below is a diagram representing the class structure:
 ![The Class relationship](diagrams/Log_Parser-Classes.png)
 
 ## Release Notes
-- 1.0.4 Snapshot
+- 1.0.4
   - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
   - #8 & #18  Added the filter function.
   - #13 Added copy constructors.
