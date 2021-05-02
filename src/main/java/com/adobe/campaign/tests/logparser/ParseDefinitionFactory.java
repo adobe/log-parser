@@ -12,6 +12,7 @@
 package com.adobe.campaign.tests.logparser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
@@ -72,16 +73,19 @@ public class ParseDefinitionFactory {
      */
     public static ParseDefinition importParseDefinition(final File in_jsonFile, ObjectMapper mapper)
             throws ParseDefinitionImportExportException {
+        
+        if (!in_jsonFile.exists()) {
+            throw new ParseDefinitionImportExportException("The provided json file "+in_jsonFile.getPath()+" does not exist.");
+        }
 
         //Read JSON
         ParseDefinition fetchedJSON = null;
         try {
-
             fetchedJSON = mapper.readValue(in_jsonFile, ParseDefinition.class);
         } catch (IOException e) {
             throw new ParseDefinitionImportExportException("Error when importing json file " + in_jsonFile,
                     e);
-        }
+        } 
         return fetchedJSON;
     }
 

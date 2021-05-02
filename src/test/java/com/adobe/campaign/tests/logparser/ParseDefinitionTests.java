@@ -15,6 +15,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.testng.Assert.assertThrows;
+import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,10 @@ public class ParseDefinitionTests {
         File l_stdOutPutFile = new File(LogParser.OUTPUT_DIR);
 
         if (l_stdOutPutFile.exists()) {
-            l_stdOutPutFile.delete();
+            for (File lt_file : l_stdOutPutFile.listFiles()) {
+                assertTrue(lt_file.delete());
+            }
+            assertTrue(l_stdOutPutFile.delete());
         }
 
     }
@@ -275,7 +280,53 @@ public class ParseDefinitionTests {
         File l_jsonPath2 = new File("random2.json");
         ParseDefinitionFactory.createParents(l_jsonPath2);
 
+    }
+
+    @Test
+    public void testImportJSON() throws ParseDefinitionImportExportException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/myParseDefinition.json";
+
+        ParseDefinition fetchedJSON = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
 
     }
 
+    @Test
+    public void testImportJSONNegative_NonExistant() throws ParseDefinitionImportExportException {
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/myParseDefinitionNONExistant.json";
+
+        assertThrows(ParseDefinitionImportExportException.class,
+                () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
+
+    }
+
+    @Test
+    public void testImportJSONNegative_NotAJSON() throws ParseDefinitionImportExportException {
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/myBadParseDefinition.json";
+
+        assertThrows(ParseDefinitionImportExportException.class,
+                () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
+
+    }
 }

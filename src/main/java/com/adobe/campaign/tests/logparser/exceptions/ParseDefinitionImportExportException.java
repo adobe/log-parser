@@ -22,4 +22,8 @@ public class ParseDefinitionImportExportException extends Exception {
         super(string, e);
     }
 
+    public ParseDefinitionImportExportException(String string) {
+        super(string);
+    }
+
 }
