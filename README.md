@@ -8,7 +8,11 @@ The basic method for using this library is, that you create a definition for you
 
 ![The Processes](diagrams/Log_Parser-Processes.png)
 
-## Defining a Parsing
+
+## Parse Definitions
+In order to parse logs you need to define a ParseDefinition. A ParseDefinition contains a set of ordered ParseDefinition Entries. While parsing a line of logs, the LogParser will see if all entries can be found in the line of logs. If that is the case, the line is stored according to the definitions.
+
+### Defining a Parsing
 Each Parse Definition consists of :
 - Title
 - A set of entries
@@ -21,7 +25,10 @@ Each entry for a Parse Definition allows us to define:
 - The start pattern of the string that will contain the value (null if in the start of a line)
 - The end pattern of the string that will contain the value (null if in the end of a line)
 - Case Sensitive search
-- Is to be kept. In some cases we just need to find a line with certain particularities, but we don't actually want to store the value
+- Is to be kept. In some cases we just need to find a line with certain particularities, but we don't actually want to store the value.
+
+### Import and Export
+You can import or store a Parse Definition to or from a JSON file.
 
 ## Using the Standard Method
 By default each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
@@ -41,11 +48,13 @@ Below is a diagram representing the class structure:
 
 ## Release Notes
 - 1.0.4 Snapshot
-  - #8  Added the filter function
-  - #13 Added copy constructors
-  - #13 Added a copy method in the StdLogEntry (#13)
+  - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
+  - #8 & #18  Added the filter function.
+  - #13 Added copy constructors.
+  - #13 Added a copy method in the StdLogEntry (#13).
   - #14 Added a set method to LogData. This allows you to change a Log data given a key value and ParseDefinition entry title
-  - Renamed exception IncorrectParseDefinitionTitleException to IncorrectParseDefinitionException
+  - Renamed exception IncorrectParseDefinitionTitleException to IncorrectParseDefinitionException.
+  - 
 - 1.0.3
   - Introduced the LogData Top Class. This encapsulates all results.
   - Introduced the LogDataFactory

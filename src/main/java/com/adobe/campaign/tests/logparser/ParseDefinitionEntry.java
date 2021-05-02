@@ -11,6 +11,8 @@
  */
 package com.adobe.campaign.tests.logparser;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * This class allows for the definition of one rule that allows you to extract
  * one piece of data from a string.
@@ -192,6 +194,7 @@ public class ParseDefinitionEntry {
      *         null)
      *
      */
+    @JsonIgnore
     public boolean isEndEOL() {
 
         return getEnd() == null;
@@ -232,6 +235,7 @@ public class ParseDefinitionEntry {
      *         line. (I.e. if start is null)
      *
      */
+    @JsonIgnore
     public boolean isStartStartOfLine() {
 
         return getStart() == null;

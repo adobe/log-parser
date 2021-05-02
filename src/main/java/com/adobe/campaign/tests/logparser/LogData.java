@@ -321,7 +321,7 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogDataObject containing only the filtered values
      *
      */
-    public LogData<T> filter(Map<String, Object> in_filterKeyValues) {
+    public LogData<T> filterBy(Map<String, Object> in_filterKeyValues) {
         LogData<T> lr_filteredLogData = new LogData<>();
 
         for (String lt_logDataKey : this.getEntries().keySet()) {

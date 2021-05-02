@@ -3,7 +3,7 @@
     xmlns="http://logging.apache.org/log4j/2.0/config">
     <Appenders>
         <File name="FILE"
-            fileName="ac_test_output/logs/logfile.log">
+            fileName="log_parser_output/logs/logfile.log">
             <PatternLayout
                 pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n" />
         </File>
