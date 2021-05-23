@@ -252,6 +252,7 @@ public class LogData<T extends StdLogEntry> {
 
             }
             lt_cubeEntry.setValuesFromMap(lt_cubeEntryValues);
+            lt_cubeEntry.setFrequence(lt_entry.getFrequence());
 
             lr_cubeData.addEntry(lt_cubeEntry);
         }

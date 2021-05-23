@@ -555,8 +555,84 @@ public class LogDataTest {
                 l_myCube.getEntries().size(), is(equalTo(2)));
 
         assertThat("The entry BAU for 13 should be 2", l_myCube.get("13#AA").getFrequence(), is(equalTo(2)));
-
+        
+        assertThat("The entry 13#AA should have two value maps (one pe definition)", l_myCube.get("13#AA").valuesMap.keySet().size(),equalTo(2));
         assertThat("The entry BAU for 113 should be 1", l_myCube.get("113#AAA").getFrequence(),
+                is(equalTo(1)));
+        
+        
+        
+
+    }
+    
+    
+    /**
+     * Testing that we can do a group by with two values
+     *
+     * Author : gandomi
+     * 
+     * @throws IncorrectParseDefinitionException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     *
+     */
+    @Test
+    public void testGroupBy_Chaining()
+            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU","DAT")).groupBy("DAT");
+
+        final ParseDefinition l_gpParseDefinition = l_myCube.getEntries().values().iterator().next()
+                .getParseDefinition();
+        assertThat(l_gpParseDefinition.getDefinitionEntries().size(), is(equalTo(1)));
+
+        assertThat("The key since not defined is the parse definition entries in the order of the group by",
+                l_gpParseDefinition.fetchKeyOrder(),
+                Matchers.contains(l_testParseDefinitionEntryDAT));
+
+        assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
+                is(equalTo(l_testParseDefinitionEntryDAT)));
+
+        assertThat("We should have two entries in the new cube one fore AA and the other for AAA",
+                l_myCube.getEntries().size(), is(equalTo(2)));
+
+        assertThat("The entry DAT for AA should be 2", l_myCube.get("AA").getFrequence(), is(equalTo(2)));
+
+        assertThat("The entry DAT for AAA should be 1", l_myCube.get("AAA").getFrequence(),
                 is(equalTo(1)));
 
     }
