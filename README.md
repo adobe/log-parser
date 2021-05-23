@@ -27,6 +27,15 @@ Each entry for a Parse Definition allows us to define:
 - Case Sensitive search
 - Is to be kept. In some cases we just need to find a line with certain particularities, but we don't actually want to store the value.
 
+### How parsing works
+When you have defined your parsing you use the LogDataFactory by passing it:
+1. The log files it should parse
+2. The ParseDefinition
+
+By using the StringParseFactory we get a LogData object with allows us to manage the logs data you have found.
+
+![Parsing a log line](diagrams/Log_Parser-log-parsing.png)
+
 ### Import and Export
 You can import or store a Parse Definition to or from a JSON file.
 
