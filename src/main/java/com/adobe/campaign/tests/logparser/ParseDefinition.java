@@ -41,9 +41,6 @@ public class ParseDefinition {
     private List<ParseDefinitionEntry> keyOrder;
     private String printOutPadding = ";";
 
-    protected static final String STD_DATA_FREQUENCE = "frequence";
-    protected static final String STD_DATA_KEY = "key";
-
     public ParseDefinition() {
         super();
     }
@@ -230,8 +227,6 @@ public class ParseDefinition {
         final Collection<String> l_definedHeaders = getDefinitionEntries().stream()
                 .filter(ParseDefinitionEntry::isToPreserve).map(ParseDefinitionEntry::getTitle)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        l_definedHeaders.add(STD_DATA_KEY);
-        l_definedHeaders.add(STD_DATA_FREQUENCE);
         return (Set<String>) l_definedHeaders;
     }
 

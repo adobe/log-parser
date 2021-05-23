@@ -37,6 +37,10 @@ public abstract class StdLogEntry {
 
     Map<String, Object> valuesMap = new HashMap<>();
 
+    protected static final String STD_DATA_KEY = "key";
+
+    protected static final String STD_DATA_FREQUENCE = "frequence";
+
     public abstract String makeKey();
 
     public StdLogEntry(ParseDefinition in_definition) {
@@ -79,10 +83,12 @@ public abstract class StdLogEntry {
 
         final Map<String, Object> l_valueMap = this.fetchValueMap();
 
+        l_printOutList.add(makeKey());
         for (String lt_header : this.fetchHeaders()) {
 
             l_printOutList.add(l_valueMap.get(lt_header).toString());
         }
+        l_printOutList.add(getFrequence().toString());
         return StringUtils.join(l_printOutList, this.getParseDefinition().getPrintOutPadding());
     }
 
@@ -188,9 +194,6 @@ public abstract class StdLogEntry {
 
             valuesMap.put(lt_definition.getTitle(), in_valueMap.get(lt_definition.getTitle()));
         }
-
-        valuesMap.put(ParseDefinition.STD_DATA_FREQUENCE, this.getFrequence());
-        valuesMap.put(ParseDefinition.STD_DATA_KEY, this.makeKey());
 
     }
 
