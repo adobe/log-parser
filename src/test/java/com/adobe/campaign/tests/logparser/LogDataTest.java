@@ -555,17 +555,14 @@ public class LogDataTest {
                 l_myCube.getEntries().size(), is(equalTo(2)));
 
         assertThat("The entry BAU for 13 should be 2", l_myCube.get("13#AA").getFrequence(), is(equalTo(2)));
-        
-        assertThat("The entry 13#AA should have two value maps (one pe definition)", l_myCube.get("13#AA").valuesMap.keySet().size(),equalTo(2));
+
+        assertThat("The entry 13#AA should have two value maps (one pe definition)",
+                l_myCube.get("13#AA").valuesMap.keySet().size(), equalTo(2));
         assertThat("The entry BAU for 113 should be 1", l_myCube.get("113#AAA").getFrequence(),
                 is(equalTo(1)));
-        
-        
-        
 
     }
-    
-    
+
     /**
      * Testing that we can do a group by with two values
      *
@@ -614,15 +611,14 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU","DAT")).groupBy("DAT");
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT")).groupBy("DAT");
 
         final ParseDefinition l_gpParseDefinition = l_myCube.getEntries().values().iterator().next()
                 .getParseDefinition();
         assertThat(l_gpParseDefinition.getDefinitionEntries().size(), is(equalTo(1)));
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
-                l_gpParseDefinition.fetchKeyOrder(),
-                Matchers.contains(l_testParseDefinitionEntryDAT));
+                l_gpParseDefinition.fetchKeyOrder(), Matchers.contains(l_testParseDefinitionEntryDAT));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryDAT)));
@@ -632,8 +628,7 @@ public class LogDataTest {
 
         assertThat("The entry DAT for AA should be 2", l_myCube.get("AA").getFrequence(), is(equalTo(2)));
 
-        assertThat("The entry DAT for AAA should be 1", l_myCube.get("AAA").getFrequence(),
-                is(equalTo(1)));
+        assertThat("The entry DAT for AAA should be 1", l_myCube.get("AAA").getFrequence(), is(equalTo(1)));
 
     }
 
@@ -853,10 +848,60 @@ public class LogDataTest {
         assertThat("We should have found the correct entry", l_myCube3.getEntries().containsKey("120"));
 
     }
-    
+
     @Test
     public void testIllegalConstrtuctorOfLogDataFactory() {
-        Assert.assertThrows(IllegalStateException.class,() -> new LogDataFactory());
+        Assert.assertThrows(IllegalStateException.class, () -> new LogDataFactory());
     }
 
+    @Test
+    public void testEquals() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+
+        LogData<GenericEntry> l_cubeData2 = new LogData<GenericEntry>();
+        l_cubeData2.addEntry(l_inputData);
+        l_cubeData2.addEntry(l_inputData2);
+
+        assertThat("Both objects should be equal", l_cubeData, equalTo(l_cubeData));
+
+        assertThat("Both objects should be equal", l_cubeData, equalTo(l_cubeData2));
+
+        assertThat("Both objects should be equal", !l_cubeData.equals(null));
+
+        assertThat("Both objects should be equal", null, not(equalTo(l_cubeData2)));
+
+        assertThat("Both objects should be equal", l_cubeData, not(equalTo(l_inputData)));
+
+        l_cubeData.setEntries(null);
+        assertThat("Both objects should be equal", l_cubeData, not(equalTo(l_cubeData2)));
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "1122");
+        l_inputData3.fetchValueMap().put("ZZZ", "1142");
+
+        LogData<GenericEntry> l_cubeData3 = new LogData<GenericEntry>();
+        l_cubeData3.addEntry(l_inputData);
+        l_cubeData3.addEntry(l_inputData3);
+
+        assertThat("Both objects should be equal", l_cubeData3, not(equalTo(l_cubeData2)));
+
+    }
 }
