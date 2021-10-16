@@ -356,21 +356,50 @@ public class LogData<T extends StdLogEntry> {
         return this.filterBy(l_filterProperties);
     }
 
-    
     /**
      * This method searches the LogData with the given properties
      *
      * Author : gandomi
      *
-     * @param in_filterKeyValues
+     * @param in_searchKeyValues
      *        A map of &lt;String,Object&gt; representation the values we want
      *        to find
      * @return a new LogDataObject containing only the filtered values
      *
      */
-    public LogData<T> search(Map<String, Object> in_filterKeyValues) {
-        
-        return filterBy(in_filterKeyValues);
+    public LogData<T> search(Map<String, Object> in_searchKeyValues) {
+
+        return filterBy(in_searchKeyValues);
+    }
+
+    /**
+     * Lets us know if the given search term could be found.
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionName
+     *        The name of the parse definition entry under which we search for a
+     *        value
+     * @param in_searchValue
+     *        The search value
+     * @return true if the search terms could be found. Otherwise false
+     *
+     */
+    public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue) {
+        return search(in_parseDefinitionName, in_searchValue).getEntries().size() > 0;
+    }
+
+    /**
+     * Lets us know if the given search terms could be found.
+     *
+     * Author : gandomi
+     *
+     * @param in_searchKeyValues
+     * @return true if the search terms could be found. Otherwise false
+     *
+     */
+    public boolean isEntryPresent(Map<String, Object> in_searchKeyValues) {
+        return search(in_searchKeyValues).getEntries().size() > 0;
     }
 
 }

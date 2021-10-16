@@ -1046,4 +1046,63 @@ public class LogDataTest {
         assertThat("We should have found the correct entry", l_myCube3.getEntries().containsKey("120"));
 
     }
+    
+    
+    /**
+     * Testing that we can detect if an element is present
+     *
+     * Author : gandomi
+     * 
+     * @throws IncorrectParseDefinitionException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     *
+     */
+    @Test
+    public void testIsPresent() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", "14");
+        l_filterProperties.put("BAU", "13");
+
+        assertThat("We should state that an entry is present", l_cubeData.isEntryPresent(l_filterProperties));
+
+        assertThat("We should state that an entry is present", l_cubeData.isEntryPresent("BAU","13"));
+
+        assertThat("We should state that an entry is present", !l_cubeData.isEntryPresent("BAU","999"));
+    }
 }
