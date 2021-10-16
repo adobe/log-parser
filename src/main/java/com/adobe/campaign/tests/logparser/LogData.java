@@ -349,7 +349,7 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogDataObject containing only the searched values
      *
      */
-    public LogData<T> search(String in_parseDefinitionName, String in_searchValue) {
+    public LogData<T> searchEntries(String in_parseDefinitionName, String in_searchValue) {
         Map<String, Object> l_filterProperties = new HashMap<>();
         l_filterProperties.put(in_parseDefinitionName, in_searchValue);
 
@@ -367,7 +367,7 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogDataObject containing only the filtered values
      *
      */
-    public LogData<T> search(Map<String, Object> in_searchKeyValues) {
+    public LogData<T> searchEntries(Map<String, Object> in_searchKeyValues) {
 
         return filterBy(in_searchKeyValues);
     }
@@ -386,7 +386,10 @@ public class LogData<T extends StdLogEntry> {
      *
      */
     public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue) {
-        return search(in_parseDefinitionName, in_searchValue).getEntries().size() > 0;
+        Map<String, Object> l_searchProperties = new HashMap<>();
+        l_searchProperties.put(in_parseDefinitionName, in_searchValue);
+
+        return isEntryPresent(l_searchProperties);
     }
 
     /**
@@ -399,7 +402,7 @@ public class LogData<T extends StdLogEntry> {
      *
      */
     public boolean isEntryPresent(Map<String, Object> in_searchKeyValues) {
-        return search(in_searchKeyValues).getEntries().size() > 0;
+        return searchEntries(in_searchKeyValues).getEntries().size() > 0;
     }
 
 }

@@ -952,7 +952,7 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        LogData<GenericEntry> l_myCube = l_cubeData.search("ZZZ", "114");
+        LogData<GenericEntry> l_myCube = l_cubeData.searchEntries("ZZZ", "114");
 
         assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(1)));
 
@@ -960,14 +960,14 @@ public class LogDataTest {
 
         //Adding another filter
 
-        LogData<GenericEntry> l_myCube2 = l_cubeData.search("DAT", "AAA");
+        LogData<GenericEntry> l_myCube2 = l_cubeData.searchEntries("DAT", "AAA");
 
         assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(1)));
 
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("112"));
 
         //Negative test
-        LogData<GenericEntry> l_myCube3 = l_cubeData.search("DAT", "AAL");
+        LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries("DAT", "AAL");
 
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(0)));
 
@@ -1025,21 +1025,21 @@ public class LogDataTest {
         l_filterProperties.put("ZZZ", "14");
         l_filterProperties.put("BAU", "13");
 
-        LogData<GenericEntry> l_myCube = l_cubeData.search(l_filterProperties);
+        LogData<GenericEntry> l_myCube = l_cubeData.searchEntries(l_filterProperties);
 
         assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(2)));
 
         assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("120"));
 
         l_filterProperties.remove("ZZZ");
-        LogData<GenericEntry> l_myCube2 = l_cubeData.search(l_filterProperties);
+        LogData<GenericEntry> l_myCube2 = l_cubeData.searchEntries(l_filterProperties);
 
         assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(2)));
 
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("120"));
 
         l_filterProperties.put("DAT", "AAA");
-        LogData<GenericEntry> l_myCube3 = l_cubeData.search(l_filterProperties);
+        LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries(l_filterProperties);
 
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(1)));
 
@@ -1099,10 +1099,14 @@ public class LogDataTest {
         l_filterProperties.put("ZZZ", "14");
         l_filterProperties.put("BAU", "13");
 
-        assertThat("We should state that an entry is present", l_cubeData.isEntryPresent(l_filterProperties));
+        assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent(l_filterProperties));
+        
+        l_filterProperties.put("BAU", "1398");
+        
+        assertThat("We should state that the given entry is present", !l_cubeData.isEntryPresent(l_filterProperties));
 
-        assertThat("We should state that an entry is present", l_cubeData.isEntryPresent("BAU","13"));
+        assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent("BAU","13"));
 
-        assertThat("We should state that an entry is present", !l_cubeData.isEntryPresent("BAU","999"));
+        assertThat("We should state that an entry is NOT  present", !l_cubeData.isEntryPresent("BAU","999"));
     }
 }
