@@ -318,7 +318,8 @@ public class LogData<T extends StdLogEntry> {
      * Author : gandomi
      *
      * @param in_filterKeyValues
-     *        A map of &lt;String,Object&gt; representation the values we want to find
+     *        A map of &lt;String,Object&gt; representation the values we want
+     *        to find
      * @return a new LogDataObject containing only the filtered values
      *
      */
@@ -332,6 +333,44 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return lr_filteredLogData;
+    }
+
+    /**
+     * This method searches the LogData for an enry with a specific value for a
+     * parse definition entry name
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionName
+     *        The name of the parse definition entry under which we search for a
+     *        value
+     * @param in_searchValue
+     *        The search value
+     * @return a new LogDataObject containing only the searched values
+     *
+     */
+    public LogData<T> search(String in_parseDefinitionName, String in_searchValue) {
+        Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put(in_parseDefinitionName, in_searchValue);
+
+        return this.filterBy(l_filterProperties);
+    }
+
+    
+    /**
+     * This method searches the LogData with the given properties
+     *
+     * Author : gandomi
+     *
+     * @param in_filterKeyValues
+     *        A map of &lt;String,Object&gt; representation the values we want
+     *        to find
+     * @return a new LogDataObject containing only the filtered values
+     *
+     */
+    public LogData<T> search(Map<String, Object> in_filterKeyValues) {
+        
+        return filterBy(in_filterKeyValues);
     }
 
 }
