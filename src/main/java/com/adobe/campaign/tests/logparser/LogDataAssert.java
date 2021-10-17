@@ -29,6 +29,9 @@ public class LogDataAssert {
      *        A Parse Definition entry used for the log entries in the log data
      * @param in_expectedValue
      *        The expected value for the entry
+     * @param <T>
+     *        The type of entry we want to be generated while parsing logs. The
+     *        type should be a child of {@link StdLogEntry}
      *
      */
     public static <T extends StdLogEntry> void assertLogContains(LogData<T> in_logData,
@@ -51,6 +54,9 @@ public class LogDataAssert {
      *        A Parse Definition entry used for the log entries in the log data
      * @param in_expectedValue
      *        The expected value for the entry
+     * @param <T>
+     *        The type of entry we want to be generated while parsing logs. The
+     *        type should be a child of {@link StdLogEntry}
      *
      */
     public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData,
@@ -71,7 +77,9 @@ public class LogDataAssert {
      *        A Parse Definition entry used for the log entries in the log data
      * @param in_expectedValue
      *        The expected value for the entry
-     *
+     * @param <T>
+     *        The type of the LogData. The type should be a child of
+     *        {@link StdLogEntry}
      */
     public static <T extends StdLogEntry> void assertLogContains(LogData<T> in_logData, String in_entryTitle,
             String in_expectedValue) {
@@ -96,7 +104,9 @@ public class LogDataAssert {
      *        A Parse Definition entry used for the log entries in the log data
      * @param in_expectedValue
      *        The expected value for the entry
-     *
+     * @param <T>
+     *        The type of the LogData. The type should be a child of
+     *        {@link StdLogEntry}
      */
     public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData,
             String in_entryTitle, String in_expectedValue) {
@@ -120,7 +130,9 @@ public class LogDataAssert {
      *        A Parse Definition entry used for the log entries in the log data
      * @param in_expectedValue
      *        The expected value for the entry
-     *
+     * @param <T>
+     *        The type of the LogData. The type should be a child of
+     *        {@link StdLogEntry}
      */
     public static void assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition,
             String in_entryTitle, String in_expectedValue) {
@@ -152,11 +164,13 @@ public class LogDataAssert {
      *        A Parse Definition entry used for the log entries in the log data
      * @param in_expectedValue
      *        The expected value for the entry
-     *
+     * @param <T>
+     *        The type of the LogData. The type should be a child of
+     *        {@link StdLogEntry}
      */
     public static void assertLogContains(String in_comment, List<String> in_filePathList,
             ParseDefinition in_parseDefinition, String in_entryTitle, String in_expectedValue) {
-        
+
         try {
 
             assertLogContains(in_comment, LogDataFactory.generateLogData(in_filePathList, in_parseDefinition),

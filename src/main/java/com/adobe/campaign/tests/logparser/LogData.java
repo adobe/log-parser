@@ -397,7 +397,8 @@ public class LogData<T extends StdLogEntry> {
      *
      * Author : gandomi
      *
-     * @param in_searchKeyValues
+     * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want
+     *        to find
      * @return true if the search terms could be found. Otherwise false
      *
      */
