@@ -20,6 +20,8 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.hamcrest.Matchers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -304,9 +306,13 @@ public class ParseDefinitionTests {
 
         final String l_jsonPath = "src/test/resources/parseDefinitions/myParseDefinition.json";
 
-        ParseDefinition fetchedJSON = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
+        ParseDefinition l_fetchedJSON = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
 
-        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+        assertThat("Both `parseDefinitions should be the same", l_fetchedJSON, equalTo(l_parseDefinition));
+        
+        assertThat("The original key order should not be null", l_parseDefinition.fetchKeyOrder(), Matchers.notNullValue());
+        assertThat("The new key order should not be null", l_fetchedJSON.fetchKeyOrder(), Matchers.notNullValue());
+        assertThat("The Key order should be the same", l_parseDefinition.fetchKeyOrder(),Matchers.contains(l_fetchedJSON.fetchKeyOrder()));
 
     }
 
