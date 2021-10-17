@@ -139,11 +139,29 @@ Definition 4 | Frequence
 AA | 2
 AAA | 1
 
+## Assertions and LogDataAssertions
+As of version 1.0.5 we have introduced the notion of assertions. Assertions can either take a LogData object or a set of files as input.
 
+We currently have the following assertions:
+
+```java
+assertLogContains(LogData<T> in_logData, String in_entryTitle, String in_expectedValue)
+
+assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition, String in_entryTitle, String in_expectedValue)
+```
+`assertLogContains(LogData<T>, String, String )` allows you to perform an assertion on an existing LogData Object. 
+
+
+`assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
 ## Release Notes
 - 1.0.5
   - #23 Added the searchEntries, and the isEntryPresent methods.
+  - #20 Adding log data assertions
+  - keyOrder is now a List<String>
+  - #32 we have solved an issue with exporting and importing the key orders
+  - #30 Allowing for the LogDataFactory to accept a JSON file as input for the ParseDefinitions
+  - #31 Solved bug with importing the JSON file
 - 1.0.4
   - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
   - #8 & #18  Added the filter function.
