@@ -527,7 +527,7 @@ public class TestLogParsing {
                 Arrays.asList(l_apiDefinition, l_verbDefinition, l_nonPreservedDefinition));
 
         assertThat(l_definition.fetchKeyOrder(),
-                Matchers.contains(Arrays.asList(equalTo(l_apiDefinition), equalTo(l_verbDefinition))));
+                Matchers.contains(l_apiDefinition.getTitle(), l_verbDefinition.getTitle()));
 
         GenericEntry l_entry = new GenericEntry(l_definition);
 
@@ -597,7 +597,7 @@ public class TestLogParsing {
                 Arrays.asList(l_apiDefinition, l_verbDefinition, l_nonPreservedDefinition));
 
         assertThat(l_definition.fetchKeyOrder(),
-                Matchers.contains(Arrays.asList(equalTo(l_apiDefinition), equalTo(l_verbDefinition))));
+                Matchers.contains(l_apiDefinition.getTitle(), l_verbDefinition.getTitle()));
 
         GenericEntry l_entry = new GenericEntry(l_definition);
 

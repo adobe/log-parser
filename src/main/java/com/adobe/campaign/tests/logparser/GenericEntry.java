@@ -41,7 +41,7 @@ public class GenericEntry extends StdLogEntry {
     @Override
     public String makeKey() {
         return String.join(getParseDefinition().getKeyPadding(), getParseDefinition().fetchKeyOrder().stream()
-                .map(e -> valuesMap.get(e.getTitle()).toString()).collect(Collectors.toList()));
+                .map(e -> valuesMap.get(e).toString()).collect(Collectors.toList()));
     }
 
     @Override
@@ -64,6 +64,5 @@ public class GenericEntry extends StdLogEntry {
     public GenericEntry copy() {
         return new GenericEntry(this);
     }
-
 
 }
