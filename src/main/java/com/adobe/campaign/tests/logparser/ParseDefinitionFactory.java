@@ -12,7 +12,6 @@
 package com.adobe.campaign.tests.logparser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
@@ -25,17 +24,17 @@ public class ParseDefinitionFactory {
      *
      * Author : gandomi
      *
-     * @param in_jsonFilePath
+     * @param in_jsonParseDefinitionFilePath
      *        The file path of a ParseDefinition
      * @return A Parse Definition
      * @throws ParseDefinitionImportExportException
      *         Whenever we encounter problem while parsing the file
      *
      */
-    public static ParseDefinition importParseDefinition(final String in_jsonFilePath)
+    public static ParseDefinition importParseDefinition(final String in_jsonParseDefinitionFilePath)
             throws ParseDefinitionImportExportException {
 
-        return importParseDefinition(new File(in_jsonFilePath));
+        return importParseDefinition(new File(in_jsonParseDefinitionFilePath));
     }
 
     /**
@@ -79,7 +78,7 @@ public class ParseDefinitionFactory {
         }
 
         //Read JSON
-        ParseDefinition fetchedJSON = null;
+        ParseDefinition fetchedJSON = new ParseDefinition();
         try {
             fetchedJSON = mapper.readValue(in_jsonFile, ParseDefinition.class);
         } catch (IOException e) {
@@ -169,6 +168,7 @@ public class ParseDefinitionFactory {
             ObjectMapper mapper) throws ParseDefinitionImportExportException {
         try {
             mapper.writeValue(in_jsonFile, in_parseDefinition);
+            
         } catch (IOException e) {
             throw new ParseDefinitionImportExportException(
                     "Error while exporting parse definition to file " + in_jsonFile.getPath(), e);

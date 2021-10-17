@@ -32,6 +32,7 @@ import com.adobe.campaign.tests.logparser.GenericEntry;
 import com.adobe.campaign.tests.logparser.ParseDefinition;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class LogDataTest {
@@ -261,6 +262,31 @@ public class LogDataTest {
 
         LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
                 l_pDefinition);
+
+        assertThat(l_logData, is(notNullValue()));
+        assertThat("We should have the correct nr of entries", l_logData.getEntries().size(), is(equalTo(5)));
+        assertThat("We should have the key for nms:delivery#PrepareFromId",
+                l_logData.getEntries().containsKey("nms:delivery#PrepareFromId"));
+
+        assertThat(l_logData.getEntries().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
+
+        for (GenericEntry lt_entry : l_logData.getEntries().values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+    }
+    
+    
+    @Test
+    public void testLogDataFactoryWithJSONFileForParseDefinition()
+            throws InstantiationException, IllegalAccessException, StringParseException,
+            ParseDefinitionImportExportException {
+
+        
+        final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
+        final String l_jsonPath = "src/test/resources/parseDefinitions/parseDefinitionLogDataFactory.json";
+        
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
+                l_jsonPath);
 
         assertThat(l_logData, is(notNullValue()));
         assertThat("We should have the correct nr of entries", l_logData.getEntries().size(), is(equalTo(5)));
@@ -546,7 +572,7 @@ public class LogDataTest {
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
                 l_gpParseDefinition.fetchKeyOrder(),
-                Matchers.contains(l_testParseDefinitionEntryBAU, l_testParseDefinitionEntryDAT));
+                Matchers.contains(l_testParseDefinitionEntryBAU.getTitle(), l_testParseDefinitionEntryDAT.getTitle()));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryBAU)));
@@ -618,7 +644,7 @@ public class LogDataTest {
         assertThat(l_gpParseDefinition.getDefinitionEntries().size(), is(equalTo(1)));
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
-                l_gpParseDefinition.fetchKeyOrder(), Matchers.contains(l_testParseDefinitionEntryDAT));
+                l_gpParseDefinition.fetchKeyOrder(), Matchers.contains(l_testParseDefinitionEntryDAT.getTitle()));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryDAT)));
@@ -688,7 +714,7 @@ public class LogDataTest {
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
                 l_gpParseDefinition.fetchKeyOrder(),
-                Matchers.contains(l_testParseDefinitionEntryBAU, l_testParseDefinitionEntryDAT));
+                Matchers.contains(l_testParseDefinitionEntryBAU.getTitle(), l_testParseDefinitionEntryDAT.getTitle()));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryBAU)));

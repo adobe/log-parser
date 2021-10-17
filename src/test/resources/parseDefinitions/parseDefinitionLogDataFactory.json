@@ -1,0 +1,22 @@
+{
+    "title": "ACC Coverage",
+    "definitionEntries": [
+        {
+            "title": "path",
+            "start": "HEADER ACTION ",
+            "end": "#",
+            "caseSensitive": true,
+            "trimQuotes": false,
+            "toPreserve": true
+        },
+        {
+            "title": "verb",
+            "start": "#",
+            "end": null,
+            "caseSensitive": true,
+            "trimQuotes": false,
+            "toPreserve": true
+        }
+    ],
+    "keyPadding": "#"
+}
