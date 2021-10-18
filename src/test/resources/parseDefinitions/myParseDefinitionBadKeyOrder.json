@@ -1,0 +1,23 @@
+{
+    "title": "rest calls",
+    "definitionEntries": [
+        {
+            "title": "path",
+            "start": " /rest/head/",
+            "end": " ",
+            "caseSensitive": true,
+            "trimQuotes": false,
+            "toPreserve": true
+        },
+        {
+            "title": "verb",
+            "start": "\"",
+            "end": " /",
+            "caseSensitive": true,
+            "trimQuotes": false,
+            "toPreserve": true
+        }
+    ],
+    "keyPadding": "#",
+    "keyOrder":["wrath"]
+}

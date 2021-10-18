@@ -378,4 +378,15 @@ public class ParseDefinitionTests {
                 () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
 
     }
+    
+    @Test
+    public void testImportJSONNegative_BadKeyInKeyOrder() throws ParseDefinitionImportExportException {
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/myParseDefinitionBadKeyOrder.json";
+
+        assertThrows(ParseDefinitionImportExportException.class,
+                () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
+
+    }
+    
 }
