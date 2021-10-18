@@ -15,8 +15,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.testng.Assert.assertThrows;
+
 import java.util.Arrays;
 import org.hamcrest.Matchers;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +32,9 @@ import com.adobe.campaign.tests.logparser.ParseDefinition;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
-public class AssertionTests {
+@PowerMockIgnore("javax.management.*")
+@PrepareForTest(LogDataFactory.class)
+public class AssertionTests extends PowerMockTestCase {
 
     /**
      * Testing that we correctly create a cube
@@ -60,16 +68,16 @@ public class AssertionTests {
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
         l_cubeData.addEntry(l_inputData2);
 
-        LogDataAssert.assertLogContains(l_cubeData, l_parseDefinitionEntryKey, "112");
-        LogDataAssert.assertLogContains("This should work", l_cubeData, l_parseDefinitionEntryKey, "112");
+        AssertLogData.assertLogContains(l_cubeData, l_parseDefinitionEntryKey, "112");
+        AssertLogData.assertLogContains("This should work", l_cubeData, l_parseDefinitionEntryKey, "112");
 
-        LogDataAssert.assertLogContains("This should also work", l_cubeData, "AAZ", "112");
+        AssertLogData.assertLogContains("This should also work", l_cubeData, "AAZ", "112");
 
         Assert.assertThrows(AssertionError.class,
-                () -> LogDataAssert.assertLogContains(l_cubeData, l_parseDefinitionEntryKey, "124"));
+                () -> AssertLogData.assertLogContains(l_cubeData, l_parseDefinitionEntryKey, "124"));
 
         try {
-            LogDataAssert.assertLogContains("But this should not", l_cubeData,
+            AssertLogData.assertLogContains("But this should not", l_cubeData,
                     l_parseDefinitionEntryKey.getTitle(), "112");
         } catch (AssertionError ae) {
             assertThat("The comment should contain the passed string", ae.getMessage(), Matchers.containsString("But this should not"));
@@ -122,8 +130,55 @@ public class AssertionTests {
         assertThat("We should have the key for nms:delivery#PrepareFromId",
                 l_logData.getEntries().containsKey("nms:delivery#PrepareFromId"));
 
-        LogDataAssert.assertLogContains("We should have gound the entry PrepareFromId", Arrays.asList(apacheLogFile), l_pDefinition, "verb", "PrepareFromId");
-        LogDataAssert.assertLogContains(Arrays.asList(apacheLogFile), l_pDefinition, "verb", "PrepareFromId");
+        AssertLogData.assertLogContains("We should have gound the entry PrepareFromId", Arrays.asList(apacheLogFile), l_pDefinition, "verb", "PrepareFromId");
+        AssertLogData.assertLogContains(Arrays.asList(apacheLogFile), l_pDefinition, "verb", "PrepareFromId");
+    }
+    
+    
+    /**
+     * Testing a possible usecase. This test is a copy of the test {@link LogDataTest#testLogDataFactory()}. Testing Exception 
+     *
+     * Author : gandomi
+     *
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws StringParseException
+     *
+     */
+    @Test
+    public void testLogDataFactory_NegativeExceptionThrown()
+            throws InstantiationException, IllegalAccessException, StringParseException {
+        PowerMockito.mockStatic(LogDataFactory.class);        
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+
+        ParseDefinition l_pDefinition = new ParseDefinition("ACC Coverage");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+
+        final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
+        
+        PowerMockito.when(LogDataFactory.generateLogData(Arrays.asList(apacheLogFile), l_pDefinition)).thenThrow( new InstantiationException("Duuh"));
+        
+        assertThrows(AssertionError.class, () -> AssertLogData.assertLogContains("We should have found the entry PrepareFromId", Arrays.asList(apacheLogFile), l_pDefinition, "verb", "PrepareFromId")); 
+       
+        assertThrows(AssertionError.class, () -> AssertLogData.assertLogContains(Arrays.asList(apacheLogFile), l_pDefinition, "verb", "PrepareFromId"));
+    }
+    
+    
+    @Test
+    public void testLogDataFactory_NegativeInstatiation() {
+        assertThrows(IllegalStateException.class, () -> new AssertLogData());
     }
 
 }

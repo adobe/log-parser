@@ -15,7 +15,11 @@ import java.util.List;
 
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
-public class LogDataAssert {
+public class AssertLogData {
+    
+    protected AssertLogData() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      * An assert that lets us see if the log data contains an entry with a given
@@ -174,7 +178,7 @@ public class LogDataAssert {
                     in_parseDefinitionEntryTitle, in_expectedValue);
         } catch (InstantiationException | IllegalAccessException | StringParseException e) {
 
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new AssertionError("Caught unexpected exception", e);
         }
 

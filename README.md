@@ -145,14 +145,14 @@ As of version 1.0.5 we have introduced the notion of assertions. Assertions can 
 We currently have the following assertions:
 
 ```java
-assertLogContains(LogData<T> in_logData, String in_entryTitle, String in_expectedValue)
+AssertLogData.assertLogContains(LogData<T> in_logData, String in_entryTitle, String in_expectedValue)
 
-assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition, String in_entryTitle, String in_expectedValue)
+AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition, String in_entryTitle, String in_expectedValue)
 ```
-`assertLogContains(LogData<T>, String, String )` allows you to perform an assertion on an existing LogData Object. 
+`AssertLogData.assertLogContains(LogData<T>, String, String )` allows you to perform an assertion on an existing LogData Object. 
 
 
-`assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
+`AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
 ## Release Notes
 - 1.0.5
