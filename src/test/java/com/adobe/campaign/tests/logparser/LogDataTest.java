@@ -32,6 +32,7 @@ import com.adobe.campaign.tests.logparser.GenericEntry;
 import com.adobe.campaign.tests.logparser.ParseDefinition;
 import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class LogDataTest {
@@ -261,6 +262,31 @@ public class LogDataTest {
 
         LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
                 l_pDefinition);
+
+        assertThat(l_logData, is(notNullValue()));
+        assertThat("We should have the correct nr of entries", l_logData.getEntries().size(), is(equalTo(5)));
+        assertThat("We should have the key for nms:delivery#PrepareFromId",
+                l_logData.getEntries().containsKey("nms:delivery#PrepareFromId"));
+
+        assertThat(l_logData.getEntries().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
+
+        for (GenericEntry lt_entry : l_logData.getEntries().values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+    }
+    
+    
+    @Test
+    public void testLogDataFactoryWithJSONFileForParseDefinition()
+            throws InstantiationException, IllegalAccessException, StringParseException,
+            ParseDefinitionImportExportException {
+
+        
+        final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
+        final String l_jsonPath = "src/test/resources/parseDefinitions/parseDefinitionLogDataFactory.json";
+        
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
+                l_jsonPath);
 
         assertThat(l_logData, is(notNullValue()));
         assertThat("We should have the correct nr of entries", l_logData.getEntries().size(), is(equalTo(5)));
@@ -546,7 +572,7 @@ public class LogDataTest {
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
                 l_gpParseDefinition.fetchKeyOrder(),
-                Matchers.contains(l_testParseDefinitionEntryBAU, l_testParseDefinitionEntryDAT));
+                Matchers.contains(l_testParseDefinitionEntryBAU.getTitle(), l_testParseDefinitionEntryDAT.getTitle()));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryBAU)));
@@ -618,7 +644,7 @@ public class LogDataTest {
         assertThat(l_gpParseDefinition.getDefinitionEntries().size(), is(equalTo(1)));
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
-                l_gpParseDefinition.fetchKeyOrder(), Matchers.contains(l_testParseDefinitionEntryDAT));
+                l_gpParseDefinition.fetchKeyOrder(), Matchers.contains(l_testParseDefinitionEntryDAT.getTitle()));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryDAT)));
@@ -688,7 +714,7 @@ public class LogDataTest {
 
         assertThat("The key since not defined is the parse definition entries in the order of the group by",
                 l_gpParseDefinition.fetchKeyOrder(),
-                Matchers.contains(l_testParseDefinitionEntryBAU, l_testParseDefinitionEntryDAT));
+                Matchers.contains(l_testParseDefinitionEntryBAU.getTitle(), l_testParseDefinitionEntryDAT.getTitle()));
 
         assertThat(l_gpParseDefinition.getDefinitionEntries().get(0),
                 is(equalTo(l_testParseDefinitionEntryBAU)));
@@ -903,5 +929,210 @@ public class LogDataTest {
 
         assertThat("Both objects should be equal", l_cubeData3, not(equalTo(l_cubeData2)));
 
+    }
+    
+    /**
+     * Testing that we can do a search
+     *
+     * Author : gandomi
+     * 
+     * @throws IncorrectParseDefinitionException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     *
+     */
+    @Test
+    public void testSearch_Default() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        LogData<GenericEntry> l_myCube = l_cubeData.searchEntries("ZZZ", "114");
+
+        assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(1)));
+
+        assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("112"));
+
+        //Adding another filter
+
+        LogData<GenericEntry> l_myCube2 = l_cubeData.searchEntries("DAT", "AAA");
+
+        assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(1)));
+
+        assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("112"));
+
+        //Negative test
+        LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries("DAT", "AAL");
+
+        assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(0)));
+
+    }
+    
+    
+    /**
+     * Testing that we can do a search using multiple fields
+     *
+     * Author : gandomi
+     * 
+     * @throws IncorrectParseDefinitionException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     *
+     */
+    @Test
+    public void testsearch_Multi() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", "14");
+        l_filterProperties.put("BAU", "13");
+
+        LogData<GenericEntry> l_myCube = l_cubeData.searchEntries(l_filterProperties);
+
+        assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(2)));
+
+        assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("120"));
+
+        l_filterProperties.remove("ZZZ");
+        LogData<GenericEntry> l_myCube2 = l_cubeData.searchEntries(l_filterProperties);
+
+        assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(2)));
+
+        assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("120"));
+
+        l_filterProperties.put("DAT", "AAA");
+        LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries(l_filterProperties);
+
+        assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(1)));
+
+        assertThat("We should have found the correct entry", l_myCube3.getEntries().containsKey("120"));
+
+    }
+    
+    
+    /**
+     * Testing that we can detect if an element is present
+     *
+     * Author : gandomi
+     * 
+     * @throws IncorrectParseDefinitionException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     *
+     */
+    @Test
+    public void testIsPresent() {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.fetchValueMap().put("BAU", "13");
+        l_inputData.fetchValueMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.fetchValueMap().put("AAZ", "112");
+        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.fetchValueMap().put("BAU", "113");
+        l_inputData2.fetchValueMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.fetchValueMap().put("AAZ", "120");
+        l_inputData3.fetchValueMap().put("ZZZ", "14");
+        l_inputData3.fetchValueMap().put("BAU", "13");
+        l_inputData3.fetchValueMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", "14");
+        l_filterProperties.put("BAU", "13");
+
+        assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent(l_filterProperties));
+        
+        l_filterProperties.put("BAU", "1398");
+        
+        assertThat("We should state that the given entry is present", !l_cubeData.isEntryPresent(l_filterProperties));
+
+        assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent("BAU","13"));
+
+        assertThat("We should state that an entry is NOT  present", !l_cubeData.isEntryPresent("BAU","999"));
     }
 }

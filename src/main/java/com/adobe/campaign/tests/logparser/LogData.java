@@ -318,7 +318,8 @@ public class LogData<T extends StdLogEntry> {
      * Author : gandomi
      *
      * @param in_filterKeyValues
-     *        A map of &lt;String,Object&gt; representation the values we want to find
+     *        A map of &lt;String,Object&gt; representation the values we want
+     *        to find
      * @return a new LogDataObject containing only the filtered values
      *
      */
@@ -332,6 +333,77 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return lr_filteredLogData;
+    }
+
+    /**
+     * This method searches the LogData for an enry with a specific value for a
+     * parse definition entry name
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionName
+     *        The name of the parse definition entry under which we search for a
+     *        value
+     * @param in_searchValue
+     *        The search value
+     * @return a new LogDataObject containing only the searched values
+     *
+     */
+    public LogData<T> searchEntries(String in_parseDefinitionName, String in_searchValue) {
+        Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put(in_parseDefinitionName, in_searchValue);
+
+        return this.filterBy(l_filterProperties);
+    }
+
+    /**
+     * This method searches the LogData with the given properties
+     *
+     * Author : gandomi
+     *
+     * @param in_searchKeyValues
+     *        A map of &lt;String,Object&gt; representation the values we want
+     *        to find
+     * @return a new LogDataObject containing only the filtered values
+     *
+     */
+    public LogData<T> searchEntries(Map<String, Object> in_searchKeyValues) {
+
+        return filterBy(in_searchKeyValues);
+    }
+
+    /**
+     * Lets us know if the given search term could be found.
+     *
+     * Author : gandomi
+     *
+     * @param in_parseDefinitionName
+     *        The name of the parse definition entry under which we search for a
+     *        value
+     * @param in_searchValue
+     *        The search value
+     * @return true if the search terms could be found. Otherwise false
+     *
+     */
+    public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue) {
+        Map<String, Object> l_searchProperties = new HashMap<>();
+        l_searchProperties.put(in_parseDefinitionName, in_searchValue);
+
+        return isEntryPresent(l_searchProperties);
+    }
+
+    /**
+     * Lets us know if the given search terms could be found.
+     *
+     * Author : gandomi
+     *
+     * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want
+     *        to find
+     * @return true if the search terms could be found. Otherwise false
+     *
+     */
+    public boolean isEntryPresent(Map<String, Object> in_searchKeyValues) {
+        return searchEntries(in_searchKeyValues).getEntries().size() > 0;
     }
 
 }

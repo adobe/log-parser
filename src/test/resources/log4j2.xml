@@ -16,8 +16,6 @@
         <Root level="DEBUG">
             <AppenderRef ref="FILE" level="DEBUG" />
             <AppenderRef ref="STDOUT" level="INFO" />
-            <!--You can set ref="STDOUT" level ="DEBUG" to allow all the 
-                logs in the console locally -->
         </Root>
     </Loggers>
 </Configuration>

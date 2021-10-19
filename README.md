@@ -1,6 +1,7 @@
 # log-parser
 [![unit-tests](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml/badge.svg)](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml) 
 [![codecov](https://codecov.io/gh/adobe/log-parser/branch/master/graph/badge.svg?token=T94S3VFEUU)](https://codecov.io/gh/adobe/log-parser)
+[![javadoc](https://javadoc.io/badge2/com.adobe.campaign.tests/log-parser/javadoc.svg)](https://javadoc.io/doc/com.adobe.campaign.tests/log-parser) 
 
 This project was created to allow us to parse and analyze log files in order to gather relevant data. It can be used as is or as an SDK. Where you can define your own parsing.
 
@@ -55,7 +56,113 @@ Below is a diagram representing the class structure:
 
 ![The Class relationship](diagrams/Log_Parser-Classes.png)
 
+## Searching a organizing log data
+As of versions 1.0.4 & 1.0.5 we have a series of search and organizing the log data.
+
+### Search and Filter Mechanisms
+We have introduced the filter and search mechanisms. These allow you to search the LogData for values for a given ParseDefinitionEntry. For this we have introduced the following methods:
+* isElementPresent
+* searchEntries
+* filterBy
+
+We currently have the following signatures:
+
+```java
+public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue)
+public boolean isEntryPresent(Map<String, Object> in_searchKeyValues)
+public LogData<T> searchEntries(String in_parseDefinitionName, String in_searchValue)
+public LogData<T> searchEntries(Map<String, Object> in_searchKeyValues)
+public LogData<T> filterBy(Map<String, Object> in_filterKeyValues)
+```
+
+In the cases where the method accepts a map we allow the user to search by a series of search terms. Example:
+
+```java
+Map<String, Object> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("Definition 1", "14");
+        l_filterProperties.put("Definition 2", "13");
+
+LogData<GenericEntry> l_foundEntries = l_logData.searchEntries(l_filterProperties)); 
+```
+
+### GroupBy Mechanisms
+We have introduced the groupBy mechanism. This functionality allows you to organize your results with more detail. Given a log data object, and an array of ParseDefinitionEntry names, we generate a new LogData Object containing groups made by the passed ParseDeinitionEnries and and number of entries for each group.
+
+Let's take the following case:
+
+Definition 1 | Definition 2 | Definition 3 | Definition 4
+------------ | ------------ | ------------ | ------------
+12 | 14 | 13 | AA
+112 | 114 | 113 | AAA
+120 | 14 | 13 | AA
+
+
+If we perform groupBy with the parseDefinition `Definition 2`, we will be getting a new LogData object with two entries:
+
+Definition 2 | Frequence
+------------ | ------------
+14 | 2
+114 | 1
+
+We can also pass a list of group by items, or even perform a chaining of the group by predicates.
+
+#### Passing a list
+We can create a sub group of the LogData by creating group by function:
+
+```java
+LogData<GenericEntry> l_myGroupedData = logData.groupBy(Arrays.asList("Definition 1", "Definition 4"));
+
+//or 
+
+LogData<MyImplementationOfStdLogEntry> l_myGroupedData = logData.groupBy(Arrays.asList("Definition 1", "Definition 4"), MyImplementationOfStdLogEntry.class);
+```
+
+In this case we get :
+
+Definition 1 | Definition 4 | Frequence
+------------ | ------------ | ------------ 
+12 | AA | 1
+112 | AAA | 1
+120 | AA | 1
+
+
+#### Chaining GroupBy
+The GroupBy can also be chained. Example:
+
+```java
+LogData<GenericEntry> l_myGroupedData = logData.groupBy(Arrays.asList("Definition 1", "Definition 4")).groupBy("Definition 4");
+```
+
+In this case we get :
+
+Definition 4 | Frequence
+------------ | ------------ 
+AA | 2
+AAA | 1
+
+## Assertions and LogDataAssertions
+As of version 1.0.5 we have introduced the notion of assertions. Assertions can either take a LogData object or a set of files as input.
+
+We currently have the following assertions:
+
+```java
+AssertLogData.assertLogContains(LogData<T> in_logData, String in_entryTitle, String in_expectedValue)
+
+AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition, String in_entryTitle, String in_expectedValue)
+```
+`AssertLogData.assertLogContains(LogData<T>, String, String )` allows you to perform an assertion on an existing LogData Object. 
+
+
+`AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
+
 ## Release Notes
+- 1.0.5
+  - #23 Added the searchEntries, and the isEntryPresent methods.
+  - #20 Adding log data assertions
+  - keyOrder is now a List<String>
+  - #32 we have solved an issue with exporting and importing the key orders
+  - #30 Allowing for the LogDataFactory to accept a JSON file as input for the ParseDefinitions
+  - #31 Solved bug with importing the JSON file
 - 1.0.4
   - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
   - #8 & #18  Added the filter function.

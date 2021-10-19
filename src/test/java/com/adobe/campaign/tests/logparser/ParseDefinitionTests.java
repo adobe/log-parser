@@ -20,6 +20,8 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.hamcrest.Matchers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -225,6 +227,41 @@ public class ParseDefinitionTests {
 
     }
 
+    @Test
+    public void testImportExportToJSONKeyOrder() throws ParseDefinitionImportExportException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+
+        l_parseDefinition.defineKeys(l_apiDefinition);
+
+        final String l_jsonPath = LogParser.OUTPUT_DIR + "/keyOrderDefinition.json";
+
+        File l_storedJSON = ParseDefinitionFactory.exportParseDefinitionToJSON(l_parseDefinition, l_jsonPath);
+
+        ParseDefinition fetchedJSON = ParseDefinitionFactory
+                .importParseDefinition(l_storedJSON.getAbsolutePath());
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+        assertThat("The keyOrder should be present", fetchedJSON.getKeyOrder(),
+                Matchers.contains(l_apiDefinition.getTitle()));
+
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testImportExportToJSON_negative() throws ParseDefinitionImportExportException,
@@ -302,11 +339,23 @@ public class ParseDefinitionTests {
         l_parseDefinition.addEntry(l_apiDefinition);
         l_parseDefinition.addEntry(l_verbDefinition);
 
+        l_parseDefinition.defineKeys(l_apiDefinition);
+
         final String l_jsonPath = "src/test/resources/parseDefinitions/myParseDefinition.json";
 
-        ParseDefinition fetchedJSON = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
+        ParseDefinition l_fetchedJSON = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
 
-        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+        assertThat("Both `parseDefinitions should be the same", l_fetchedJSON, equalTo(l_parseDefinition));
+
+        assertThat("The original key order should not be null", l_parseDefinition.fetchKeyOrder(),
+                Matchers.notNullValue());
+        assertThat("By default, if not set we use all entries as key",
+                l_parseDefinition.fetchKeyOrder().size(), is(1));
+
+        assertThat("The new key order should not be null", l_fetchedJSON.fetchKeyOrder(),
+                Matchers.notNullValue());
+        assertThat("The new key order should be empty", l_fetchedJSON.fetchKeyOrder(),
+                is(equalTo(l_parseDefinition.fetchKeyOrder())));
 
     }
 
@@ -329,4 +378,15 @@ public class ParseDefinitionTests {
                 () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
 
     }
+    
+    @Test
+    public void testImportJSONNegative_BadKeyInKeyOrder() throws ParseDefinitionImportExportException {
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/myParseDefinitionBadKeyOrder.json";
+
+        assertThrows(ParseDefinitionImportExportException.class,
+                () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
+
+    }
+    
 }

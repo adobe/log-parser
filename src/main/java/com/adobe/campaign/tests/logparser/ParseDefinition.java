@@ -38,11 +38,13 @@ public class ParseDefinition {
     private String title;
     private List<ParseDefinitionEntry> definitionEntries;
     private String keyPadding = "#";
-    private List<ParseDefinitionEntry> keyOrder;
+    private List<String> keyOrder;
     private String printOutPadding = ";";
 
     public ParseDefinition() {
         super();
+        definitionEntries = new ArrayList<>();
+        keyOrder = new ArrayList<>();
     }
 
     /**
@@ -148,13 +150,13 @@ public class ParseDefinition {
      * Author : gandomi
      *
      * @return if no keyOrder was defined it will return a list of all of the
-     *         preservable ParseDefinitionEntrys
+     *         preservable ParseDefinitionEntries
      *
      */
-    public List<ParseDefinitionEntry> fetchKeyOrder() {
+    public List<String> fetchKeyOrder() {
         if (keyOrder.isEmpty()) {
             return getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve)
-                    .collect(Collectors.toList());
+                    .map(t -> t.getTitle()).collect(Collectors.toList());
         }
         return keyOrder;
     }
@@ -178,7 +180,7 @@ public class ParseDefinition {
         for (ParseDefinitionEntry lt_pdEntry : in_keyOrderDefinitions) {
 
             if (getDefinitionEntries().contains(lt_pdEntry)) {
-                this.keyOrder.add(lt_pdEntry);
+                this.keyOrder.add(lt_pdEntry.getTitle());
 
             } else {
                 throw new IllegalArgumentException("The definition entry with the title "
@@ -230,4 +232,10 @@ public class ParseDefinition {
         return (Set<String>) l_definedHeaders;
     }
 
+    /**
+     * @return the keyOrder
+     */
+    public List<String> getKeyOrder() {
+        return keyOrder;
+    }
 }
