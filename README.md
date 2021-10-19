@@ -1,6 +1,7 @@
 # log-parser
 [![unit-tests](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml/badge.svg)](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml) 
 [![codecov](https://codecov.io/gh/adobe/log-parser/branch/master/graph/badge.svg?token=T94S3VFEUU)](https://codecov.io/gh/adobe/log-parser)
+[![javadoc](https://javadoc.io/badge2/com.adobe.campaign.tests/log-parser/javadoc.svg)](https://javadoc.io/doc/com.adobe.campaign.tests/log-parser) 
 
 This project was created to allow us to parse and analyze log files in order to gather relevant data. It can be used as is or as an SDK. Where you can define your own parsing.
 
