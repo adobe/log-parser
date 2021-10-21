@@ -163,7 +163,6 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
   - #32 we have solved an issue with exporting and importing the key orders
   - #30 Allowing for the LogDataFactory to accept a JSON file as input for the ParseDefinitions
   - #31 Solved bug with importing the JSON file
-  - #43 Solved issue with tests continuing in consumer mode even if their steps had not been executed in the producer phase
 - 1.0.4
   - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
   - #8 & #18  Added the filter function.
