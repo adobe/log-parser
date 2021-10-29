@@ -283,6 +283,8 @@
         <license.dir>${basedir}</license.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <sonar.organization>adobeinc</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <powermock.version>2.0.2</powermock.version>
     </properties>
     <reporting>
