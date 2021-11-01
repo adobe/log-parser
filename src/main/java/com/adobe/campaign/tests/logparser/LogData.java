@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -145,6 +147,11 @@ public class LogData<T extends StdLogEntry> {
 
         l_foundCubeEntry.fetchValueMap().put(in_valueKey, in_newValue);
 
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entries);
     }
 
     @Override

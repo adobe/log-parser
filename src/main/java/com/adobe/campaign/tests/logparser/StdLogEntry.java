@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -233,7 +234,6 @@ public abstract class StdLogEntry {
         return true;
     }
     
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -259,6 +259,11 @@ public abstract class StdLogEntry {
         } else if (!valuesMap.equals(other.valuesMap))
             return false;
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(frequence, parseDefinition, valuesMap);
     }
 
 }
