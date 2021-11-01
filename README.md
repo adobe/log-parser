@@ -1,7 +1,8 @@
 # log-parser
 [![unit-tests](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml/badge.svg)](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml) 
 [![codecov](https://codecov.io/gh/adobe/log-parser/branch/main/graph/badge.svg?token=T94S3VFEUU)](https://codecov.io/gh/adobe/log-parser)
-[![javadoc](https://javadoc.io/badge2/com.adobe.campaign.tests/log-parser/javadoc.svg)](https://javadoc.io/doc/com.adobe.campaign.tests/log-parser) 
+[![javadoc](https://javadoc.io/badge2/com.adobe.campaign.tests/log-parser/javadoc.svg)](https://javadoc.io/doc/com.adobe.campaign.tests/log-parser)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adobe_log-parser&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=adobe_log-parser) 
 
 This project was created to allow us to parse and analyze log files in order to gather relevant data. It can be used as is or as an SDK. Where you can define your own parsing.
 
