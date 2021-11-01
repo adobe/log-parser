@@ -16,7 +16,7 @@ name: Deploy-Log-Parser
 # Run workflow on commits to default branch
 on: 
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
   workflow_dispatch :
 
