@@ -157,6 +157,11 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
 ## Release Notes
+- 1.0.6
+  - #39 updated the log4J library to 2.15.0 to avoid the PSIRT vulnerability
+  - #38 Resolved some issues with HashCode
+  - #37 Upgraded the build to Java11
+  - #34 Activated sonar in the build process
 - 1.0.5
   - #23 Added the searchEntries, and the isEntryPresent methods.
   - #20 Adding log data assertions
