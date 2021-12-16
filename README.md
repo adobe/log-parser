@@ -158,7 +158,7 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 
 ## Release Notes
 - 1.0.6
-  - #39 updated the log4J library to 2.15.0 to avoid the PSIRT vulnerability
+  - #39 updated the log4J library to 2.16.0 to avoid the PSIRT vulnerability
   - #38 Resolved some issues with HashCode
   - #37 Upgraded the build to Java11
   - #34 Activated sonar in the build process
