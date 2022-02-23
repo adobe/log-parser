@@ -6,3 +6,4 @@ target/
 test-output/
 .DS_Store
 log_parser_output/
+.idea/
