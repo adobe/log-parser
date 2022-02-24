@@ -10,6 +10,21 @@ The basic method for using this library is, that you create a definition for you
 
 ![The Processes](diagrams/Log_Parser-Processes.png)
 
+# Table of contents
+
+- [Parse Definitions](#parse-definitions)
+  - [Defining a Parsing](#defining-a-parsing)
+  - [Defining an entry](#defining-an-entry)
+  - [How parsing works](#how-parsing-works)
+  - [Import and Export](#import-and-export)
+- [Using the Standard Method](#using-the-standard-method)
+- [Using the SDK](#using-the-sdk)
+- [Code Structure](#code-structure)
+- [Searching a organizing log data](#searching-a-organizing-log-data)
+  - [Search and Filter Mechanisms](#search-and-filter-mechanisms)
+  - [GroupBy Mechanisms](#groupby-mechanisms)
+- [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
+- [Release Notes](#release-notes)
 
 ## Parse Definitions
 In order to parse logs you need to define a ParseDefinition. A ParseDefinition contains a set of ordered ParseDefinition Entries. While parsing a line of logs, the LogParser will see if all entries can be found in the line of logs. If that is the case, the line is stored according to the definitions.
