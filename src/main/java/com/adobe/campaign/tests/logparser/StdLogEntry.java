@@ -69,6 +69,10 @@ public abstract class StdLogEntry {
      */
     public abstract StdLogEntry copy();
 
+    /**
+     * Returns the aw unchanged value map
+     * @return
+     */
     public Map<String, Object> getValuesMap() {
         return valuesMap;
     }
