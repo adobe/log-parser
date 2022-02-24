@@ -1,3 +1,22 @@
+# Table of contents
+
+- [log-parser](#log-parser)
+  - [Parse Definitions](#parse-definitions)
+    - [Defining a Parsing](#defining-a-parsing)
+    - [Defining an entry](#defining-an-entry)
+    - [How parsing works](#how-parsing-works)
+    - [Import and Export](#import-and-export)
+  - [Using the Standard Method](#using-the-standard-method)
+  - [Using the SDK](#using-the-sdk)
+  - [Code Structure](#code-structure)
+  - [Searching a organizing log data](#searching-a-organizing-log-data)
+    - [Search and Filter Mechanisms](#search-and-filter-mechanisms)
+    - [GroupBy Mechanisms](#groupby-mechanisms)
+      - [Passing a list](#passing-a-list)
+      - [Chaining GroupBy](#chaining-groupby)
+  - [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
+  - [Release Notes](#release-notes)
+
 # log-parser
 [![unit-tests](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml/badge.svg)](https://github.com/adobe/log-parser/actions/workflows/onPushSimpleTest.yml) 
 [![codecov](https://codecov.io/gh/adobe/log-parser/branch/main/graph/badge.svg?token=T94S3VFEUU)](https://codecov.io/gh/adobe/log-parser)
