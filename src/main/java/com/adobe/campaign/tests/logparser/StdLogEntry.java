@@ -35,7 +35,6 @@ public abstract class StdLogEntry {
     
     private Integer frequence = 1;
     private ParseDefinition parseDefinition;
-
     Map<String, Object> valuesMap = new HashMap<>();
 
     protected static final String STD_DATA_KEY = "key";
@@ -69,6 +68,15 @@ public abstract class StdLogEntry {
      *
      */
     public abstract StdLogEntry copy();
+
+    /**
+     * Returns the aw unchanged value map
+     * @return
+     */
+    public Map<String, Object> getValuesMap() {
+        return valuesMap;
+    }
+
 
     /**
      * Fetches a print out for listing purposed. It uses the header list as an
@@ -107,7 +115,7 @@ public abstract class StdLogEntry {
 
     /**
      * Returns a set of objects you have defined for your log class. When using
-     * Genric Object no changes are made to it.
+     * Generic Object no changes are made to it.
      *
      * Author : gandomi
      *

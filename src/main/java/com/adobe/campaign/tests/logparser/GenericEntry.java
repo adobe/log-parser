@@ -57,7 +57,7 @@ public class GenericEntry extends StdLogEntry {
     @Override
     public Map<String, Object> fetchValueMap() {
 
-        return valuesMap;
+        return getValuesMap();
     }
 
     @Override
