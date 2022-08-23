@@ -12,10 +12,13 @@ The basic method for using this library is, that you create a definition for you
 
 # Table of contents
 
+- [Installation](#installation)
+  - [Maven](#maven)
 - [Parse Definitions](#parse-definitions)
   - [Defining a Parsing](#defining-a-parsing)
   - [Defining an entry](#defining-an-entry)
   - [How parsing works](#how-parsing-works)
+  - [Code Example](#code-example)
   - [Import and Export](#import-and-export)
 - [Using the Standard Method](#using-the-standard-method)
 - [Using the SDK](#using-the-sdk)
@@ -25,6 +28,20 @@ The basic method for using this library is, that you create a definition for you
   - [GroupBy Mechanisms](#groupby-mechanisms)
 - [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
 - [Release Notes](#release-notes)
+
+## Installation
+For now we are using this library with maven, in later iteration we will publish other build system examples:
+
+### Maven
+The following dependency needs to be added to your pom file:
+
+```
+ <dependency>
+    <groupId>com.adobe.campaign.tests</groupId>
+    <artifactId>log-parser</artifactId>
+    <version>1.0.8</version>
+</dependency>
+```
 
 ## Parse Definitions
 In order to parse logs you need to define a ParseDefinition. A ParseDefinition contains a set of ordered ParseDefinition Entries. While parsing a line of logs, the LogParser will see if all entries can be found in the line of logs. If that is the case, the line is stored according to the definitions.
@@ -52,6 +69,46 @@ When you have defined your parsing you use the LogDataFactory by passing it:
 By using the StringParseFactory we get a LogData object with allows us to manage the logs data you have found.
 
 ![Parsing a log line](diagrams/Log_Parser-log-parsing.png)
+
+### Code Example
+Here is an example of how we can parse a string. The method is leveraged to perform the same parsing in one or many files.
+
+```java
+@Test
+public void parseAStringDemo() throws StringParseException {
+    String logString = "afthostXX.qa.campaign.adobe.com:443 - - [02/Apr/2022:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 ";
+
+    //Create a parse definition
+    ParseDefinitionEntry verbDefinition = new ParseDefinitionEntry();
+    verbDefinition.setTitle("verb");
+    verbDefinition.setStart("\"");
+    verbDefinition.setEnd(" /");
+
+    ParseDefinitionEntry apiDefinition = new ParseDefinitionEntry();
+    apiDefinition.setTitle("path");
+    apiDefinition.setStart(" /");
+    apiDefinition.setEnd(" ");
+
+    List<ParseDefinitionEntry> definitionList = Arrays.asList(verbDefinition,apiDefinition);
+
+    //Perform Parsing
+    Map<String, String> parseResult = StringParseFactory.parseString(logString, definitionList);
+
+    //Check Results
+    assertThat("We should have an entry for verb", parseResult.containsKey("verb"));
+    assertThat("We should have the correct value for logDate", parseResult.get("verb"), is(equalTo("GET")));
+
+    assertThat("We should have an entry for the API", parseResult.containsKey("path"));
+    assertThat("We should have the correct value for logDate", parseResult.get("path"),
+            is(equalTo("rest/head/workflow/WKF193")));
+}
+```
+In the code above we want to parse the log line below, and want to fin the REST call "GET /rest/head/workflow/WKF193", and to extract the verb "GET", and the api "/rest/head/workflow/WKF193". 
+`afthostXX.qa.campaign.adobe.com:443 - - [02/Apr/2022:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200`
+
+The code starts with the creation a parse definition with at least two parse definitions that tell us between which markers should each data be extracted. The parse difinition is then handed to the StringParseFactory so that the data can be extracted.
+At the end we can see that each data is stored in a map with the parse defnition entry title as a key.
+
 
 ### Import and Export
 You can import or store a Parse Definition to or from a JSON file.
@@ -172,30 +229,31 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
 ## Release Notes
-- 1.0.7
-  - #39 updated the log4J library to 2.17.1 to avoid the PSIRT vulnerability
-- 1.0.6
-  - #38 Resolved some issues with HashCode
-  - #37 Upgraded the build to Java11
-  - #34 Activated sonar in the build process
-- 1.0.5
-  - #23 Added the searchEntries, and the isEntryPresent methods.
-  - #20 Adding log data assertions
-  - keyOrder is now a List<String>
-  - #32 we have solved an issue with exporting and importing the key orders
-  - #30 Allowing for the LogDataFactory to accept a JSON file as input for the ParseDefinitions
-  - #31 Solved bug with importing the JSON file
-- 1.0.4
-  - #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
-  - #8 & #18  Added the filter function.
-  - #13 Added copy constructors.
-  - #13 Added a copy method in the StdLogEntry (#13).
-  - #14 Added a set method to LogData. This allows you to change a Log data given a key value and ParseDefinition entry title
-  - Renamed exception IncorrectParseDefinitionTitleException to IncorrectParseDefinitionException.
-  - 
-- 1.0.3
-  - Introduced the LogData Top Class. This encapsulates all results.
-  - Introduced the LogDataFactory
-  - Added the groupBy method to extract data from the results
-- 1.0.1
-  - Open source release.
+### 1.0.8
+- Moving back to Java 8 as our clients are still using Java8
+### 1.0.7
+- #39 updated the log4J library to 2.17.1 to avoid the PSIRT vulnerability
+### 1.0.6
+- #38 Resolved some issues with HashCode
+- #37 Upgraded the build to Java11
+- #34 Activated sonar in the build process
+### 1.0.5
+- #23 Added the searchEntries, and the isEntryPresent methods.
+- #20 Adding log data assertions
+- keyOrder is now a List<String>
+- #32 we have solved an issue with exporting and importing the key orders
+- #30 Allowing for the LogDataFactory to accept a JSON file as input for the ParseDefinitions
+- #31 Solved bug with importing the JSON file
+### 1.0.4
+- #6 We Can now import a definition from a JSON file. You can also export a ParseDefinition into a JSON file.
+- #8 & #18  Added the filter function.
+- #13 Added copy constructors.
+- #13 Added a copy method in the StdLogEntry (#13).
+- #14 Added a set method to LogData. This allows you to change a Log data given a key value and ParseDefinition entry title
+- Renamed exception IncorrectParseDefinitionTitleException to IncorrectParseDefinitionException.
+### 1.0.3
+- Introduced the LogData Top Class. This encapsulates all results.
+- Introduced the LogDataFactory
+- Added the groupBy method to extract data from the results
+### 1.0.1
+- Open source release.
