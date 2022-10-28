@@ -229,6 +229,7 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
 ## Release Notes
+
 ### 1.0.8.2
 - Building with java8. 
 - Upgraded Jackson XML to remove critical version
