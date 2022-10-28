@@ -1,4 +1,4 @@
-/**
+/*
  * MIT License
  *
  * © Copyright 2020 Adobe. All rights reserved.
