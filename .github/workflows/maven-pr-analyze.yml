@@ -1,7 +1,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # MIT License
 #
-# © Copyright 2020 Adobe. All rights reserved.
+# © Copyright 2021 Adobe. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 # 
@@ -11,11 +11,11 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-name: deploy-Log-Parser
+name: analyze-log-parser
 
 # Run workflow on commits to default branch
 on: 
-  push:
+  pull_request:
     branches: [ main ]
 
   workflow_dispatch :
@@ -29,10 +29,17 @@ jobs:
       - uses: actions/checkout@v2
 
       # Set up environment with Java and Maven
-      - name: Set up JDK 1.8
+      - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 11
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      # Set up dependency cache
       - name: Cache local Maven repository
         uses: actions/cache@v2
         with:
@@ -48,19 +55,17 @@ jobs:
         run: |
           echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+      - name: Build and analyze SONAR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          OSSRH_ARTIFACTORY_USER: ${{ secrets.OSSRH_ARTIFACTORY_USER }}
+          OSSRH_ARTIFACTORY_API_TOKEN: ${{ secrets.OSSRH_ARTIFACTORY_API_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=adobe_log-parser -DargLine='--illegal-access=permit' -DargLine='--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED' -Prelease,ossrh -s .github/workflows/settings.xml
       - name: Configure git user for release commits
         env:
           X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
         run: |
           git config user.email "Grp-opensourceoffice@adobe.com"
           git config user.name "${X_GITHUB_USERNAME}"
-      # Deploy to OSSRH, which will automatically release to Central Repository
-      - name: Deploy to Central Repository
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
-          X_GITHUB_PASSWORD: ${{ secrets.ADOBE_BOT_GITHUB_PASSWORD }}
-        run: mvn -B -DperformRelease=true clean deploy -Prelease,ossrh -s .github/workflows/settings.xml
-       
