@@ -62,5 +62,5 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
           X_GITHUB_PASSWORD: ${{ secrets.ADOBE_BOT_GITHUB_PASSWORD }}
-        run: mvn -B clean deploy -Prelease,ossrh -s .github/workflows/settings.xml
+        run: mvn -B -DperformRelease=true clean deploy -Prelease,ossrh -s .github/workflows/settings.xml
        
