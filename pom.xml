@@ -63,6 +63,11 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <argLine>
+                        --illegal-access=permit
+                        --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+                        ${argLine}
+                    </argLine>
                 </configuration>
             </plugin>
             <plugin>
