@@ -63,12 +63,12 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <argLine>
-                        <!-- To activate when we use Java 11 and onwards -->
+                    <!-- <argLine>
+                          To activate when we use Java 11 and onwards -->
                         <!--illegal-access=permit-->
                         <!--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
-                        ${argLine}-->
-                    </argLine>
+                        ${argLine}
+                    </argLine>-->
                 </configuration>
             </plugin>
             <plugin>
