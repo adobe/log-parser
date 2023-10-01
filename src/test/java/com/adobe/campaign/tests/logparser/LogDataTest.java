@@ -12,17 +12,20 @@
 package com.adobe.campaign.tests.logparser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.lessThan;
 import static org.testng.Assert.assertThrows;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -1134,5 +1137,90 @@ public class LogDataTest {
         assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent("BAU","13"));
 
         assertThat("We should state that an entry is NOT  present", !l_cubeData.isEntryPresent("BAU","999"));
+    }
+
+
+    @Test
+    public void testNestedFileAccess()
+            throws InstantiationException, IllegalAccessException, StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        final String apacheLogFile = "src/test/resources/nestedDirs/dirA/simpleLog.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        String l_searchItem1 = "extAccount/destroySharedAudience#GET";
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey(l_searchItem1));
+
+        GenericEntry l_ge = l_entries.get(l_searchItem1);
+        assertThat("We should only have one entry for the "+l_searchItem1, l_ge.getFrequence(), Matchers.equalTo(1));
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
+                l_pDefinition);
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData.getEntries().containsKey(l_searchItem1));
+
+        GenericEntry l_logDataItem = l_logData.get(l_searchItem1);
+        assertThat("We should only have one entry for the "+l_searchItem1, l_logDataItem.getFrequence(), Matchers.equalTo(1));
+
+        String l_searchItem2 = "extAccount/importSharedAudience#GET";
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData.getEntries().containsKey(l_searchItem2));
+
+        GenericEntry l_logDataItem2 = l_logData.get(l_searchItem2);
+        assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2.getFrequence(), Matchers.equalTo(1));
+
+        File l_rootDir = new File("src/test/resources/nestedDirs/");
+
+        assertThat("The directory should exist", l_rootDir.exists());
+        assertThat("The directory should be a directory", l_rootDir.isDirectory());
+        String l_fileFilter = "simple*.log";
+        Iterator<File> l_foundFilesIterator = FileUtils.iterateFiles(l_rootDir, new WildcardFileFilter(l_fileFilter), TrueFileFilter.INSTANCE);
+
+        l_foundFilesIterator.forEachRemaining(f -> System.out.println(f.getAbsolutePath()));
+
+        //Nested search
+
+        LogData<GenericEntry> l_logData2 = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData2.getEntries().containsKey(l_searchItem1));
+
+        GenericEntry l_logDataItem2_1 = l_logData2.get(l_searchItem1);
+        assertThat("We should only have one entry for the "+l_searchItem1, l_logDataItem2_1.getFrequence(), Matchers.equalTo(1));
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData2.getEntries().containsKey(l_searchItem2));
+
+        GenericEntry l_logDataItem2_2 = l_logData2.get(l_searchItem2);
+        assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2_2.getFrequence(), Matchers.equalTo(2));
+
+
     }
 }
