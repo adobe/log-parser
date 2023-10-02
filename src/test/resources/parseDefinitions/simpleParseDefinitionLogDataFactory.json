@@ -1,0 +1,1 @@
+{"title":"Simple log","definitionEntries":[{"title":"verb","start":"\"","end":" /","caseSensitive":true,"trimQuotes":false,"toPreserve":true},{"title":"path","start":" /rest/head/","end":" ","caseSensitive":true,"trimQuotes":false,"toPreserve":true}],"keyPadding":"#","keyOrder":["path","verb"]}

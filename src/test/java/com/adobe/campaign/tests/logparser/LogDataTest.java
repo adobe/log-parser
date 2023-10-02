@@ -18,10 +18,7 @@ import static org.testng.Assert.assertThrows;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -1158,7 +1155,7 @@ public class LogDataTest {
         l_apiDefinition.setStart(" /rest/head/");
         l_apiDefinition.setEnd(" ");
 
-        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
         l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
         l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
 
@@ -1220,7 +1217,103 @@ public class LogDataTest {
 
         GenericEntry l_logDataItem2_2 = l_logData2.get(l_searchItem2);
         assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2_2.getFrequence(), Matchers.equalTo(2));
-
-
     }
+
+    @Test
+    public void testLogDataFactoryWithJSONFileForParseDefinitionAndSearchFile()
+            throws InstantiationException, IllegalAccessException, StringParseException,
+            ParseDefinitionImportExportException {
+
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(l_rootPath, l_fileFilter,
+                l_jsonPath);
+
+        String l_searchItem1 = "extAccount/destroySharedAudience#GET";
+        String l_searchItem2 = "extAccount/importSharedAudience#GET";
+
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData.getEntries().containsKey(l_searchItem1));
+
+        GenericEntry l_logDataItem2_1 = l_logData.get(l_searchItem1);
+        assertThat("We should only have one entry for the "+l_searchItem1, l_logDataItem2_1.getFrequence(), equalTo(1));
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData.getEntries().containsKey(l_searchItem2));
+
+        GenericEntry l_logDataItem2_2 = l_logData.get(l_searchItem2);
+        assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2_2.getFrequence(), equalTo(2));
+    }
+
+
+    /******************** Search file tests ***********************/
+
+    @Test
+    public void testFileSearch() {
+        String l_fileFilter = "simple*.log";
+        String l_rootPath = "src/test/resources/nestedDirs/";
+
+        List<String> l_foundFilePaths = LogDataFactory.findFilePaths(l_rootPath, l_fileFilter);
+
+        assertThat("We should have found 2 files", l_foundFilePaths,
+                Matchers.containsInAnyOrder(Matchers.endsWith("dirA/simpleLog.log"),
+                        Matchers.endsWith("dirB/simpleLog.log")));
+    }
+
+    @Test
+    public void testFileSearch_negative() {
+        String l_fileFilter = "simple*.log";
+        String l_rootPath = "src/test/resources/nonexistantDir/";
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+    }
+
+    @Test
+    public void testFileSearch_negative2() {
+        String l_fileFilter = "simple*.log";
+        String l_rootPath = "src/test/resources/testng.xml";
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+    }
+
+    @Test
+    public void testFileSearch_negative3() {
+        String l_fileFilter=null;
+        String l_rootPath = "src/test/resources/nestedDirs";
+        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+    }
+
+    @Test
+    public void testFileSearch_negative4() {
+        String l_fileFilter="nonExistantFile.notLog";
+        String l_rootPath = "src/test/resources/nestedDirs";
+        List<String> l_foundFilePaths = LogDataFactory.findFilePaths(l_rootPath, l_fileFilter);
+
+        assertThat("We should have found no files", l_foundFilePaths.size(),
+                Matchers.equalTo(0));
+    }
+
+    @Test
+    public void testFileSearch_negative5() {
+        String l_fileFilter = "simple*.log";
+        String l_rootPath = "null";
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+    }
+
+    @Test
+    public void testFileSearch_specific() {
+        String l_fileFilter = "simpleLog.log";
+        String l_rootPath = "src/test/resources/nestedDirs";
+
+        List<String> l_foundFilePaths = LogDataFactory.findFilePaths(l_rootPath, l_fileFilter);
+        assertThat("We should have found 2 files", l_foundFilePaths,
+                Matchers.containsInAnyOrder(Matchers.endsWith("dirA/simpleLog.log"),
+                        Matchers.endsWith("dirB/simpleLog.log")));
+    }
+
 }
