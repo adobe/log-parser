@@ -98,7 +98,7 @@ public class StringParseFactory {
             }
         }
 
-        log.info("RESULT : Entry Report per file:");
+        log.info("RESULT : Entry Report for Parse Definition '{}' per file:", in_parseDefinition.getTitle());
         l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
         log.info("RESULT : Found {} unique keys", lr_entries.keySet().size());
         return lr_entries;
