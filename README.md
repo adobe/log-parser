@@ -129,7 +129,7 @@ Below is a diagram representing the class structure:
 
 ![The Class relationship](diagrams/Log_Parser-Classes.png)
 
-## Searching a organizing log data
+## Searching and organizing log data
 As of versions 1.0.4 & 1.0.5 we have a series of search and organizing the log data.
 
 ### Search and Filter Mechanisms
@@ -229,6 +229,9 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
 ## Release Notes
+### 1.0.9
+- [#67](https://github.com/adobe/log-parser/issues/67) We can now select the files using a wild card. Given a directory we can now look for files in the sub-directory given a wild-card. The wildcards are implemented using Adobe Commons IO. Youcan read more on this in the [WildcardFilter JavaDoc](https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/filefilter/WildcardFilter.html)
+- [#68](https://github.com/adobe/log-parser/issues/68) We now present a report of the findings at the end of the analysis.
 
 ### 1.0.8.2
 - Building with java8. 
