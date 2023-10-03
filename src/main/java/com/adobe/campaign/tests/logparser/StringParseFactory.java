@@ -93,6 +93,7 @@ public class StringParseFactory {
                     i++;
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
+                log.info("Finished scanning {} lines.",i);
             } catch (FileNotFoundException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
