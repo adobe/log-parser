@@ -69,11 +69,13 @@ public class StringParseFactory {
         }
 
         Map<String, T> lr_entries = new HashMap<>();
-        int i = 0;
 
+        Map<String, Integer> l_foundEntries = new HashMap<>();
         //Fetch File
         for (String l_currentLogFile : in_logFiles) {
-
+            int lt_foundEntryCount = 0;
+            int i = 0;
+            log.info("Parsing file {}", l_currentLogFile);
             try (Scanner scanner = new Scanner(new File(l_currentLogFile))) {
 
                 while (scanner.hasNextLine()) {
@@ -84,18 +86,21 @@ public class StringParseFactory {
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
                         updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
                                 in_classTarget);
-
+                        lt_foundEntryCount++;
                     } else {
                         log.debug("Skipping line {} - {}", i, lt_nextLine);
                     }
                     i++;
-
+                    l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
             } catch (FileNotFoundException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
         }
 
+        log.info("RESULT : Entry Report per file:");
+        l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
+        log.info("RESULT : Found {} unique keys", lr_entries.keySet().size());
         return lr_entries;
     }
 

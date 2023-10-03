@@ -24,6 +24,8 @@ import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory class for creating log data
@@ -32,6 +34,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
  *
  */
 public class LogDataFactory {
+    protected static Logger log = LogManager.getLogger();
 
     protected LogDataFactory() {
         throw new IllegalStateException("Utility class");
@@ -254,6 +257,8 @@ public class LogDataFactory {
                 TrueFileFilter.INSTANCE);
         List<String> l_foundFilesList = new ArrayList<>();
         l_foundFilesIterator.forEachRemaining(f -> l_foundFilesList.add(f.getAbsolutePath()));
+        log.info("Searching within the {} matching files :", l_foundFilesList.size());
+        l_foundFilesList.stream().forEach(log::info);
         return l_foundFilesList;
     }
 }
