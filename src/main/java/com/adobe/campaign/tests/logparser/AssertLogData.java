@@ -147,8 +147,6 @@ public class AssertLogData {
             assertLogContains(LogDataFactory.generateLogData(in_filePathList, in_parseDefinition),
                     in_parseDefinitionEntryTitle, in_expectedValue);
         } catch (InstantiationException | IllegalAccessException | StringParseException e) {
-
-            e.printStackTrace();
             throw new AssertionError("Caught unexpected exception", e);
         }
 
