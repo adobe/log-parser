@@ -15,8 +15,11 @@ import java.util.List;
 
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
+/**
+ * Assertion mechanisms for logs. Using this class you can perform assertions on log data
+ */
 public class AssertLogData {
-    
+
     protected AssertLogData() {
         throw new IllegalStateException("Utility class");
     }
@@ -24,9 +27,9 @@ public class AssertLogData {
     /**
      * An assert that lets us see if the log data contains an entry with a given
      * value for a definition
-     *
+     * <p>
      * Author : gandomi
-     *
+     * <p>
      * @param in_logData
      *        A Log data object
      * @param in_parseDefinitionEntry
@@ -47,9 +50,9 @@ public class AssertLogData {
     /**
      * An assert that lets us see if the log data contains an entry with a given
      * value for a definition
-     *
+     * <p>
      * Author : gandomi
-     *
+     * <p>
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
      * @param in_logData
@@ -72,9 +75,9 @@ public class AssertLogData {
     /**
      * An assert that lets us see if the log data contains an entry with a given
      * value for a definition
-     *
+     * <p>
      * Author : gandomi
-     *
+     * <p>
      * @param in_logData
      *        A Log data object
      * @param in_parseDefinitionEntryTitle
@@ -98,9 +101,9 @@ public class AssertLogData {
     /**
      * An assert that lets us see if the log data contains an entry with a given
      * value for a definition
-     *
+     * <p>
      * Author : gandomi
-     *
+     * <p>
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
      * @param in_logData
@@ -124,9 +127,9 @@ public class AssertLogData {
     /**
      * This is an assertion at a file level. Given a set of log files it will
      * let you know if a given entry can be found
-     *
+     * <p>
      * Author : gandomi
-     *
+     * <p>
      * @param in_filePathList
      *        A list of file paths containing log/generated data
      * @param in_parseDefinition

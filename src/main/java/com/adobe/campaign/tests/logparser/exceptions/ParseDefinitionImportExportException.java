@@ -11,7 +11,7 @@
  */
 package com.adobe.campaign.tests.logparser.exceptions;
 
-public class ParseDefinitionImportExportException extends Exception {
+public class ParseDefinitionImportExportException extends RuntimeException {
 
     /**
      * 

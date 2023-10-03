@@ -41,6 +41,10 @@ public abstract class StdLogEntry {
 
     protected static final String STD_DATA_FREQUENCE = "frequence";
 
+    /**
+     * A method that creates the key to identify each stored entry
+     * @return A constructed key
+     */
     public abstract String makeKey();
 
     public StdLogEntry(ParseDefinition in_definition) {
@@ -70,8 +74,8 @@ public abstract class StdLogEntry {
     public abstract StdLogEntry copy();
 
     /**
-     * Returns the aw unchanged value map
-     * @return
+     * Returns the naw unchanged value map
+     * @return a map of generated keys and stored values
      */
     public Map<String, Object> getValuesMap() {
         return valuesMap;

@@ -170,12 +170,10 @@ public class ParseDefinitionFactory {
      * @param mapper
      *        a mapper object for testing
      * @return The file containing the exported data
-     * @throws ParseDefinitionImportExportException
-     *         when we face problems managing the export
      *
      */
     protected static File exportParseDefinitionToJSON(ParseDefinition in_parseDefinition, File in_jsonFile,
-            ObjectMapper mapper) throws ParseDefinitionImportExportException {
+            ObjectMapper mapper) {
         try {
             mapper.writeValue(in_jsonFile, in_parseDefinition);
 

@@ -13,11 +13,9 @@ package com.adobe.campaign.tests.logparser;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.lessThan;
 import static org.testng.Assert.assertThrows;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.*;
 
 import org.apache.commons.io.FileUtils;

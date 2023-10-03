@@ -265,7 +265,7 @@ public class ParseDefinitionTests {
     @SuppressWarnings("unchecked")
     @Test
     public void testImportExportToJSON_negative() throws ParseDefinitionImportExportException,
-            JsonGenerationException, JsonMappingException, IOException {
+            JsonGenerationException, IOException {
         ObjectMapper mapper = Mockito.mock(ObjectMapper.class);
         Mockito.doThrow(IOException.class).when(mapper).writeValue(ArgumentMatchers.any(File.class),
                 ArgumentMatchers.any(ParseDefinition.class));

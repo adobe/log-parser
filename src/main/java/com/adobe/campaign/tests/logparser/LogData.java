@@ -22,22 +22,39 @@ import org.apache.logging.log4j.Logger;
 
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 
+/**
+ * The main log object that contains the log information
+ * @param <T> The log information is always of the type @{@link StdLogEntry}
+ */
 public class LogData<T extends StdLogEntry> {
 
     protected static Logger log = LogManager.getLogger();
+
     /**
      * This value is both csv header, and a JSON selector
      */
     private Map<String, T> entries = new HashMap<>();
 
+    /**
+     * A standard LogData constructor
+     *
+     * @param in_stdLogEnDataData An object of the type @{@link StdLogEntry}
+     */
     public LogData(T in_stdLogEnDataData) {
         this.addEntry(in_stdLogEnDataData);
     }
 
+    /**
+     * A map of String and @{@link StdLogEntry}
+     * @param in_logMap A Map of generated Keys and @{@link StdLogEntry data}
+     */
     public LogData(Map<String, T> in_logMap) {
         this.setEntries(in_logMap);
     }
 
+    /**
+     * Default constructor
+     */
     public LogData() {
     }
 
@@ -52,9 +69,9 @@ public class LogData<T extends StdLogEntry> {
     /**
      * This method adds an entry to the log data. If the entry already exists we
      * just increment the frequence
-     *
+     * <p>
      * Author : gandomi
-     *
+     * <p>
      * @param lt_cubeEntry
      *        An object of the type {@link StdLogEntry}
      *
@@ -74,7 +91,7 @@ public class LogData<T extends StdLogEntry> {
     /**
      * This method allows you to access an entry in the log data. For this you
      * need the key of the Data
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_dataEntryKey
@@ -89,7 +106,7 @@ public class LogData<T extends StdLogEntry> {
     /**
      * This method allows you to access a value within the cube map. For this
      * you need the key of the Data and the title of the value
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_dataEntryKey
@@ -121,7 +138,7 @@ public class LogData<T extends StdLogEntry> {
     /**
      * This method allows you to change a specific value in the log data. For
      * this, you need the key and the parse definition title to find the value
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_dataEntryKey
@@ -175,7 +192,7 @@ public class LogData<T extends StdLogEntry> {
      * Here we create a new LogDataObject with the given ParseDefinitionEntry.
      * This method performs a groupby for the given value. The frequence will
      * also take into account the original frequence
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_parseDefinitionEntryKey
@@ -207,7 +224,7 @@ public class LogData<T extends StdLogEntry> {
      * Here we create a new LogDataObject with the given ParseDefinitionEntry.
      * This method performs a groupby for the given value. The frequence will
      * also take into account the original frequence
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_parseDefinitionEntryKeyList
@@ -270,7 +287,7 @@ public class LogData<T extends StdLogEntry> {
      * Here we create a new LogDataObject with the given ParseDefinitionEntry.
      * This method performs a groupby for the given value. The frequence will
      * also take into account the original frequence
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_parseDefinitionEntryKeyList
@@ -297,7 +314,7 @@ public class LogData<T extends StdLogEntry> {
      * Here we create a new LogDataObject with the given ParseDefinitionEntry.
      * This method performs a groupby for the given value. The frequence will
      * also take into account the original frequence
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_parseDefinitionEntryKey
@@ -321,7 +338,7 @@ public class LogData<T extends StdLogEntry> {
 
     /**
      * This method filters the LogData with the given properties
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_filterKeyValues
@@ -345,7 +362,7 @@ public class LogData<T extends StdLogEntry> {
     /**
      * This method searches the LogData for an enry with a specific value for a
      * parse definition entry name
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_parseDefinitionName
@@ -365,7 +382,7 @@ public class LogData<T extends StdLogEntry> {
 
     /**
      * This method searches the LogData with the given properties
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_searchKeyValues
@@ -381,7 +398,7 @@ public class LogData<T extends StdLogEntry> {
 
     /**
      * Lets us know if the given search term could be found.
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_parseDefinitionName
@@ -401,7 +418,7 @@ public class LogData<T extends StdLogEntry> {
 
     /**
      * Lets us know if the given search terms could be found.
-     *
+     * <p>
      * Author : gandomi
      *
      * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want
