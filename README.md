@@ -42,6 +42,10 @@ The following dependency needs to be added to your pom file:
     <version>1.0.8.2</version>
 </dependency>
 ```
+## Running the Log Parser
+We have two ways of running the log parser:
+1. Programmatically, as a library and in your test you can simply use the log-parser to analyse your log files.
+2. Command-Line, as of version 1.0.9, we allow you to run your log-parsing from the command-line.
 
 ## Parse Definitions
 In order to parse logs you need to define a ParseDefinition. A ParseDefinition contains a set of ordered ParseDefinition Entries. While parsing a line of logs, the LogParser will see if all entries can be found in the line of logs. If that is the case, the line is stored according to the definitions.
@@ -109,8 +113,7 @@ In the code above we want to parse the log line below, and want to fin the REST 
 The code starts with the creation a parse definition with at least two parse definitions that tell us between which markers should each data be extracted. The parse difinition is then handed to the StringParseFactory so that the data can be extracted.
 At the end we can see that each data is stored in a map with the parse defnition entry title as a key.
 
-
-### Import and Export
+### Import and Export of Definitions
 You can import or store a Parse Definition to or from a JSON file.
 
 ## Using the Standard Method
@@ -227,6 +230,9 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 
 
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
+
+## Command-line execution of the log-parser
+
 
 ## Release Notes
 ### 1.0.9 -  In progress

@@ -11,13 +11,9 @@
  */
 package com.adobe.campaign.tests.logparser;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.testng.Assert.assertThrows;
-
-import java.io.File;
-import java.util.*;
-
+import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -25,13 +21,12 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.adobe.campaign.tests.logparser.LogData;
-import com.adobe.campaign.tests.logparser.GenericEntry;
-import com.adobe.campaign.tests.logparser.ParseDefinition;
-import com.adobe.campaign.tests.logparser.ParseDefinitionEntry;
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
-import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import java.io.File;
+import java.util.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.testng.Assert.assertThrows;
 
 public class LogDataTest {
 
