@@ -9,7 +9,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -21,6 +21,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import com.adobe.campaign.tests.logparser.core.*;
 import org.hamcrest.Matchers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -30,7 +31,6 @@ import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ParseDefinitionTests {
