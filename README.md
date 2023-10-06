@@ -228,11 +228,15 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
+## Exporting Results to a CSV File
+We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
+
 ## Release Notes
 ### 1.0.9 -  In progress
 - Moved main code and tests to the package "core"
 - [#67](https://github.com/adobe/log-parser/issues/67) We can now select the files using a wild card. Given a directory we can now look for files in the sub-directory given a wild-card. The wildcards are implemented using Adobe Commons IO. You can read more on this in the [WildcardFilter JavaDoc](https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/filefilter/WildcardFilter.html)
 - [#68](https://github.com/adobe/log-parser/issues/68) We now present a report of the findings at the end of the analysis.
+- [#55](https://github.com/adobe/log-parser/issues/55) We can now export the log parsing results into a CSV file. 
 
 ### 1.0.8.2
 - Building with java8. 
