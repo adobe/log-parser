@@ -13,9 +13,16 @@ package com.adobe.campaign.tests.logparser.exceptions;
 
 import java.io.IOException;
 
+/**
+ * Exceptions for managing problems with import and export
+ */
 public class LogDataExportToFileException extends Exception {
 
     public LogDataExportToFileException(String s, IOException ex) {
         super(s, ex);
+    }
+
+    public LogDataExportToFileException(String s) {
+        super(s);
     }
 }

@@ -439,6 +439,11 @@ public class LogData<T extends StdLogEntry> {
      * @return a CSV file containing the LogData
      */
     public File exportLogDataToCSV() throws LogDataExportToFileException {
+        if (this.getEntries().keySet().isEmpty()) {
+            log.warn("No Log data to export. Please load the log data before re-attempting");
+            return new File("Non-ExistingFile");
+        }
+
         StdLogEntry l_parseDefinition = this.getEntries().values().stream().findFirst().get();
         return exportLogDataToCSV(l_parseDefinition.fetchStoredHeaders(), l_parseDefinition.getParseDefinition()
                 .fetchEscapedTitle()
@@ -458,7 +463,9 @@ public class LogData<T extends StdLogEntry> {
 
         if (l_exportFile.exists()) {
             log.info("Deleting existing log export file {}...", in_csvFileName);
-            l_exportFile.delete();
+            if (!l_exportFile.delete()) {
+                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
+            }
         }
 
         try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {

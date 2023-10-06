@@ -1371,4 +1371,11 @@ public class LogDataTest {
 
     }
 
+    @Test
+    public void exportLogData_negativeEmptyData() throws LogDataExportToFileException {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        File l_shouldBeEmpty = l_emptyLogData.exportLogDataToCSV();
+        assertThat("The returned file should not exist", !l_shouldBeEmpty.exists());
+    }
+
 }
