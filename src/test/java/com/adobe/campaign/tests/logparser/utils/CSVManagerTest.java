@@ -14,7 +14,6 @@ package com.adobe.campaign.tests.logparser.utils;
 import com.github.javafaker.Faker;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +29,7 @@ public class CSVManagerTest {
 
 
     @Test
-    public void fetchCoverageHistoryData_noFile() throws IOException, JAXBException {
+    public void fetchCoverageHistoryData_noFile() throws IOException {
 
         CSVManager csvManager = new CSVManager();
 
