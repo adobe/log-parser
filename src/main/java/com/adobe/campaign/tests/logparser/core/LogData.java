@@ -11,12 +11,14 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
+import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -430,4 +432,46 @@ public class LogData<T extends StdLogEntry> {
         return searchEntries(in_searchKeyValues).getEntries().size() > 0;
     }
 
+    /**
+     * Exports the current LogData to a standard CSV file. By default the file will have an escaped version of the Parse
+     * Definition as the name
+     *
+     * @return a CSV file containing the LogData
+     */
+    public File exportLogDataToCSV() throws LogDataExportToFileException {
+        StdLogEntry l_parseDefinition = this.getEntries().values().stream().findFirst().get();
+        return exportLogDataToCSV(l_parseDefinition.fetchStoredHeaders(), l_parseDefinition.getParseDefinition()
+                .fetchEscapedTitle()
+                + "-export.csv");
+    }
+
+    /**
+     * Exports the current LogData to a CSV file.
+     *
+     * @param in_headerSet A set of headers to be used as keys for exporting
+     * @param in_csvFileName The file name to export
+     * @return a CSV file containing the LogData
+     */
+    public File exportLogDataToCSV(Set<String> in_headerSet, String in_csvFileName)
+            throws LogDataExportToFileException {
+        File l_exportFile = new File(in_csvFileName);
+
+        if (l_exportFile.exists()) {
+            log.info("Deleting existing log export file {}...", in_csvFileName);
+            l_exportFile.delete();
+        }
+
+        try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {
+            printer.printRecord(in_headerSet);
+
+            for (StdLogEntry lt_entry : this.getEntries().values()) {
+                printer.printRecord(lt_entry.fetchValuesAsList());
+            }
+
+        } catch (IOException ex) {
+            throw new LogDataExportToFileException("Encountered error while exporting the log data to a CSV file.", ex);
+        }
+
+        return new File(in_csvFileName);
+    }
 }

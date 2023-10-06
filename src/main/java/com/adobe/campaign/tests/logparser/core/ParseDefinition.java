@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ParseDefinition {
 
+    protected static final String TITLE_PLACEHOLDER = "parseDefinitionResult";
     private String title;
     private List<ParseDefinitionEntry> definitionEntries;
     private String keyPadding = "#";
@@ -237,5 +238,14 @@ public class ParseDefinition {
      */
     public List<String> getKeyOrder() {
         return keyOrder;
+    }
+
+    /**
+     * This method returns the title of the Parse Definition as a suitable for a file name.
+     * @return A string with the spaces escaped with '-'
+     */
+    public String fetchEscapedTitle() {
+        String l_trimmedTitle = this.getTitle().trim();
+        return l_trimmedTitle.isEmpty() ? TITLE_PLACEHOLDER : l_trimmedTitle.replace(' ','-');
     }
 }

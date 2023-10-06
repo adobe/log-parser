@@ -21,7 +21,6 @@ import static org.testng.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
-import com.adobe.campaign.tests.logparser.core.*;
 import org.hamcrest.Matchers;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -386,6 +385,18 @@ public class ParseDefinitionTests {
 
         assertThrows(ParseDefinitionImportExportException.class,
                 () -> ParseDefinitionFactory.importParseDefinition(l_jsonPath));
+    }
+
+    @Test
+    public void testParseTitle() {
+        ParseDefinition l_p1 = new ParseDefinition("Title 1");
+        assertThat("The file generation of the title should be correct", l_p1.fetchEscapedTitle(), Matchers.equalTo("Title-1"));
+
+        l_p1.setTitle(" ");
+        assertThat("Emptt tutles should have a default value", l_p1.fetchEscapedTitle(), Matchers.equalTo("parseDefinitionResult"));
+
+        l_p1.setTitle("title 3 ");
+        assertThat("The file generation of the title should be correct", l_p1.fetchEscapedTitle(), Matchers.equalTo("title-3"));
 
     }
     

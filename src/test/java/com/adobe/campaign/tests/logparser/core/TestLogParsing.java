@@ -683,6 +683,9 @@ public class TestLogParsing {
                         + testPrintOutPadding + l_ale.fetchValueMap().get("path") + testPrintOutPadding
                         + 1)));
 
+        assertThat(l_ale.fetchValuesAsList(),
+                Matchers.contains(l_ale.makeKey(),l_ale.fetchValueMap().get("verb"),l_ale.fetchValueMap().get("path"),"1"));
+
     }
 
     @Test
@@ -710,6 +713,8 @@ public class TestLogParsing {
 
         assertThat("We should have the correct key", l_entry.fetchHeaders(),
                 Matchers.contains("API", "verb"));
+
+        assertThat("We should have the actual headers", l_entry.fetchStoredHeaders(), Matchers.contains(StdLogEntry.STD_DATA_KEY,"API", "verb",StdLogEntry.STD_DATA_FREQUENCE));
     }
 
     @Test
