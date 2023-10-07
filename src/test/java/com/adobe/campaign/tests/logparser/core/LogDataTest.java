@@ -1372,6 +1372,53 @@ public class LogDataTest {
     }
 
     @Test
+    public void testExportDataFileExists()
+            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            LogDataExportToFileException {
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(l_rootPath, l_fileFilter,
+                l_jsonPath);
+
+        String l_searchItem1 = "extAccount/destroySharedAudience#GET";
+        String l_searchItem2 = "extAccount/importSharedAudience#GET";
+
+        ParseDefinition l_pDefinition = l_logData.getEntries().values().stream().findFirst().get().getParseDefinition();
+        String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
+
+        //Create the file so it is deleted
+        File l_duplicateFile = new File(l_fileNameToExpect);
+        l_duplicateFile.createNewFile();
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData.getEntries().containsKey(l_searchItem1));
+
+        File l_exportedFile = l_logData.exportLogDataToCSV();
+
+        assertThat("We successfully created the file", l_exportedFile, notNullValue());
+        assertThat("We successfully created the file", l_exportedFile.exists());
+        assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        try {
+
+            assertThat("We successfully created the file correctly", l_exportedFile.getName(),
+                    Matchers.endsWith(l_fileNameToExpect));
+
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+                    l_exportedFile);
+
+            for (GenericEntry l_ge : l_logData.getEntries().values()) {
+                assertThat(l_ge.fetchValuesAsList(), Matchers.equalTo(l_fetchedResult.get(l_ge.makeKey())));
+            }
+        } finally {
+            l_exportedFile.delete();
+        }
+
+    }
+
+    @Test
     public void exportLogData_negativeEmptyData() throws LogDataExportToFileException {
         LogData<GenericEntry> l_emptyLogData = new LogData<>();
         File l_shouldBeEmpty = l_emptyLogData.exportLogDataToCSV();
