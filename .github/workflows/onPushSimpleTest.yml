@@ -45,7 +45,7 @@ jobs:
       - name: publish coverage onto codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./**/target/site/jacoco/jacoco.xml
+          file: target/site/jacoco/jacoco.xml
           name: codecov
           token: ${{ secrets.CODECOV_TOKEN }}
 
