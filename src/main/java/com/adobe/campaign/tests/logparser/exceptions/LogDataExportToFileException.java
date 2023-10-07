@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 public class LogDataExportToFileException extends Exception {
 
-    public LogDataExportToFileException(String s, IOException ex) {
+    public LogDataExportToFileException(String s, Exception ex) {
         super(s, ex);
     }
 
