@@ -13,7 +13,12 @@
 
 name: unit-tests
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
@@ -27,8 +32,6 @@ jobs:
           java-version: 11
           distribution: temurin
       - name: Build with Maven
-        #run: mvn --batch-mode --update-snapshots verify --settings .mvn/settings.xml
-        #run: mvn --batch-mode clean test -DargLine='--illegal-access=permit' -DargLine='--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED'
         run: mvn --batch-mode clean test
         env:
           OSSRH_ARTIFACTORY_USER: ${{ secrets.OSSRH_ARTIFACTORY_USER }}
