@@ -439,15 +439,17 @@ public class LogData<T extends StdLogEntry> {
      * @return a CSV file containing the LogData
      */
     public File exportLogDataToCSV() throws LogDataExportToFileException {
-        if (this.getEntries().keySet().isEmpty()) {
+        Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
+
+        if (l_firstEntry.isPresent()) {
+            return exportLogDataToCSV(l_firstEntry.get().fetchStoredHeaders(), l_firstEntry.get().getParseDefinition()
+                    .fetchEscapedTitle()
+                    + "-export.csv");
+        } else {
             log.warn("No Log data to export. Please load the log data before re-attempting");
             return new File("Non-ExistingFile");
         }
 
-        StdLogEntry l_parseDefinition = this.getEntries().values().stream().findFirst().get();
-        return exportLogDataToCSV(l_parseDefinition.fetchStoredHeaders(), l_parseDefinition.getParseDefinition()
-                .fetchEscapedTitle()
-                + "-export.csv");
     }
 
     /**
