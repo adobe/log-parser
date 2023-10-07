@@ -7,7 +7,7 @@
         
         <packages>
             <package
-                name="com.adobe.campaign.tests.logparser" />
+                name="com.adobe.campaign.tests.logparser.core" />
         </packages>
     </test>
 </suite> <!-- Default suite -->

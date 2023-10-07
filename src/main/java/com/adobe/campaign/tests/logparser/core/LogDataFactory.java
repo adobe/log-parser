@@ -12,7 +12,7 @@
 /**
  * 
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
 import java.util.ArrayList;
