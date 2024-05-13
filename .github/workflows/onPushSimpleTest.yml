@@ -43,7 +43,7 @@ jobs:
           echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
 
       - name: publish coverage onto codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           file: target/site/jacoco/jacoco.xml
           name: codecov
