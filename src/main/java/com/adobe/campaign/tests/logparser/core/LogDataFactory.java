@@ -15,6 +15,7 @@
 package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -253,8 +254,10 @@ public class LogDataFactory {
             throw new IllegalArgumentException("The given root path " + in_rootDir + " is not a directory.");
         }
 
-        Iterator<File> l_foundFilesIterator = FileUtils.iterateFiles(l_rootDir, new WildcardFileFilter(in_fileFilter),
-                TrueFileFilter.INSTANCE);
+        Iterator<File> l_foundFilesIterator = FileUtils.iterateFiles(l_rootDir,WildcardFileFilter.builder().setWildcards(in_fileFilter).get(), TrueFileFilter.INSTANCE);
+
+        FileFilter fileFilter = WildcardFileFilter.builder().setWildcards(in_fileFilter).get();
+
         List<String> l_foundFilesList = new ArrayList<>();
         l_foundFilesIterator.forEachRemaining(f -> l_foundFilesList.add(f.getAbsolutePath()));
         log.info("Searching within the {} matching files :", l_foundFilesList.size());

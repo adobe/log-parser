@@ -1278,10 +1278,19 @@ public class LogDataTest {
     }
 
     @Test
-    public void testFileSearch_negative3() {
-        String l_fileFilter=null;
+    public void testFileSearch_null() {
+        String l_fileFilter = null;
         String l_rootPath = "src/test/resources/nestedDirs";
-        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+        assertThat("An empty or null filter should not return enything",
+                LogDataFactory.findFilePaths(l_rootPath, l_fileFilter), Matchers.empty());
+    }
+
+    @Test
+    public void testFileSearch_empty() {
+        String l_fileFilter = "";
+        String l_rootPath = "src/test/resources/nestedDirs";
+        assertThat("An empty or null filter should not return enything",
+                LogDataFactory.findFilePaths(l_rootPath, l_fileFilter), Matchers.empty());
     }
 
     @Test
