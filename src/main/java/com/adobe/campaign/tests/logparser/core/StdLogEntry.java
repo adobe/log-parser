@@ -9,14 +9,9 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class StdLogEntry {
     protected static Logger log = LogManager.getLogger();
-    
+
     private Integer frequence = 1;
     private ParseDefinition parseDefinition;
     Map<String, Object> valuesMap = new HashMap<>();
@@ -43,6 +38,7 @@ public abstract class StdLogEntry {
 
     /**
      * A method that creates the key to identify each stored entry
+     *
      * @return A constructed key
      */
     public abstract String makeKey();
@@ -63,35 +59,37 @@ public abstract class StdLogEntry {
     }
 
     /**
-     * Creates a clone of the current LogEntry. This requires that each child
-     * defines a copy constructor
-     *
+     * Creates a clone of the current LogEntry. This requires that each child defines a copy constructor
+     * <p>
      * Author : gandomi
      *
      * @return A new constructed LogEntry Object
-     *
      */
     public abstract StdLogEntry copy();
 
     /**
      * Returns the naw unchanged value map
+     *
      * @return a map of generated keys and stored values
      */
     public Map<String, Object> getValuesMap() {
         return valuesMap;
     }
 
-
     /**
-     * Fetches a print out for listing purposed. It uses the header list as an
-     * index to fetch the correct order of the values
-     *
+     * Fetches a print out for listing purposes. It uses the header list as an index to fetch the correct order of the
+     * values
+     * <p>
      * Author : gandomi
      *
      * @return a String for the print out
-     *
      */
     public String fetchPrintOut() {
+        List<String> l_printOutList = fetchValuesAsList();
+        return StringUtils.join(l_printOutList, this.getParseDefinition().getPrintOutPadding());
+    }
+
+    protected List<String> fetchValuesAsList() {
         List<String> l_printOutList = new ArrayList<>();
 
         final Map<String, Object> l_valueMap = this.fetchValueMap();
@@ -102,38 +100,33 @@ public abstract class StdLogEntry {
             l_printOutList.add(l_valueMap.get(lt_header).toString());
         }
         l_printOutList.add(getFrequence().toString());
-        return StringUtils.join(l_printOutList, this.getParseDefinition().getPrintOutPadding());
+        return l_printOutList;
     }
 
     /**
-     * Fetches the headers that you have defined for the log class. You need to
-     * be careful that the headers you have defined have been used in storing
-     * the values.
-     *
+     * Fetches the headers that you have defined for the log class. You need to be careful that the headers you have
+     * defined have been used in storing the values.
+     * <p>
      * Author : gandomi
      *
      * @return a list of header names.
-     *
      */
     public abstract Set<String> fetchHeaders();
 
     /**
-     * Returns a set of objects you have defined for your log class. When using
-     * Generic Object no changes are made to it.
-     *
+     * Returns a set of objects you have defined for your log class. When using Generic Object no changes are made to
+     * it.
+     * <p>
      * Author : gandomi
      *
      * @return A Maps of extentions of StdLogEntry
-     *
      */
     public abstract Map<String, Object> fetchValueMap();
 
     /**
      * Increments the frequence
-     *
+     * <p>
      * Author : gandomi
-     *
-     *
      */
     protected void incrementUsage() {
         addFrequence(1);
@@ -142,12 +135,10 @@ public abstract class StdLogEntry {
 
     /**
      * Adds the usage of the current entry by the given value
-     *
+     * <p>
      * Author : gandomi
      *
-     * @param in_addedFrequence
-     *        The amount we should add to the frequence
-     *
+     * @param in_addedFrequence The amount we should add to the frequence
      */
     public void addFrequence(int in_addedFrequence) {
         frequence += in_addedFrequence;
@@ -159,16 +150,14 @@ public abstract class StdLogEntry {
     }
 
     /**
-     * @param frequence
-     *        the frequence to set
+     * @param frequence the frequence to set
      */
     protected void setFrequence(Integer frequence) {
         this.frequence = frequence;
     }
 
     /**
-     * @param valuesMap
-     *        the valuesMap to set
+     * @param valuesMap the valuesMap to set
      */
     protected void setValuesMap(Map<String, Object> valuesMap) {
         this.valuesMap = valuesMap;
@@ -183,17 +172,13 @@ public abstract class StdLogEntry {
     }
 
     /**
-     * This method updates the value maps. You need to have set the parse
-     * definition for this method to work. If you want more specific
-     * implementations of the map, like using different types other than String
-     * we suggest that you create an extension of this class and override this
-     * method.
-     *
+     * This method updates the value maps. You need to have set the parse definition for this method to work. If you
+     * want more specific implementations of the map, like using different types other than String we suggest that you
+     * create an extension of this class and override this method.
+     * <p>
      * Author : gandomi
      *
-     * @param in_valueMap
-     *        A map of Strings pertaining to the values fetched from the log
-     *
+     * @param in_valueMap A map of Strings pertaining to the values fetched from the log
      */
     public void setValuesFromMap(Map<String, String> in_valueMap) {
 
@@ -218,22 +203,18 @@ public abstract class StdLogEntry {
     public Object get(String in_dataTitle) {
         return this.fetchValueMap().get(in_dataTitle);
     }
-    
+
     /**
-     * Given a map of &lt;String,Object&gt; this method returns true if all of the map
-     * values can be found in the values map of this StdLogEntry. If any of the
-     * keys cannot be found in the valueMap, we provide a warning
-     *
+     * Given a map of &lt;String,Object&gt; this method returns true if all of the map values can be found in the values
+     * map of this StdLogEntry. If any of the keys cannot be found in the valueMap, we provide a warning
+     * <p>
      * Author : gandomi
      *
-     * @param in_filterMap
-     *        A map of filter values
+     * @param in_filterMap A map of filter values
      * @return True if all of the values can be found in the valueMap
-     *
      */
     public boolean matches(Map<String, Object> in_filterMap) {
 
-        
         for (String lt_filterKey : in_filterMap.keySet()) {
             if (!this.fetchHeaders().contains(lt_filterKey)) {
                 log.warn("The filter key {} could not be found among the log entry headers.", lt_filterKey);
@@ -245,7 +226,7 @@ public abstract class StdLogEntry {
         }
         return true;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -278,4 +259,16 @@ public abstract class StdLogEntry {
         return Objects.hash(frequence, parseDefinition, valuesMap);
     }
 
+    /**
+     * Returns the headers as they are stored
+     * @return An ordered set of the value names that are stored
+     */
+    public Set<String> fetchStoredHeaders() {
+        Set<String> lr_storedHeaders = new LinkedHashSet<>();
+        lr_storedHeaders.add(STD_DATA_KEY);
+        lr_storedHeaders.addAll(getParseDefinition().fetchHeaders());
+        lr_storedHeaders.add(STD_DATA_FREQUENCE);
+        return lr_storedHeaders;
+    }
 }
+

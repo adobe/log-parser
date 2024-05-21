@@ -9,11 +9,18 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
-import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.testng.Assert.assertThrows;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.utils.CSVManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -21,12 +28,9 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.util.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.testng.Assert.assertThrows;
+import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class LogDataTest {
 
@@ -1274,10 +1278,19 @@ public class LogDataTest {
     }
 
     @Test
-    public void testFileSearch_negative3() {
-        String l_fileFilter=null;
+    public void testFileSearch_null() {
+        String l_fileFilter = null;
         String l_rootPath = "src/test/resources/nestedDirs";
-        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+        assertThat("An empty or null filter should not return enything",
+                LogDataFactory.findFilePaths(l_rootPath, l_fileFilter), Matchers.empty());
+    }
+
+    @Test
+    public void testFileSearch_empty() {
+        String l_fileFilter = "";
+        String l_rootPath = "src/test/resources/nestedDirs";
+        assertThat("An empty or null filter should not return enything",
+                LogDataFactory.findFilePaths(l_rootPath, l_fileFilter), Matchers.empty());
     }
 
     @Test
@@ -1307,6 +1320,118 @@ public class LogDataTest {
         assertThat("We should have found 2 files", l_foundFilePaths,
                 Matchers.containsInAnyOrder(Matchers.endsWith("dirA/simpleLog.log"),
                         Matchers.endsWith("dirB/simpleLog.log")));
+    }
+
+    /*************** #55 Exporting results **********************/
+    @Test
+    public void testExportData()
+            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            LogDataExportToFileException {
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        final String apacheLogFile = "src/test/resources/nestedDirs/dirA/simpleLog.log";
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+        int l_nrOfEntries = l_logData.getEntries().keySet().size();
+        assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
+
+        File l_exportedFile = l_logData.exportLogDataToCSV();
+
+        assertThat("We successfully created the file", l_exportedFile, notNullValue());
+        assertThat("We successfully created the file", l_exportedFile.exists());
+        assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        try {
+            String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-');
+            assertThat("We successfully created the file correctly", l_exportedFile.getName(),
+                    Matchers.endsWith(l_fileNameToExpect + "-export.csv"));
+
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+                    l_exportedFile);
+
+            for (GenericEntry l_ge : l_logData.getEntries().values()) {
+                assertThat(l_ge.fetchValuesAsList(), Matchers.equalTo(l_fetchedResult.get(l_ge.makeKey())));
+            }
+        } finally {
+            l_exportedFile.delete();
+        }
+
+    }
+
+    @Test
+    public void testExportDataFileExists()
+            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            LogDataExportToFileException {
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(l_rootPath, l_fileFilter,
+                l_jsonPath);
+
+        String l_searchItem1 = "extAccount/destroySharedAudience#GET";
+        String l_searchItem2 = "extAccount/importSharedAudience#GET";
+
+        ParseDefinition l_pDefinition = l_logData.getEntries().values().stream().findFirst().get().getParseDefinition();
+        String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
+
+        //Create the file so it is deleted
+        File l_duplicateFile = new File(l_fileNameToExpect);
+        l_duplicateFile.createNewFile();
+
+        assertThat("We should have the key for amcDataSource",
+                l_logData.getEntries().containsKey(l_searchItem1));
+
+        File l_exportedFile = l_logData.exportLogDataToCSV();
+
+        assertThat("We successfully created the file", l_exportedFile, notNullValue());
+        assertThat("We successfully created the file", l_exportedFile.exists());
+        assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        try {
+
+            assertThat("We successfully created the file correctly", l_exportedFile.getName(),
+                    Matchers.endsWith(l_fileNameToExpect));
+
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+                    l_exportedFile);
+
+            for (GenericEntry l_ge : l_logData.getEntries().values()) {
+                assertThat(l_ge.fetchValuesAsList(), Matchers.equalTo(l_fetchedResult.get(l_ge.makeKey())));
+            }
+        } finally {
+            l_exportedFile.delete();
+        }
+
+    }
+
+    @Test
+    public void exportLogData_negativeEmptyData() throws LogDataExportToFileException {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        File l_shouldBeEmpty = l_emptyLogData.exportLogDataToCSV();
+        assertThat("The returned file should not exist", !l_shouldBeEmpty.exists());
     }
 
 }

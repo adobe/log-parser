@@ -9,14 +9,16 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
+import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -430,4 +432,55 @@ public class LogData<T extends StdLogEntry> {
         return searchEntries(in_searchKeyValues).getEntries().size() > 0;
     }
 
+    /**
+     * Exports the current LogData to a standard CSV file. By default the file will have an escaped version of the Parse
+     * Definition as the name
+     *
+     * @return a CSV file containing the LogData
+     */
+    public File exportLogDataToCSV() throws LogDataExportToFileException {
+        Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
+
+        if (l_firstEntry.isPresent()) {
+            return exportLogDataToCSV(l_firstEntry.get().fetchStoredHeaders(), l_firstEntry.get().getParseDefinition()
+                    .fetchEscapedTitle()
+                    + "-export.csv");
+        } else {
+            log.warn("No Log data to export. Please load the log data before re-attempting");
+            return new File("Non-ExistingFile");
+        }
+
+    }
+
+    /**
+     * Exports the current LogData to a CSV file.
+     *
+     * @param in_headerSet A set of headers to be used as keys for exporting
+     * @param in_csvFileName The file name to export
+     * @return a CSV file containing the LogData
+     */
+    public File exportLogDataToCSV(Set<String> in_headerSet, String in_csvFileName)
+            throws LogDataExportToFileException {
+        File l_exportFile = new File(in_csvFileName);
+
+        if (l_exportFile.exists()) {
+            log.info("Deleting existing log export file {}...", in_csvFileName);
+            if (!l_exportFile.delete()) {
+                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
+            }
+        }
+
+        try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {
+            printer.printRecord(in_headerSet);
+
+            for (StdLogEntry lt_entry : this.getEntries().values()) {
+                printer.printRecord(lt_entry.fetchValuesAsList());
+            }
+
+        } catch (IOException ex) {
+            throw new LogDataExportToFileException("Encountered error while exporting the log data to a CSV file.", ex);
+        }
+
+        return new File(in_csvFileName);
+    }
 }

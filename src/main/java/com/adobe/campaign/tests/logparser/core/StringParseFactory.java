@@ -9,10 +9,10 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -76,11 +76,11 @@ public class StringParseFactory {
             int lt_foundEntryCount = 0;
             int i = 0;
             log.info("Parsing file {}", l_currentLogFile);
-            try (Scanner scanner = new Scanner(new File(l_currentLogFile))) {
 
-                while (scanner.hasNextLine()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(l_currentLogFile))) {
+                String lt_nextLine;
+                while ((lt_nextLine = reader.readLine()) != null) {
 
-                    final String lt_nextLine = scanner.nextLine();
                     //Activate only if the log is not enough. Here we list each line we consider
                     //log.debug("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
@@ -94,7 +94,7 @@ public class StringParseFactory {
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
                 log.info("Finished scanning {} lines.",i);
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
         }

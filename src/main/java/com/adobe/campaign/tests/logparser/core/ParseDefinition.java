@@ -9,7 +9,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class ParseDefinition {
 
+    protected static final String TITLE_PLACEHOLDER = "parseDefinitionResult";
     private String title;
     private List<ParseDefinitionEntry> definitionEntries;
     private String keyPadding = "#";
@@ -237,5 +238,14 @@ public class ParseDefinition {
      */
     public List<String> getKeyOrder() {
         return keyOrder;
+    }
+
+    /**
+     * This method returns the title of the Parse Definition as a suitable for a file name.
+     * @return A string with the spaces escaped with '-'
+     */
+    public String fetchEscapedTitle() {
+        String l_trimmedTitle = this.getTitle().trim();
+        return l_trimmedTitle.isEmpty() ? TITLE_PLACEHOLDER : l_trimmedTitle.replace(' ','-');
     }
 }
