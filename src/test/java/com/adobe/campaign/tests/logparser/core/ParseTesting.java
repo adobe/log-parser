@@ -15,12 +15,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertThrows;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.adobe.campaign.tests.logparser.core.ParseDefinition;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.core.GenericEntry;
@@ -75,6 +77,7 @@ public class ParseTesting {
                 is(equalTo("02/Apr/2020:08:08:28 +0200")));
 
     }
+
 
     @Test(description = "A case where the separators are the same and larger than 1 character")
     public void testItemParseDefinitionOfASimpleDateCase2() throws StringParseException {
@@ -964,6 +967,27 @@ public class ParseTesting {
         assertThat("The given log should be compliant",
                 StringParseFactory.isStringCompliant(l_line, l_definitionList));
         assertThat("We should have values", l_parseResult.size(), is(equalTo(3)));
+    }
+
+    @Test(description = "Related to issue #102, where the parsing stops or no reason")
+    public void testFileInterruption()
+            throws InstantiationException, IllegalAccessException, StringParseException {
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+        l_apiDefinition.setTitle("Finding a specific line");
+        l_apiDefinition.setStart(" ");
+        l_apiDefinition.setEnd(null);
+        ParseDefinition l_parseDefinition = new ParseDefinition("Post Upgrade Logs");
+        l_parseDefinition.addEntry(l_apiDefinition);
+
+        final String bugFile = "src/test/resources/bugs/issue102_charSetBadUTFChar.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(bugFile), l_parseDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(19)));
+
     }
 
 }
