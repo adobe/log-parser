@@ -35,7 +35,7 @@ public class CSVManagerTest {
 
         final File l_csvFile = new File(faker.file().fileName());
         Map<String, List<String>> l_coverageHistory = csvManager
-                .fetchCoverageHistoryData(faker.name().firstName(), l_csvFile);
+                .fetchCSVToMapList(faker.name().firstName(), l_csvFile);
 
         assertThat("We should have an empty map", l_coverageHistory.isEmpty());
 
