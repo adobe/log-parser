@@ -20,7 +20,6 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CSVManager {
@@ -31,13 +30,13 @@ public class CSVManager {
      * <p>
      * Author : gandomi
      *
-     * @param in_fileToLoad
-     * @param in_key
+     * @param in_fileToLoad A file to fetch
+     * @param in_key The header key to use as the key in the map
      * @return A map with the key being the LogDataKey and the values stored for that LogEntry
      * @throws FileNotFoundException if the file is absent
-     * @throws IOException
+     * @throws IOException if the file cannot be read
      */
-    public static Map<String, List<String>> fetchCoverageHistoryData(final String in_key,
+    public static Map<String, List<String>> fetchCSVToMapList(final String in_key,
             final File in_fileToLoad) throws FileNotFoundException, IOException {
 
         Map<String, List<String>> l_coverageHistory = new HashMap<String, List<String>>();

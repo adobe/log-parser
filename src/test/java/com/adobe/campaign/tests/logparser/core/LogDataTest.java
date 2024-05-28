@@ -1368,7 +1368,7 @@ public class LogDataTest {
             assertThat("We successfully created the file correctly", l_exportedFile.getName(),
                     Matchers.endsWith(l_fileNameToExpect + "-export.csv"));
 
-            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCSVToMapList(StdLogEntry.STD_DATA_KEY,
                     l_exportedFile);
 
             for (GenericEntry l_ge : l_logData.getEntries().values()) {
@@ -1415,7 +1415,7 @@ public class LogDataTest {
             assertThat("We successfully created the file correctly", l_exportedFile.getName(),
                     Matchers.endsWith(l_fileNameToExpect));
 
-            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCSVToMapList(StdLogEntry.STD_DATA_KEY,
                     l_exportedFile);
 
             for (GenericEntry l_ge : l_logData.getEntries().values()) {
