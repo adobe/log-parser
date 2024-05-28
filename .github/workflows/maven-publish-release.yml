@@ -28,8 +28,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 1.8
-          distribution: oracle
+          java-version: 8.0.412+8
+          distribution: temurin
 
       # Set up dependency cache
       - name: Cache local Maven repository
