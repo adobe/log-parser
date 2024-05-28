@@ -9,10 +9,10 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,33 +69,39 @@ public class StringParseFactory {
         }
 
         Map<String, T> lr_entries = new HashMap<>();
-        int i = 0;
 
+        Map<String, Integer> l_foundEntries = new HashMap<>();
         //Fetch File
         for (String l_currentLogFile : in_logFiles) {
+            int lt_foundEntryCount = 0;
+            int i = 0;
+            log.info("Parsing file {}", l_currentLogFile);
 
-            try (Scanner scanner = new Scanner(new File(l_currentLogFile))) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(l_currentLogFile))) {
+                String lt_nextLine;
+                while ((lt_nextLine = reader.readLine()) != null) {
 
-                while (scanner.hasNextLine()) {
-
-                    final String lt_nextLine = scanner.nextLine();
                     //Activate only if the log is not enough. Here we list each line we consider
                     //log.debug("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
                         updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
                                 in_classTarget);
-
+                        lt_foundEntryCount++;
                     } else {
                         log.debug("Skipping line {} - {}", i, lt_nextLine);
                     }
                     i++;
-
+                    l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
-            } catch (FileNotFoundException e) {
+                log.info("Finished scanning {} lines.",i);
+            } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
         }
 
+        log.info("RESULT : Entry Report for Parse Definition '{}' per file:", in_parseDefinition.getTitle());
+        l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
+        log.info("RESULT : Found {} unique keys", lr_entries.keySet().size());
         return lr_entries;
     }
 

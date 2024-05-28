@@ -9,21 +9,11 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser.exceptions;
+package com.adobe.campaign.tests.logparser.core;
 
-public class ParseDefinitionImportExportException extends RuntimeException {
+public abstract class LogParser {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8447982808632053227L;
-
-    public ParseDefinitionImportExportException(String string, Exception e) {
-        super(string, e);
-    }
-
-    public ParseDefinitionImportExportException(String string) {
-        super(string);
-    }
+    public static final String OUTPUT_ROOT = "log_parser_output";
+    public static final String OUTPUT_DIR = OUTPUT_ROOT + "/" + "data";
 
 }

@@ -9,21 +9,38 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser.exceptions;
+package com.adobe.campaign.tests.logparser.utils;
 
-public class ParseDefinitionImportExportException extends RuntimeException {
+import com.github.javafaker.Faker;
+import org.testng.annotations.Test;
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 8447982808632053227L;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-    public ParseDefinitionImportExportException(String string, Exception e) {
-        super(string, e);
+import static org.hamcrest.MatcherAssert.assertThat;
+
+public class CSVManagerTest {
+
+    Faker faker = new Faker();
+
+
+
+
+    @Test
+    public void fetchCoverageHistoryData_noFile() throws IOException {
+
+        CSVManager csvManager = new CSVManager();
+
+        final File l_csvFile = new File(faker.file().fileName());
+        Map<String, List<String>> l_coverageHistory = csvManager
+                .fetchCoverageHistoryData(faker.name().firstName(), l_csvFile);
+
+        assertThat("We should have an empty map", l_coverageHistory.isEmpty());
+
     }
 
-    public ParseDefinitionImportExportException(String string) {
-        super(string);
-    }
+
 
 }

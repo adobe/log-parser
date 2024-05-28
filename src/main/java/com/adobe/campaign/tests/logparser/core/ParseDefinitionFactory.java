@@ -9,7 +9,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -170,12 +170,10 @@ public class ParseDefinitionFactory {
      * @param mapper
      *        a mapper object for testing
      * @return The file containing the exported data
-     * @throws ParseDefinitionImportExportException
-     *         when we face problems managing the export
      *
      */
     protected static File exportParseDefinitionToJSON(ParseDefinition in_parseDefinition, File in_jsonFile,
-            ObjectMapper mapper) throws ParseDefinitionImportExportException {
+            ObjectMapper mapper) {
         try {
             mapper.writeValue(in_jsonFile, in_parseDefinition);
 

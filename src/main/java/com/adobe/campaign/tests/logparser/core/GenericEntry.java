@@ -9,7 +9,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,17 +19,22 @@ import java.util.stream.Collectors;
  * The generic entry is a standard string based definition where the values are
  * stored as is. I.e. strings. All definitions are based on the ParseDefinition
  * class
- *
- *
+ * <p>
  * Author : gandomi
- *
  */
 public class GenericEntry extends StdLogEntry {
 
+    /**
+     * Constructor accepting a @{@link ParseDefinition object}
+     * @param in_definition A @{@link ParseDefinition object}
+     */
     public GenericEntry(ParseDefinition in_definition) {
         super(in_definition);
     }
 
+    /**
+     * Default constructor
+     */
     public GenericEntry() {
         super(new ParseDefinition("Created By Default"));
     }

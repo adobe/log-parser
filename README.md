@@ -39,7 +39,7 @@ The following dependency needs to be added to your pom file:
  <dependency>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.8.2</version>
 </dependency>
 ```
 
@@ -129,7 +129,7 @@ Below is a diagram representing the class structure:
 
 ![The Class relationship](diagrams/Log_Parser-Classes.png)
 
-## Searching a organizing log data
+## Searching and organizing log data
 As of versions 1.0.4 & 1.0.5 we have a series of search and organizing the log data.
 
 ### Search and Filter Mechanisms
@@ -228,7 +228,17 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
+## Exporting Results to a CSV File
+We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
+
 ## Release Notes
+
+### 1.0.9
+- Moved main code and tests to the package "core"
+- [#67](https://github.com/adobe/log-parser/issues/67) We can now select the files using a wild card. Given a directory we can now look for files in the sub-directory given a wild-card. The wildcards are implemented using Adobe Commons IO. You can read more on this in the [WildcardFilter JavaDoc](https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/filefilter/WildcardFilter.html)
+- [#68](https://github.com/adobe/log-parser/issues/68) We now present a report of the findings at the end of the analysis.
+- [#55](https://github.com/adobe/log-parser/issues/55) We can now export the log parsing results into a CSV file.
+- [#102](https://github.com/adobe/log-parser/issues/102) Corrected bug where Log parser could silently stop with no error when confronted with CharSet incompatibilities.
 
 ### 1.0.8.2
 - Building with java8. 

@@ -12,12 +12,21 @@
 /**
  * 
  */
-package com.adobe.campaign.tests.logparser;
+package com.adobe.campaign.tests.logparser.core;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Factory class for creating log data
@@ -26,6 +35,7 @@ import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
  *
  */
 public class LogDataFactory {
+    protected static Logger log = LogManager.getLogger();
 
     protected LogDataFactory() {
         throw new IllegalStateException("Utility class");
@@ -171,4 +181,87 @@ public class LogDataFactory {
                 GenericEntry.class);
     }
 
+    /**
+     * A factory method for LogData. By default we create GenricEntries. Given a root directory path and a wildcard for
+     * finding files, it generates a LogDataObject containing all the data the log parser finds in the files matching
+     * the search query
+     * <p>
+     * Author : gandomi
+     *
+     * @param in_rootDir         A list of file paths containing log/generated data
+     * @param in_fileFilter      A wildcard to be used for filtering the files
+     * @param in_parseDefinition A ParseDefinition Object defining the parsing rules
+     * @return A LogData Object containing the found entries from the logs
+     * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
+     * @throws InstantiationException               if this {@code Class} represents an abstract class, an interface, an
+     *                                              array class, a primitive type, or void; or if the class has no
+     *                                              nullary constructor; or if the instantiation fails for some other
+     *                                              reason.
+     * @throws IllegalAccessException               if the class or its nullary constructor is not accessible.
+     * @throws StringParseException                 When there are logical rules when parsing the given string
+     */
+    public static LogData<GenericEntry> generateLogData(String in_rootDir, String in_fileFilter,
+            ParseDefinition in_parseDefinition)
+            throws StringParseException, InstantiationException, IllegalAccessException {
+        List<String> l_foundFilesList = findFilePaths(in_rootDir, in_fileFilter);
+        return generateLogData(l_foundFilesList, in_parseDefinition);
+
+    }
+
+
+    /**
+     * A factory method for LogData. By default we create GenricEntries. Given a root directory path and a wildcard for
+     * finding files, it generates a LogDataObject containing all the data the log parser finds in the files matching
+     * the search query defined as a json
+     * <p>
+     * Author : gandomi
+     *
+     * @param in_rootDir                     A starting directory to start our file search
+     * @param in_fileFilter                  A wild card pattern to start our searches
+     * @param in_jsonParseDefinitionFilePath The file path of a ParseDefinition
+     * @return A LogData Object containing the found entries from the logs
+     * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
+     * @throws InstantiationException               if this {@code Class} represents an abstract class, an interface, an
+     *                                              array class, a primitive type, or void; or if the class has no
+     *                                              nullary constructor; or if the instantiation fails for some other
+     *                                              reason.
+     * @throws IllegalAccessException               if the class or its nullary constructor is not accessible.
+     * @throws StringParseException                 When there are logical rules when parsing the given string
+     */
+    public static LogData<GenericEntry> generateLogData(String in_rootDir, String in_fileFilter,
+            String in_jsonParseDefinitionFilePath) throws InstantiationException, IllegalAccessException,
+            StringParseException, ParseDefinitionImportExportException {
+
+        return LogDataFactory.generateLogData(in_rootDir, in_fileFilter,
+                ParseDefinitionFactory.importParseDefinition(in_jsonParseDefinitionFilePath));
+    }
+
+    /**
+     * Given a root directory and a filter, we return a list of files that correspond to our search mechanism
+     *
+     * @param in_rootDir    A starting directory to start our file search
+     * @param in_fileFilter A wild card pattern to start our searches
+     * @return a list of file paths that can be used for
+     */
+    public static List<String> findFilePaths(String in_rootDir, String in_fileFilter) {
+        File l_rootDir = new File(in_rootDir);
+
+        if (!l_rootDir.exists()) {
+            throw new IllegalArgumentException("The given root path directory " + in_rootDir + " does not exist.");
+        }
+
+        if (!l_rootDir.isDirectory()) {
+            throw new IllegalArgumentException("The given root path " + in_rootDir + " is not a directory.");
+        }
+
+        Iterator<File> l_foundFilesIterator = FileUtils.iterateFiles(l_rootDir,WildcardFileFilter.builder().setWildcards(in_fileFilter).get(), TrueFileFilter.INSTANCE);
+
+        FileFilter fileFilter = WildcardFileFilter.builder().setWildcards(in_fileFilter).get();
+
+        List<String> l_foundFilesList = new ArrayList<>();
+        l_foundFilesIterator.forEachRemaining(f -> l_foundFilesList.add(f.getAbsolutePath()));
+        log.info("Searching within the {} matching files :", l_foundFilesList.size());
+        l_foundFilesList.stream().forEach(log::info);
+        return l_foundFilesList;
+    }
 }
