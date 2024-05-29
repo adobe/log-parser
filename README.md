@@ -39,7 +39,7 @@ The following dependency needs to be added to your pom file:
  <dependency>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>1.0.8.2</version>
+    <version>1.0.10</version>
 </dependency>
 ```
 
