@@ -84,7 +84,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>4.5</version>
                 <configuration>
-                    <header>${license.dir}/licenseHeader</header>
+                    <header>${license.dir}/LicenseHeader</header>
                     <properties>
                         <project>
                             ${project.name}
