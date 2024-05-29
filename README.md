@@ -233,8 +233,9 @@ We now have the possibility to export the log data results into a CSV file. The 
 
 ## Release Notes
 
-### 1.11.0
+### 1.11.0 (next version)
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
+- [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
 
 ### 1.0.10
 - Moved main code and tests to the package "core"
