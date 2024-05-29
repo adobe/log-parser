@@ -64,6 +64,13 @@ jobs:
           OSSRH_ARTIFACTORY_USER: ${{ secrets.OSSRH_ARTIFACTORY_USER }}
           OSSRH_ARTIFACTORY_API_TOKEN: ${{ secrets.OSSRH_ARTIFACTORY_API_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=adobe_log-parser -DargLine='--illegal-access=permit' -DargLine='--add-opens java.xml/jdk.xml.internal=ALL-UNNAMED' -Prelease,ossrh -s .github/workflows/settings.xml
+      - name: SonarQube Quality Gate check
+          uses: sonarsource/sonarqube-quality-gate-action@master
+          # Force to fail step after specific time
+          timeout-minutes: 5
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            scanMetadataReportFile: target/sonar/report-task.txt
       - name: Configure git user for release commits
         env:
           X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
