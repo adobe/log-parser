@@ -70,7 +70,7 @@ jobs:
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          scanMetadataReportFile: target/sonar/report-task.txt
+          scanMetadataReportFile: ${{ inputs.working-directory }}/.scannerwork/report-task.txt
       - name: Configure git user for release commits
         env:
           X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
