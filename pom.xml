@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
 
-<!-- | MIT License | © Copyright 2020 Adobe. All rights reserved. | Permission
-    is hereby granted, free of charge, to any person obtaining a copy of this 
-    software and associated documentation files (the "Software"), to deal in 
-    the Software without restriction, including without limitation the rights 
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
-    copies of the Software, and to permit persons to whom the Software is furnished 
-    to do so, subject to the following conditions: | The above copyright notice 
-    and this permission notice shall be included in all copies or substantial 
-    portions of the Software. | | THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY 
-    OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-    DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
-    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
-    DEALINGS IN THE SOFTWARE. -->
+    Copyright 2022 Adobe
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file in
+    accordance with the terms of the Adobe license agreement accompanying
+    it.
+
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.adobe.campaign.tests</groupId>
@@ -79,7 +74,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>4.5</version>
                 <configuration>
-                    <header>${license.dir}/license.txt</header>
+                    <header>${license.dir}/licenseHeader</header>
                     <properties>
                         <project>
                             ${project.name}
@@ -88,10 +83,17 @@
                         <year>${project.inceptionYear}</year>
                         <website>${founder-website}</website>
                     </properties>
-                    <includes>
-                        <include>src/main/java/**</include>
-                        <include>src/test/java/**</include>
-                    </includes>
+                    <excludes>
+                        <exclude>**/*.md</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.log</exclude>
+                        <exclude>**/*.properties</exclude>
+                        <exclude>LICENSE_DATA/**</exclude>
+                        <exclude>ibs_output/**</exclude>
+                        <exclude>**/ibs_output/**</exclude>
+                        <exclude>${license.dir}/**</exclude>
+                        <exclude>**/*.drawio</exclude>
+                    </excludes>
                     <strictCheck>true</strictCheck>
                 </configuration>
                 <executions>
