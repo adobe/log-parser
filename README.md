@@ -233,6 +233,9 @@ We now have the possibility to export the log data results into a CSV file. The 
 
 ## Release Notes
 
+### 1.11.0
+- [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
+
 ### 1.0.10
 - Moved main code and tests to the package "core"
 - [#67](https://github.com/adobe/log-parser/issues/67) We can now select the files using a wild card. Given a directory we can now look for files in the sub-directory given a wild-card. The wildcards are implemented using Adobe Commons IO. You can read more on this in the [WildcardFilter JavaDoc](https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/filefilter/WildcardFilter.html)
