@@ -33,6 +33,16 @@
             <url>https://www.linkedin.com/in/baubakgandomi/</url>
         </developer>
     </developers>
+    <properties>
+        <license.dir>LICENSE_DATA</license.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <sonar.organization>adobeinc</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>11</java.version>
+    </properties>
     <scm>
         <connection>scm:git::https://github.com/adobe/log-parser.git</connection>
         <developerConnection>scm:git:https://github.com/adobe/log-parser.git</developerConnection>
@@ -273,16 +283,6 @@
             </build>
         </profile>
     </profiles>
-    <properties>
-        <license.dir>LICENSE_DATA</license.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <sonar.organization>adobeinc</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <java.version>11</java.version>
-    </properties>
     <reporting>
         <plugins>
             <plugin>
