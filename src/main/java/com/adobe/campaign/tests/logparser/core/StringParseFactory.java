@@ -68,18 +68,19 @@ public class StringParseFactory {
         Map<String, T> lr_entries = new HashMap<>();
 
         Map<String, Integer> l_foundEntries = new HashMap<>();
+        long totalBytesAnalyzed = 0;
         //Fetch File
         for (String l_currentLogFile : in_logFiles) {
             int lt_foundEntryCount = 0;
             int i = 0;
+            totalBytesAnalyzed+= new File(l_currentLogFile).length();
             log.info("Parsing file {}", l_currentLogFile);
 
             try (BufferedReader reader = new BufferedReader(new FileReader(l_currentLogFile))) {
                 String lt_nextLine;
                 while ((lt_nextLine = reader.readLine()) != null) {
 
-                    //Activate only if the log is not enough. Here we list each line we consider
-                    //log.debug("{}  -  {}", i, lt_nextLine);
+                    log.trace("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
                         updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
                                 in_classTarget);
@@ -90,7 +91,7 @@ public class StringParseFactory {
                     i++;
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
-                log.info("Finished scanning {} lines.",i);
+                log.info("Finished scanning {} lines.",i, new File(l_currentLogFile).length());
             } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
@@ -98,7 +99,12 @@ public class StringParseFactory {
 
         log.info("RESULT : Entry Report for Parse Definition '{}' per file:", in_parseDefinition.getTitle());
         l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
-        log.info("RESULT : Found {} unique keys", lr_entries.keySet().size());
+
+        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        long fileSizeInKB = totalBytesAnalyzed / 1024;
+        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+        long fileSizeInMB = fileSizeInKB / 1024;
+        log.info("RESULT : Found {} unique keys in {} files, and {}Mb of data.", lr_entries.keySet().size(), l_foundEntries.keySet().size(),fileSizeInMB);
         return lr_entries;
     }
 
