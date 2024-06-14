@@ -143,7 +143,7 @@ public class AssertLogData {
 
             assertLogContains(LogDataFactory.generateLogData(in_filePathList, in_parseDefinition),
                     in_parseDefinitionEntryTitle, in_expectedValue);
-        } catch (InstantiationException | IllegalAccessException | StringParseException e) {
+        } catch (StringParseException e) {
             throw new AssertionError("Caught unexpected exception", e);
         }
 
@@ -174,7 +174,7 @@ public class AssertLogData {
 
             assertLogContains(in_comment, LogDataFactory.generateLogData(in_filePathList, in_parseDefinition),
                     in_parseDefinitionEntryTitle, in_expectedValue);
-        } catch (InstantiationException | IllegalAccessException | StringParseException e) {
+        } catch (StringParseException e) {
 
             //e.printStackTrace();
             throw new AssertionError("Caught unexpected exception", e);

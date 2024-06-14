@@ -253,7 +253,7 @@ public class TestLogParsing {
      *********/
     @Test
     public void testFetchACCCoverageFromFile()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 

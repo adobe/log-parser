@@ -232,7 +232,7 @@ public class LogDataTest {
 
     @Test
     public void testLogDataFactory()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -272,7 +272,7 @@ public class LogDataTest {
     
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinition()
-            throws InstantiationException, IllegalAccessException, StringParseException,
+            throws StringParseException,
             ParseDefinitionImportExportException {
 
         
@@ -522,7 +522,7 @@ public class LogDataTest {
      */
     @Test
     public void testMultipleGroupBy()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -1133,7 +1133,7 @@ public class LogDataTest {
 
     @Test
     public void testNestedFileAccess()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -1215,7 +1215,7 @@ public class LogDataTest {
 
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinitionAndSearchFile()
-            throws InstantiationException, IllegalAccessException, StringParseException,
+            throws StringParseException,
             ParseDefinitionImportExportException {
 
         String l_rootPath = "src/test/resources/nestedDirs/";
@@ -1322,7 +1322,7 @@ public class LogDataTest {
     /*************** #55 Exporting results **********************/
     @Test
     public void testExportData()
-            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            throws StringParseException, IOException,
             LogDataExportToFileException {
         //Create a parse definition
 
@@ -1379,7 +1379,7 @@ public class LogDataTest {
 
     @Test
     public void testExportDataFileExists()
-            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            throws StringParseException, IOException,
             LogDataExportToFileException {
         String l_rootPath = "src/test/resources/nestedDirs/";
         String l_fileFilter = "simple*.log";

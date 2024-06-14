@@ -154,7 +154,7 @@ public class ParseDefinition {
     public List<String> fetchKeyOrder() {
         if (keyOrder.isEmpty()) {
             return getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve)
-                    .map(t -> t.getTitle()).collect(Collectors.toList());
+                    .map(ParseDefinitionEntry::getTitle).collect(Collectors.toList());
         }
         return keyOrder;
     }
@@ -224,10 +224,10 @@ public class ParseDefinition {
      *
      */
     public Set<String> fetchHeaders() {
-        final Collection<String> l_definedHeaders = getDefinitionEntries().stream()
+        final Set<String> l_definedHeaders = getDefinitionEntries().stream()
                 .filter(ParseDefinitionEntry::isToPreserve).map(ParseDefinitionEntry::getTitle)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        return (Set<String>) l_definedHeaders;
+        return l_definedHeaders;
     }
 
     /**

@@ -85,7 +85,7 @@ public class AssertionTests {
      */
     @Test
     public void testLogDataFactory()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -133,7 +133,7 @@ public class AssertionTests {
      */
     @Test
     public void testLogDataFactory_NegativeExceptionThrown()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
         try (MockedStatic<LogDataFactory> mockedLogFactory = Mockito.mockStatic(LogDataFactory.class)) {
 
             //Create a parse definition
@@ -155,7 +155,7 @@ public class AssertionTests {
             final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
 
             mockedLogFactory.when(() -> LogDataFactory.generateLogData(Arrays.asList(apacheLogFile), l_pDefinition))
-                    .thenThrow(new InstantiationException("Duuh"));
+                    .thenThrow(new StringParseException("Duuh"));
 
             assertThrows(AssertionError.class,
                     () -> AssertLogData.assertLogContains("We should have found the entry PrepareFromId",

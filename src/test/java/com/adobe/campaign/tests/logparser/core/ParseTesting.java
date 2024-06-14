@@ -495,7 +495,46 @@ public class ParseTesting {
 
     @Test
     public void testCreateApacheProfileFile()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+
+        for (GenericEntry lt_entry : l_entries.values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+
+    }
+
+    @Test
+    public void testIncludingTheFileAsAnEntry()
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -534,7 +573,7 @@ public class ParseTesting {
 
     @Test
     public void testCreateApacheProfileFile_Negative()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -557,7 +596,7 @@ public class ParseTesting {
 
     @Test
     public void testCreateApacheProfileFile_Negative2()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -927,7 +966,7 @@ public class ParseTesting {
     }
 
     @Test
-    public void testToPreserve() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testToPreserve() throws StringParseException {
 
         ParseDefinitionEntry l_lineFinder = new ParseDefinitionEntry();
 
@@ -968,7 +1007,7 @@ public class ParseTesting {
 
     @Test(description = "Related to issue #102, where the parsing stops or no reason")
     public void testFileInterruption()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
         l_apiDefinition.setTitle("Finding a specific line");
