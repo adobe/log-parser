@@ -22,6 +22,7 @@ import java.util.*;
 public class StringParseFactory {
 
     protected static final Logger log = LogManager.getLogger();
+    public static final String STD_DEFAULT_ENTRY_FILENAME = "no_file";
 
     private StringParseFactory() {
         throw new IllegalStateException("Utility class");
@@ -132,13 +133,13 @@ public class StringParseFactory {
         lt_entry.setParseDefinition(in_parseDefinition);
         lt_entry.setValuesFromMap(lt_lineResult);
 
-        var lt_fileObject = new File(in_logFile != null ? in_logFile : "no_file");
+        var lt_fileObject = new File(in_logFile != null ? in_logFile : STD_DEFAULT_ENTRY_FILENAME);
         if (in_parseDefinition.isStoreFileName()) {
             lt_entry.setLogFileName(lt_fileObject.getName());
         }
 
         if (in_parseDefinition.isStoreFilePath()) {
-            lt_entry.setFilePath(in_logFile != null ? lt_fileObject.getParentFile().getPath() : in_logFile);
+            lt_entry.setFilePath(lt_fileObject.exists()  ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
         }
 
         final String lt_currentKey = lt_entry.makeKey();
