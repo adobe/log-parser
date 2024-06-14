@@ -97,36 +97,27 @@ public class LogDataFactory {
     }
 
     /**
-     * A factory method for LogData. By default we create GenricEntries. Given a
-     * list of files, and a ParseDefinition, it generates a LogDataObject
-     * containing all the data the log parser finds
-     *
+     * A factory method for LogData. By default we create GenricEntries. Given a list of files, and a ParseDefinition,
+     * it generates a LogDataObject containing all the data the log parser finds
+     * <p>
      * Author : gandomi
      *
-     * @param in_filePathList
-     *        A list of file paths containing log/generated data
-     * @param in_jsonParseDefinitionFilePath
-     *        The file path of a ParseDefinition
-     * @param in_logEntryClass
-     *        A log entry class that defines how the found data is to be
-     *        transformed
-     * @param <T>
-     *        The type of entry we want to be generated while parsing logs. The
-     *        type should be a child of {@link StdLogEntry}
+     * @param in_filePathList                A list of file paths containing log/generated data
+     * @param in_jsonParseDefinitionFilePath The file path of a ParseDefinition
+     * @param in_logEntryClass               A log entry class that defines how the found data is to be transformed
+     * @param <T>                            The type of entry we want to be generated while parsing logs. The type
+     *                                       should be a child of {@link StdLogEntry}
      * @return A LogData Object containing the found entries from the logs
-     * @throws ParseDefinitionImportExportException
-     *         Thrown if there is a problem with the given parseDefinition file
-     * @throws StringParseException
-     *         When there are logical rules when parsing the given string
-     *
+     * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
+     * @throws StringParseException                 When there are logical rules when parsing the given string
      */
-    public static <T extends StdLogEntry> LogData<GenericEntry> generateLogData(List<String> in_filePathList,
+    public static <T extends StdLogEntry> LogData<T> generateLogData(List<String> in_filePathList,
             String in_jsonParseDefinitionFilePath, Class<T> in_logEntryClass) throws
             StringParseException, ParseDefinitionImportExportException {
 
         return generateLogData(in_filePathList,
                 ParseDefinitionFactory.importParseDefinition(in_jsonParseDefinitionFilePath),
-                GenericEntry.class);
+                in_logEntryClass);
     }
 
     /**
