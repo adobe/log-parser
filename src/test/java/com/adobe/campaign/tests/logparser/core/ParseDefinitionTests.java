@@ -220,7 +220,38 @@ public class ParseDefinitionTests {
                 .importParseDefinition(l_storedJSON.getAbsolutePath());
 
         assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+    }
 
+    @Test
+    public void testImportExportToJSON_withFileExport() throws ParseDefinitionImportExportException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+        l_parseDefinition.setStoreFilePath(true);
+        l_parseDefinition.setStoreFileName(true);
+
+        final String l_jsonPath = LogParser.OUTPUT_DIR + "/firstDefinitionWithFilePath.json";
+
+        File l_storedJSON = ParseDefinitionFactory.exportParseDefinitionToJSON(l_parseDefinition, l_jsonPath);
+
+        ParseDefinition fetchedJSON = ParseDefinitionFactory
+                .importParseDefinition(l_storedJSON.getAbsolutePath());
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
     }
 
     @Test

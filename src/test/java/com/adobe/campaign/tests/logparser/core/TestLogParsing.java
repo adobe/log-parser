@@ -469,7 +469,7 @@ public class TestLogParsing {
         final GenericEntry l_entry = l_entryMap.values().iterator().next();
 
         assertThat("We should still have a file", l_entry.getFileName(), is(equalTo("does not exist")));
-        assertThat("We should still have a path", l_entry.getFilePath(), is(equalTo("does not exist")));
+        assertThat("We should still have a path", l_entry.getFilePath(), is(equalTo(StringParseFactory.STD_DEFAULT_ENTRY_FILENAME)));
 
     }
 

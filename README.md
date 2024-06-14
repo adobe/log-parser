@@ -52,6 +52,7 @@ Each Parse Definition consists of :
 - A set of entries
 - A Padding allowing us to create a legible key
 - A key Order which is used for defining the Key
+- If you want the result to include the log file name and path
 
 ### Defining an entry
 Each entry for a Parse Definition allows us to define:
@@ -235,8 +236,9 @@ We now have the possibility to export the log data results into a CSV file. The 
 
 ### 1.11.0 (next version)
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
-- [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
+- [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
 - [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
+- [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 
 

@@ -33,13 +33,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ParseDefinition {
 
     protected static final String TITLE_PLACEHOLDER = "parseDefinitionResult";
+    private String title;
     private boolean storeFileName = false;
     private boolean storeFilePath = false;
-    private String title;
-    private List<ParseDefinitionEntry> definitionEntries;
     private String keyPadding = "#";
     private List<String> keyOrder;
     private String printOutPadding = ";";
+    private List<ParseDefinitionEntry> definitionEntries;
+
 
     public ParseDefinition() {
         super();
