@@ -326,7 +326,7 @@ public class TestLogParsing {
     }
 
     @Test
-    public void testUpdateMap() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testUpdateMap() throws StringParseException {
 
         String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
 

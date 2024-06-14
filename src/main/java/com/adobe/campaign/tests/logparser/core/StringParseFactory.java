@@ -8,18 +8,16 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import java.io.*;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class StringParseFactory {
 
@@ -44,20 +42,13 @@ public class StringParseFactory {
      * @param <T> The type of data (subclass of {@link StdLogEntry}) we want to create and store
      * @param <V> The collection type with which we receive the parameter in_logFiles
      * @return A map of String and a Sub-class of {@link StdLogEntry}
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> extractLogEntryMap(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         if (in_logFiles.isEmpty()) {
             log.warn(
@@ -126,18 +117,21 @@ public class StringParseFactory {
      *         an array class, a primitive type, or void; or if the class has no
      *         nullary constructor; or if the instantiation fails for some other
      *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
     static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine,
             ParseDefinition in_parseDefinition, Map<String, T> in_entries, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
         Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine, in_parseDefinition);
 
-        T lt_entry = in_classTarget.newInstance();
+        T lt_entry = null;
+        try {
+            lt_entry = in_classTarget.getDeclaredConstructor().newInstance();
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Missing Default constructor in SDK Parser Class", e);
+        }
 
         lt_entry.setParseDefinition(in_parseDefinition);
         lt_entry.setValuesFromMap(lt_lineResult);
