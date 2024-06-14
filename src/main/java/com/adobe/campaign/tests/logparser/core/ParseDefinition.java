@@ -33,6 +33,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ParseDefinition {
 
     protected static final String TITLE_PLACEHOLDER = "parseDefinitionResult";
+    private boolean storeFileName = false;
+    private boolean storeFilePath = false;
     private String title;
     private List<ParseDefinitionEntry> definitionEntries;
     private String keyPadding = "#";
@@ -244,5 +246,21 @@ public class ParseDefinition {
     public String fetchEscapedTitle() {
         String l_trimmedTitle = this.getTitle().trim();
         return l_trimmedTitle.isEmpty() ? TITLE_PLACEHOLDER : l_trimmedTitle.replace(' ','-');
+    }
+
+    public boolean isStoreFileName() {
+        return storeFileName;
+    }
+
+    public void setStoreFileName(boolean storeFileName) {
+        this.storeFileName = storeFileName;
+    }
+
+    public boolean isStoreFilePath() {
+        return storeFilePath;
+    }
+
+    public void setStoreFilePath(boolean storeFilePath) {
+        this.storeFilePath = storeFilePath;
     }
 }

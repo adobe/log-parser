@@ -264,9 +264,11 @@ public class LogDataTest {
 
         assertThat(l_logData.getEntries().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
 
-        for (GenericEntry lt_entry : l_logData.getEntries().values()) {
+        for (StdLogEntry lt_entry : l_logData.getEntries().values()) {
             System.out.println(lt_entry.fetchPrintOut());
         }
+
+        l_logData.getEntries().values().stream().forEach(e -> System.out.println(e.fetchPrintOut()));
     }
     
     

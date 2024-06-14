@@ -192,11 +192,11 @@ LogData<MyImplementationOfStdLogEntry> l_myGroupedData = logData.groupBy(Arrays.
 
 In this case we get :
 
-Definition 1 | Definition 4 | Frequence
------------- | ------------ | ------------ 
-12 | AA | 1
-112 | AAA | 1
-120 | AA | 1
+| Definition 1 | Definition 4 | Frequence |
+|--------------|--------------|-----------|
+| 12           | AA           | 1         |
+| 112          | AAA          | 1         |
+| 120          | AA           | 1         |
 
 
 #### Chaining GroupBy
@@ -236,6 +236,9 @@ We now have the possibility to export the log data results into a CSV file. The 
 ### 1.11.0 (next version)
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
+- [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
+- [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
+
 
 ### 1.0.10
 - Moved main code and tests to the package "core"

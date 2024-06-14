@@ -18,13 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.adobe.campaign.tests.logparser.core.ParseDefinition;
-import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-import com.adobe.campaign.tests.logparser.core.GenericEntry;
-import com.adobe.campaign.tests.logparser.core.ParseDefinitionEntry;
-import com.adobe.campaign.tests.logparser.core.StringParseFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class ParseTesting {
@@ -525,6 +520,55 @@ public class ParseTesting {
         assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
         assertThat("We should have the key for amcDataSource",
                 l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+
+        for (GenericEntry lt_entry : l_entries.values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+
+    }
+
+    @Test
+    public void testCreateApacheProfileFile_storeFile()
+            throws StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+        l_pDefinition.setStoreFileName(true);
+        l_pDefinition.setStoreFilePath(true);
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFileName(),
+                is(equalTo("ssl_accessSmall.log")));
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFilePath(),
+                is(equalTo("src/test/resources/logTests/apache")));
+
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchHeaders().stream().forEach(System.out::println);
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchValuesAsList().stream().forEach(System.out::println);
+
 
         for (GenericEntry lt_entry : l_entries.values()) {
             System.out.println(lt_entry.fetchPrintOut());

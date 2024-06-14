@@ -73,7 +73,7 @@ public class StringParseFactory {
 
                     log.trace("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
-                        updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
+                        updateEntryMapWithParsedData(l_currentLogFile, lt_nextLine, in_parseDefinition, lr_entries,
                                 in_classTarget);
                         lt_foundEntryCount++;
                     } else {
@@ -104,6 +104,7 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
+     * @param in_logFile The log file from which the line was extracted
      * @param in_logLine
      *        A string representing a log line
      * @param in_parseDefinition
@@ -112,16 +113,11 @@ public class StringParseFactory {
      *        The map of String and StdLogEntries
      * @param in_classTarget
      *        The target class that will be storing the results
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
-    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine,
+    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logFile, final String in_logLine,
             ParseDefinition in_parseDefinition, Map<String, T> in_entries, Class<T> in_classTarget)
             throws StringParseException {
         Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine, in_parseDefinition);
@@ -135,6 +131,15 @@ public class StringParseFactory {
 
         lt_entry.setParseDefinition(in_parseDefinition);
         lt_entry.setValuesFromMap(lt_lineResult);
+
+        var lt_fileObject = new File(in_logFile != null ? in_logFile : "no_file");
+        if (in_parseDefinition.isStoreFileName()) {
+            lt_entry.setLogFileName(lt_fileObject.getName());
+        }
+
+        if (in_parseDefinition.isStoreFilePath()) {
+            lt_entry.setFilePath(in_logFile != null ? lt_fileObject.getParentFile().getPath() : in_logFile);
+        }
 
         final String lt_currentKey = lt_entry.makeKey();
 

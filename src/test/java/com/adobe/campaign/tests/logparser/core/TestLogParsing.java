@@ -348,7 +348,7 @@ public class TestLogParsing {
 
         Map<String, GenericEntry> l_entryMap = new HashMap<String, GenericEntry>();
 
-        StringParseFactory.updateEntryMapWithParsedData(l_accLogString, l_definition, l_entryMap,
+        StringParseFactory.updateEntryMapWithParsedData("arbitraryFile.com", l_accLogString, l_definition, l_entryMap,
                 GenericEntry.class);
 
         assertThat("We should have one entry in the map", l_entryMap.size(), is(equalTo(1)));
