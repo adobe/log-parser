@@ -381,15 +381,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by")
     public void testgroupBy()
             throws IncorrectParseDefinitionException {
 
@@ -445,15 +438,7 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+    @Test(description = "Testing that we can do a group by")
     public void testgroupBy_Default()
             throws IncorrectParseDefinitionException {
 
@@ -508,15 +493,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy()
             throws IncorrectParseDefinitionException {
 
@@ -579,15 +557,7 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+    @Test(description = "Testing that we can do a group by with two values")
     public void testGroupBy_Chaining()
             throws IncorrectParseDefinitionException {
 
@@ -646,15 +616,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy_Default()
             throws IncorrectParseDefinitionException {
 
@@ -715,15 +678,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a filter
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a filter")
     public void testFilter_Default() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -786,15 +742,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a filter using multiple fields
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a filter using multiple fields")
     public void testFilter_Multi() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -913,15 +862,8 @@ public class LogDataTest {
 
     }
     
-    /**
-     * Testing that we can do a search
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a search")
     public void testSearch_Default() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -979,16 +921,8 @@ public class LogDataTest {
 
     }
     
-    
-    /**
-     * Testing that we can do a search using multiple fields
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a search using multiple fields")
     public void testsearch_Multi() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -1051,16 +985,8 @@ public class LogDataTest {
 
     }
     
-    
-    /**
-     * Testing that we can detect if an element is present
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can detect if an element is present")
     public void testIsPresent() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");

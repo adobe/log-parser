@@ -1,0 +1,83 @@
+2024-06-12T23:31:59.931Z	27967	27967	1	info	log	qwerty
+2024-06-12T23:32:00.949Z	27923	27923	1	error	log	INT-158912 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-12T23:32:00.951Z	27923	27923	1	error	log	SOP-338921 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-12T23:32:00.952Z	27923	27923	1	error	log	Failed to push tracking logs for Full H. (iRc=16384)
+2024-06-12T23:44:49.588Z	28540	28540	1	info	log	Calling mid sourcing server to fetch tracking logs for FH.
+2024-06-12T23:44:59.686Z	28540	28540	1	error	log	INT-158912 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-12T23:44:59.687Z	28540	28540	1	error	log	SOP-338921 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-12T23:44:59.688Z	28540	28540	1	error	log	Failed to push tracking logs for Full H. (iRc=16384)
+2024-06-12T23:45:20.291Z	28559	28559	1	info	log	Application server for Acme (1.2.3 (ab4f) of 06/12/2024)
+2024-06-12T23:45:20.326Z	28559	28559	1	info	log	Starting 1 connection(s) on pool 'default server1' (DBType1, server='127.0.0.1', login='server2:server2')
+2024-06-12T23:45:21.683Z	28559	28559	1	info	log	thingy 'fHReplicateStagingData' is being run on host=server1
+2024-06-12T23:45:21.771Z	28559	28559	1	info	log	Application server for Acme (1.2.3 (ab4f) of 06/12/2024)
+2024-06-12T23:45:22.392Z	28559	28559	1	info	log	No staging data created or updated on 'AVisitorStg'.
+2024-06-13T02:19:51.823Z	35252	35252	1	warning	log	JST-311156 The current working table 'bec:irsxtgstki' data source 'A:ytyt:fH' has poor unitary operation performance.
+2024-06-13T02:19:51.824Z	35252	35252	1	error	log	It is not possible to manually update or insert auto primary key in schema 'bec:irsxtgstki'. (iRc=16384)
+2024-06-13T02:19:51.824Z	35252	35252	1	error	log	XSV-3508923 Unable to save document of type 'bec:irsxtgstki'. (iRc=16384)
+2024-06-13T02:19:51.825Z	35252	35252	1	error	log	SOP-338911 Error while executing the method 'Write' of service 'g:persist|g:session'. (iRc=16384)
+2024-06-13T02:19:51.825Z	35252	35252	1	error	log	SCR-169012 aaaa: error while evaluating script 'QA_aaaa_TrinidadInsertIN84577136/js'. (iRc=-53)
+2024-06-13T02:19:55.471Z	35267	35267	1	info	log	Application server for Acme (1.2.3 (ab4f) of 06/12/2024)
+2024-06-13T02:19:55.501Z	35267	35267	1	info	log	Starting 1 connection(s) on pool 'default server1' (DBType1, server='127.0.0.1', login='server2:server2')
+2024-06-13T02:19:56.697Z	35267	35267	1	info	log	thingy 'QA_aaaa_IN50053645' is being run on host=server1
+2024-06-13T02:19:56.706Z	35267	35267	1	info	log	Starting thingy (operator 'O')
+2024-06-13T02:19:56.905Z	35267	35267	1	warning	log	JST-317056 The current working table 'A:tack' data source 'A:ytyt:fH' has poor unitary operation performance.
+2024-06-13T02:19:58.158Z	35267	35267	1	info	log	thingy finished
+2024-06-13T02:19:59.367Z	35283	35283	1	info	log	Application server for Acme (1.2.3 (ab4f) of 06/12/2024)
+2024-06-13T02:20:00.464Z	35283	35283	1	info	log	thingy 'fHUnicity' is being run on host=server1
+2024-06-13T02:20:00.589Z	35283	35283	1	info	log	dataSource:A:ytyt:fH
+2024-06-13T02:20:00.712Z	35283	35283	1	info	log	------------------------------------------
+2024-06-13T02:20:00.713Z	35283	35283	1	info	log	*** START SCANNING ***: bec:tightiow
+2024-06-13T02:20:00.716Z	35283	35283	1	info	log	strQueryToExecute:#011 jh UUID_STRING(),CURRENT_TIMESTAMP,'bec:tightiow', '@id', 0, CONCAT(NVL(TO_VARCHAR(utightId),'NULL') ), COUNT(*), 1#011 FROM bectightiow #011 GROUP BY utightId #011 HAVING COUNT(*) > 1;
+2024-06-13T02:20:00.717Z	35283	35283	1	info	log	*** END SCANNING ***: bec:tightiow#011
+2024-06-13T02:20:01.288Z	35298	35298	1	info	log	Application server for Acme (1.2.3 (ab4f) of 06/12/2024)
+2024-06-13T02:20:02.147Z	35283	35283	1	info	log	0 duplicated records found in bec:tightiow
+2024-06-13T02:20:02.148Z	35283	35283	1	info	log	*** START SCANNING ***: bec:createTrinidadTargetMappingWithUuidPrimaryKey83714324
+2024-06-13T02:20:02.152Z	35283	35283	1	info	log	strQueryToExecute:#011 jh UUID_STRING(),CURRENT_TIMESTAMP,'bec:createTrinidadTargetMappingWithUuidPrimaryKey83714324', '@id | @holderEmail', 0, CONCAT(NVL(TO_VARCHAR(uCreateTrinidadTargetMappingWithUuidPrimaryKey83714324Id),'NULL') , ' | ', NVL(TO_VARCHAR(sHolderEmail),'NULL') ), COUNT(*), 1#011 FROM becCreateTrinidadTargetMappingWithUuidPrimaryKey83714324 #011 GROUP BY uCreateTrinidadTargetMappingWithUuidPrimaryKey83714324Id, sHolderEmail #011 HAVING COUNT(*) > 1;
+2024-06-13T02:20:02.153Z	35283	35283	1	info	log	*** END SCANNING ***: bec:createTrinidadTargetMappingWithUuidPrimaryKey83714324#011
+2024-06-13T03:00:19.719Z	37044	37044	1	info	log	DLV-491023 Augmenting marketing mapping information in jhjhh.
+2024-06-13T03:00:19.726Z	37044	37044	1	error	log	INT-150612 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly. (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	 (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	HTTP code 500 (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	'IOB-090007 Network error (send(), errno=111: Connection refused) (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	error	log	WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:19.727Z	37044	37044	1	info	log	Retry in 1.0s s.
+2024-06-13T03:00:20.751Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-13T03:00:20.751Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly. (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	error	log	 (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	error	log	HTTP code 500 (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	error	log	'IOB-090007 Network error (send(), errno=111: Connection refused) (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	error	log	WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:20.752Z	37044	37044	1	info	log	Retry in 1.0s s.
+2024-06-13T03:00:21.768Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-13T03:00:21.768Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly. (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	error	log	 (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	error	log	HTTP code 500 (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	error	log	'IOB-090007 Network error (send(), errno=111: Connection refused) (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	error	log	WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:21.769Z	37044	37044	1	info	log	Retry in 1.0s s.
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly. (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	 (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	HTTP code 500 (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	'IOB-090007 Network error (send(), errno=111: Connection refused) (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	error	log	WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:22.785Z	37044	37044	1	info	log	Retry in 2.0s s.
+2024-06-13T03:00:23.159Z	37037	37037	1	info	log	Data replication for schema 'A:jhjjjjjjjjjj' complete, copied 3 records.
+2024-06-13T03:00:23.160Z	37037	37037	1	info	log	Data replication for schema 'A:state' starts.
+2024-06-13T03:00:24.801Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=-53)
+2024-06-13T03:00:24.802Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly.#012#012HTTP code 500#012'IOB-090007 Network error (send(), errno=111: Connection refused)#012WEB-530007 Error relaying '/h/j/m.iii' to URL 'http://localhost:8080/h/j/m.iii'.'. (iRc=16384)
+2024-06-13T03:00:24.802Z	37044	37044	1	error	log	INT-150012 The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)
+2024-06-13T03:00:24.802Z	37044	37044	1	error	log	SOP-330021 Communication error with server: please make sure it is configured correctly. (iRc=16384)
+2024-06-13T03:00:24.802Z	37044	37044	1	error	log	 (iRc=16384)
+2024-06-13T03:00:24.802Z	37044	37044	1	error	log	HTTP code 500 (iRc=16384)
+2024-06-13T03:00:24.802Z	37044	37044	1	error	log	'IOB-090007 Network error (send(), errno=111: Connection refused) (iRc=16384)
+2024-06-13T03:00:25.160Z	37037	37037	1	info	log	Data replication for schema 'A:state' starts.
