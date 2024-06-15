@@ -11,7 +11,7 @@ package com.adobe.campaign.tests.logparser.exceptions;
 public class ParseDefinitionImportExportException extends RuntimeException {
 
     /**
-     * 
+     * This exceptions is to be thrown whenever we have a problem instantiatioting one of the extensions of StdLogParser
      */
     private static final long serialVersionUID = 8447982808632053227L;
 

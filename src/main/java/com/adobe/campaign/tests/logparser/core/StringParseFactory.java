@@ -8,6 +8,7 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
+import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -126,8 +127,12 @@ public class StringParseFactory {
         T lt_entry = null;
         try {
             lt_entry = in_classTarget.getDeclaredConstructor().newInstance();
-        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException("Missing Default constructor in SDK Parser Class", e);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new LogParserSDKDefinitionException("Structural Problems whith calling the Default constructor in SDK Parser Class", e);
+        } catch (InvocationTargetException e) {
+            throw new LogParserSDKDefinitionException("Problems when calling the Default constructor in SDK Parser Class", e);
+        } catch (NoSuchMethodException e) {
+            throw new LogParserSDKDefinitionException("Missing Default constructor in SDK Parser Class", e);
         }
 
         lt_entry.setParseDefinition(in_parseDefinition);
