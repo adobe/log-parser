@@ -11,6 +11,7 @@ package com.adobe.campaign.tests.logparser.core;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
@@ -203,18 +204,11 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
             Class<U> in_transformationClass)
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         return groupBy(Arrays.asList(in_parseDefinitionEntryKey), in_transformationClass);
     }
@@ -236,19 +230,12 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
             Class<U> in_transformationClass)
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
-        LogData<U> lr_cubeData = new LogData<U>();
+            throws IncorrectParseDefinitionException {
+        LogData<U> lr_cubeData = new LogData<>();
 
         //Creating new Definition
         ParseDefinition l_cubeDefinition = new ParseDefinition(
@@ -261,7 +248,12 @@ public class LogData<T extends StdLogEntry> {
         //Filling STDLogData
         for (T lt_entry : getEntries().values()) {
             Map<String, String> lt_cubeEntryValues = new HashMap<>();
-            U lt_cubeEntry = in_transformationClass.newInstance();
+            U lt_cubeEntry = null;
+            try {
+                lt_cubeEntry = in_transformationClass.getDeclaredConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
             lt_cubeEntry.setParseDefinition(l_cubeDefinition);
 
             for (String lt_parseDefinitionEntryKey : in_parseDefinitionEntryKeyList) {
@@ -295,17 +287,10 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public LogData<GenericEntry> groupBy(List<String> in_parseDefinitionEntryKeyList)
-            throws InstantiationException, IllegalAccessException, IncorrectParseDefinitionException {
+            throws IncorrectParseDefinitionException {
         return groupBy(in_parseDefinitionEntryKeyList, GenericEntry.class);
     }
 
@@ -321,17 +306,10 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public LogData<GenericEntry> groupBy(String in_parseDefinitionEntryKey)
-            throws InstantiationException, IllegalAccessException, IncorrectParseDefinitionException {
+            throws IncorrectParseDefinitionException {
         return groupBy(in_parseDefinitionEntryKey, GenericEntry.class);
     }
 
@@ -434,6 +412,7 @@ public class LogData<T extends StdLogEntry> {
      * Definition as the name
      *
      * @return a CSV file containing the LogData
+     * @throws LogDataExportToFileException If the file could not be exported
      */
     public File exportLogDataToCSV() throws LogDataExportToFileException {
         Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
@@ -455,6 +434,7 @@ public class LogData<T extends StdLogEntry> {
      * @param in_headerSet A set of headers to be used as keys for exporting
      * @param in_csvFileName The file name to export
      * @return a CSV file containing the LogData
+     * @throws LogDataExportToFileException If the file could not be exported
      */
     public File exportLogDataToCSV(Set<String> in_headerSet, String in_csvFileName)
             throws LogDataExportToFileException {

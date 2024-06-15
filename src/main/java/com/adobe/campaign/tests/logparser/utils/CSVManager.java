@@ -36,7 +36,7 @@ public class CSVManager {
     public static Map<String, List<String>> fetchCSVToMapList(final String in_key,
             final File in_fileToLoad) throws FileNotFoundException, IOException {
 
-        Map<String, List<String>> l_coverageHistory = new HashMap<String, List<String>>();
+        Map<String, List<String>> l_coverageHistory = new HashMap<>();
 
         if (!in_fileToLoad.exists() || (in_fileToLoad.length() == 0)) {
             log.error("File {} could not be found.", in_fileToLoad.getPath());

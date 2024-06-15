@@ -253,7 +253,7 @@ public class TestLogParsing {
      *********/
     @Test
     public void testFetchACCCoverageFromFile()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -326,7 +326,7 @@ public class TestLogParsing {
     }
 
     @Test
-    public void testUpdateMap() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testUpdateMap() throws StringParseException {
 
         String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
 
@@ -348,7 +348,7 @@ public class TestLogParsing {
 
         Map<String, GenericEntry> l_entryMap = new HashMap<String, GenericEntry>();
 
-        StringParseFactory.updateEntryMapWithParsedData(l_accLogString, l_definition, l_entryMap,
+        StringParseFactory.updateEntryMapWithParsedData("arbitraryFile.com", l_accLogString, l_definition, l_entryMap,
                 GenericEntry.class);
 
         assertThat("We should have one entry in the map", l_entryMap.size(), is(equalTo(1)));
@@ -359,6 +359,117 @@ public class TestLogParsing {
                 is(equalTo(l_definition)));
         assertThat("The key should be correct", l_entry.getFrequence(), is(equalTo(1)));
         assertThat("The key should be correct", l_entry.makeKey(), is(equalTo("xtk:persist#NewInstance")));
+
+    }
+
+    @Test
+    public void testUpdateMap_missingFile() throws StringParseException {
+
+        String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("API");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+
+        ParseDefinition l_definition = new ParseDefinition("Soap Call");
+        l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+
+        Map<String, GenericEntry> l_entryMap = new HashMap<String, GenericEntry>();
+
+        StringParseFactory.updateEntryMapWithParsedData(null, l_accLogString, l_definition, l_entryMap,
+                GenericEntry.class);
+
+        assertThat("We should have one entry in the map", l_entryMap.size(), is(equalTo(1)));
+
+        final GenericEntry l_entry = l_entryMap.values().iterator().next();
+
+        assertThat("We should have the Definition stored in the generic entry", l_entry.getParseDefinition(),
+                is(equalTo(l_definition)));
+        assertThat("The key should be correct", l_entry.getFrequence(), is(equalTo(1)));
+        assertThat("The key should be correct", l_entry.makeKey(), is(equalTo("xtk:persist#NewInstance")));
+
+    }
+
+    @Test
+    public void testUpdateMap_nullFileButAwaitingAFile() throws StringParseException {
+
+        String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("API");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+
+        ParseDefinition l_definition = new ParseDefinition("Soap Call");
+        l_definition.setStoreFileName(true);
+        l_definition.setStoreFilePath(true);
+        l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+
+        Map<String, GenericEntry> l_entryMap = new HashMap<String, GenericEntry>();
+
+        StringParseFactory.updateEntryMapWithParsedData(null, l_accLogString, l_definition, l_entryMap,
+                GenericEntry.class);
+
+        assertThat("We should have one entry in the map", l_entryMap.size(), is(equalTo(1)));
+
+        final GenericEntry l_entry = l_entryMap.values().iterator().next();
+
+        assertThat("We should still have a file", l_entry.getFileName(), is(equalTo(StringParseFactory.STD_DEFAULT_ENTRY_FILENAME)));
+        assertThat("We should still have a path", l_entry.getFilePath(), is(equalTo(StringParseFactory.STD_DEFAULT_ENTRY_FILENAME)));
+    }
+
+
+    @Test
+    public void testUpdateMap_nonExistingFileButAwaitingAPath() throws StringParseException {
+
+        String l_accLogString = "INFO | 25-May-2020 03:29:28:097 | - (SOAPutils.java:434) - HEADER ACTION xtk:persist#NewInstance";
+
+        //Create a parse definition
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("API");
+        l_apiDefinition.setStart("HEADER ACTION ");
+        l_apiDefinition.setEnd("#");
+
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("#");
+        l_verbDefinition.setEnd(null);
+
+        ParseDefinition l_definition = new ParseDefinition("Soap Call");
+        l_definition.setStoreFileName(true);
+        l_definition.setStoreFilePath(true);
+        l_definition.setDefinitionEntries(Arrays.asList(l_apiDefinition, l_verbDefinition));
+
+        Map<String, GenericEntry> l_entryMap = new HashMap<String, GenericEntry>();
+
+        StringParseFactory.updateEntryMapWithParsedData("does not exist", l_accLogString, l_definition, l_entryMap,
+                GenericEntry.class);
+
+        assertThat("We should have one entry in the map", l_entryMap.size(), is(equalTo(1)));
+
+        final GenericEntry l_entry = l_entryMap.values().iterator().next();
+
+        assertThat("We should still have a file", l_entry.getFileName(), is(equalTo("does not exist")));
+        assertThat("We should still have a path", l_entry.getFilePath(), is(equalTo(StringParseFactory.STD_DEFAULT_ENTRY_FILENAME)));
 
     }
 

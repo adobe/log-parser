@@ -28,10 +28,15 @@ public abstract class StdLogEntry {
     private Integer frequence = 1;
     private ParseDefinition parseDefinition;
     Map<String, Object> valuesMap = new HashMap<>();
+    private String fileName;
+    private String filePath;
+
 
     protected static final String STD_DATA_KEY = "key";
 
     protected static final String STD_DATA_FREQUENCE = "frequence";
+    protected static final String STD_DATA_FILE_NAME = "fileName";
+    protected static final String STD_DATA_FILE_PATH = "filePath";
 
     /**
      * A method that creates the key to identify each stored entry
@@ -92,6 +97,13 @@ public abstract class StdLogEntry {
         final Map<String, Object> l_valueMap = this.fetchValueMap();
 
         l_printOutList.add(makeKey());
+        if (getParseDefinition().isStoreFileName()) {
+            l_printOutList.add(getFileName());
+        }
+
+        if (getParseDefinition().isStoreFilePath()) {
+            l_printOutList.add(getFilePath());
+        }
         for (String lt_header : this.fetchHeaders()) {
 
             l_printOutList.add(l_valueMap.get(lt_header).toString());
@@ -266,6 +278,22 @@ public abstract class StdLogEntry {
         lr_storedHeaders.addAll(getParseDefinition().fetchHeaders());
         lr_storedHeaders.add(STD_DATA_FREQUENCE);
         return lr_storedHeaders;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setLogFileName(String in_logFile) {
+        this.fileName = in_logFile;
+    }
+
+    public void setFilePath(String in_logFile) {
+        this.filePath = in_logFile;
     }
 }
 

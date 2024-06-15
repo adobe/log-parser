@@ -8,22 +8,22 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import java.io.*;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 public class StringParseFactory {
 
     protected static final Logger log = LogManager.getLogger();
+    public static final String STD_DEFAULT_ENTRY_FILENAME = "no_file";
 
     private StringParseFactory() {
         throw new IllegalStateException("Utility class");
@@ -44,20 +44,13 @@ public class StringParseFactory {
      * @param <T> The type of data (subclass of {@link StdLogEntry}) we want to create and store
      * @param <V> The collection type with which we receive the parameter in_logFiles
      * @return A map of String and a Sub-class of {@link StdLogEntry}
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> extractLogEntryMap(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         if (in_logFiles.isEmpty()) {
             log.warn(
@@ -68,20 +61,21 @@ public class StringParseFactory {
         Map<String, T> lr_entries = new HashMap<>();
 
         Map<String, Integer> l_foundEntries = new HashMap<>();
+        long totalBytesAnalyzed = 0;
         //Fetch File
         for (String l_currentLogFile : in_logFiles) {
             int lt_foundEntryCount = 0;
             int i = 0;
+            totalBytesAnalyzed+= new File(l_currentLogFile).length();
             log.info("Parsing file {}", l_currentLogFile);
 
             try (BufferedReader reader = new BufferedReader(new FileReader(l_currentLogFile))) {
                 String lt_nextLine;
                 while ((lt_nextLine = reader.readLine()) != null) {
 
-                    //Activate only if the log is not enough. Here we list each line we consider
-                    //log.debug("{}  -  {}", i, lt_nextLine);
+                    log.trace("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
-                        updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
+                        updateEntryMapWithParsedData(l_currentLogFile, lt_nextLine, in_parseDefinition, lr_entries,
                                 in_classTarget);
                         lt_foundEntryCount++;
                     } else {
@@ -90,7 +84,7 @@ public class StringParseFactory {
                     i++;
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
-                log.info("Finished scanning {} lines.",i);
+                log.info("Finished scanning {} lines.",i, new File(l_currentLogFile).length());
             } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
@@ -98,7 +92,12 @@ public class StringParseFactory {
 
         log.info("RESULT : Entry Report for Parse Definition '{}' per file:", in_parseDefinition.getTitle());
         l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
-        log.info("RESULT : Found {} unique keys", lr_entries.keySet().size());
+
+        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        long fileSizeInKB = totalBytesAnalyzed / 1024;
+        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+        long fileSizeInMB = fileSizeInKB / 1024;
+        log.info("RESULT : Found {} unique keys in {} files, and {}Mb of data.", lr_entries.keySet().size(), l_foundEntries.keySet().size(),fileSizeInMB);
         return lr_entries;
     }
 
@@ -107,6 +106,7 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
+     * @param in_logFile The log file from which the line was extracted
      * @param in_logLine
      *        A string representing a log line
      * @param in_parseDefinition
@@ -115,26 +115,37 @@ public class StringParseFactory {
      *        The map of String and StdLogEntries
      * @param in_classTarget
      *        The target class that will be storing the results
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
-    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine,
+    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logFile, final String in_logLine,
             ParseDefinition in_parseDefinition, Map<String, T> in_entries, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
         Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine, in_parseDefinition);
 
-        T lt_entry = in_classTarget.newInstance();
+        T lt_entry = null;
+        try {
+            lt_entry = in_classTarget.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new LogParserSDKDefinitionException("Structural Problems whith calling the Default constructor in SDK Parser Class", e);
+        } catch (InvocationTargetException e) {
+            throw new LogParserSDKDefinitionException("Problems when calling the Default constructor in SDK Parser Class", e);
+        } catch (NoSuchMethodException e) {
+            throw new LogParserSDKDefinitionException("Missing Default constructor in SDK Parser Class", e);
+        }
 
         lt_entry.setParseDefinition(in_parseDefinition);
         lt_entry.setValuesFromMap(lt_lineResult);
+
+        var lt_fileObject = new File(in_logFile != null ? in_logFile : STD_DEFAULT_ENTRY_FILENAME);
+        if (in_parseDefinition.isStoreFileName()) {
+            lt_entry.setLogFileName(lt_fileObject.getName());
+        }
+
+        if (in_parseDefinition.isStoreFilePath()) {
+            lt_entry.setFilePath(lt_fileObject.exists()  ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
+        }
 
         final String lt_currentKey = lt_entry.makeKey();
 

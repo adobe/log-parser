@@ -232,7 +232,7 @@ public class LogDataTest {
 
     @Test
     public void testLogDataFactory()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -264,15 +264,17 @@ public class LogDataTest {
 
         assertThat(l_logData.getEntries().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
 
-        for (GenericEntry lt_entry : l_logData.getEntries().values()) {
+        for (StdLogEntry lt_entry : l_logData.getEntries().values()) {
             System.out.println(lt_entry.fetchPrintOut());
         }
+
+        l_logData.getEntries().values().stream().forEach(e -> System.out.println(e.fetchPrintOut()));
     }
     
     
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinition()
-            throws InstantiationException, IllegalAccessException, StringParseException,
+            throws StringParseException,
             ParseDefinitionImportExportException {
 
         
@@ -379,19 +381,10 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by")
     public void testgroupBy()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -445,19 +438,9 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+    @Test(description = "Testing that we can do a group by")
     public void testgroupBy_Default()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -510,19 +493,10 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -583,19 +557,9 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+    @Test(description = "Testing that we can do a group by with two values")
     public void testGroupBy_Chaining()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -652,19 +616,10 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy_Default()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -723,17 +678,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a filter
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a filter")
     public void testFilter_Default() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -796,17 +742,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a filter using multiple fields
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a filter using multiple fields")
     public void testFilter_Multi() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -925,17 +862,8 @@ public class LogDataTest {
 
     }
     
-    /**
-     * Testing that we can do a search
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a search")
     public void testSearch_Default() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -993,18 +921,8 @@ public class LogDataTest {
 
     }
     
-    
-    /**
-     * Testing that we can do a search using multiple fields
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a search using multiple fields")
     public void testsearch_Multi() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -1067,18 +985,8 @@ public class LogDataTest {
 
     }
     
-    
-    /**
-     * Testing that we can detect if an element is present
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can detect if an element is present")
     public void testIsPresent() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -1133,7 +1041,7 @@ public class LogDataTest {
 
     @Test
     public void testNestedFileAccess()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -1215,7 +1123,7 @@ public class LogDataTest {
 
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinitionAndSearchFile()
-            throws InstantiationException, IllegalAccessException, StringParseException,
+            throws StringParseException,
             ParseDefinitionImportExportException {
 
         String l_rootPath = "src/test/resources/nestedDirs/";
@@ -1322,7 +1230,7 @@ public class LogDataTest {
     /*************** #55 Exporting results **********************/
     @Test
     public void testExportData()
-            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            throws StringParseException, IOException,
             LogDataExportToFileException {
         //Create a parse definition
 
@@ -1379,7 +1287,7 @@ public class LogDataTest {
 
     @Test
     public void testExportDataFileExists()
-            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            throws StringParseException, IOException,
             LogDataExportToFileException {
         String l_rootPath = "src/test/resources/nestedDirs/";
         String l_fileFilter = "simple*.log";

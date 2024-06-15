@@ -6,9 +6,7 @@
  * accordance with the terms of the Adobe license agreement accompanying
  * it.
  */
-/**
- * 
- */
+
 package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
@@ -50,20 +48,13 @@ public class LogDataFactory {
      * @param in_parseDefinition
      *        A ParseDefinition Object defining the parsing rules
      * @return A LogData Object containing the found entries from the logs
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
-     *         When there are logical rules when parsing the given string
+     *         When there are logical rules that fail when parsing the given string
      *
      */
     public static LogData<GenericEntry> generateLogData(List<String> in_filePathList,
             ParseDefinition in_parseDefinition)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         return LogDataFactory.generateLogData(in_filePathList, in_parseDefinition, GenericEntry.class);
     }
@@ -86,63 +77,40 @@ public class LogDataFactory {
      *        The type of entry we want to be generated while parsing logs. The
      *        type should be a child of {@link StdLogEntry}
      * @return A LogData Object containing the found entries from the logs
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
     public static <T extends StdLogEntry> LogData<T> generateLogData(List<String> in_filePathList,
             ParseDefinition in_parseDefinition, Class<T> in_logEntryClass)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         return new LogData<>(
                 StringParseFactory.extractLogEntryMap(in_filePathList, in_parseDefinition, in_logEntryClass));
     }
 
     /**
-     * A factory method for LogData. By default we create GenricEntries. Given a
-     * list of files, and a ParseDefinition, it generates a LogDataObject
-     * containing all the data the log parser finds
-     *
+     * A factory method for LogData. By default we create GenricEntries. Given a list of files, and a ParseDefinition,
+     * it generates a LogDataObject containing all the data the log parser finds
+     * <p>
      * Author : gandomi
      *
-     * @param in_filePathList
-     *        A list of file paths containing log/generated data
-     * @param in_jsonParseDefinitionFilePath
-     *        The file path of a ParseDefinition
-     * @param in_logEntryClass
-     *        A log entry class that defines how the found data is to be
-     *        transformed
-     * @param <T>
-     *        The type of entry we want to be generated while parsing logs. The
-     *        type should be a child of {@link StdLogEntry}
+     * @param in_filePathList                A list of file paths containing log/generated data
+     * @param in_jsonParseDefinitionFilePath The file path of a ParseDefinition
+     * @param in_logEntryClass               A log entry class that defines how the found data is to be transformed
+     * @param <T>                            The type of entry we want to be generated while parsing logs. The type
+     *                                       should be a child of {@link StdLogEntry}
      * @return A LogData Object containing the found entries from the logs
-     * @throws ParseDefinitionImportExportException
-     *         Thrown if there is a problem with the given parseDefinition file
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws StringParseException
-     *         When there are logical rules when parsing the given string
-     *
+     * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
+     * @throws StringParseException                 When there are logical rules when parsing the given string
      */
-    public static <T extends StdLogEntry> LogData<GenericEntry> generateLogData(List<String> in_filePathList,
-            String in_jsonParseDefinitionFilePath, Class<T> in_logEntryClass) throws InstantiationException,
-            IllegalAccessException, StringParseException, ParseDefinitionImportExportException {
+    public static <T extends StdLogEntry> LogData<T> generateLogData(List<String> in_filePathList,
+            String in_jsonParseDefinitionFilePath, Class<T> in_logEntryClass) throws
+            StringParseException, ParseDefinitionImportExportException {
 
         return generateLogData(in_filePathList,
                 ParseDefinitionFactory.importParseDefinition(in_jsonParseDefinitionFilePath),
-                GenericEntry.class);
+                in_logEntryClass);
     }
 
     /**
@@ -159,23 +127,14 @@ public class LogDataFactory {
      * @return A LogData Object containing the found entries from the logs
      * @throws ParseDefinitionImportExportException
      *         Thrown if there is a problem with the given parseDefinition file
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
-     *         When there are logical rules when parsing the given string
+     *         When there are logical rules that fail when parsing the given string
      *
      */
     public static LogData<GenericEntry> generateLogData(List<String> in_filePathList,
-            String in_jsonParseDefinitionFilePath) throws InstantiationException, IllegalAccessException,
-            StringParseException, ParseDefinitionImportExportException {
+            String in_jsonParseDefinitionFilePath) throws StringParseException, ParseDefinitionImportExportException {
 
-        return LogDataFactory.generateLogData(in_filePathList, in_jsonParseDefinitionFilePath,
-                GenericEntry.class);
+        return LogDataFactory.generateLogData(in_filePathList, in_jsonParseDefinitionFilePath, GenericEntry.class);
     }
 
     /**
@@ -190,16 +149,11 @@ public class LogDataFactory {
      * @param in_parseDefinition A ParseDefinition Object defining the parsing rules
      * @return A LogData Object containing the found entries from the logs
      * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
-     * @throws InstantiationException               if this {@code Class} represents an abstract class, an interface, an
-     *                                              array class, a primitive type, or void; or if the class has no
-     *                                              nullary constructor; or if the instantiation fails for some other
-     *                                              reason.
-     * @throws IllegalAccessException               if the class or its nullary constructor is not accessible.
      * @throws StringParseException                 When there are logical rules when parsing the given string
      */
     public static LogData<GenericEntry> generateLogData(String in_rootDir, String in_fileFilter,
             ParseDefinition in_parseDefinition)
-            throws StringParseException, InstantiationException, IllegalAccessException {
+            throws StringParseException {
         List<String> l_foundFilesList = findFilePaths(in_rootDir, in_fileFilter);
         return generateLogData(l_foundFilesList, in_parseDefinition);
 
@@ -218,16 +172,10 @@ public class LogDataFactory {
      * @param in_jsonParseDefinitionFilePath The file path of a ParseDefinition
      * @return A LogData Object containing the found entries from the logs
      * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
-     * @throws InstantiationException               if this {@code Class} represents an abstract class, an interface, an
-     *                                              array class, a primitive type, or void; or if the class has no
-     *                                              nullary constructor; or if the instantiation fails for some other
-     *                                              reason.
-     * @throws IllegalAccessException               if the class or its nullary constructor is not accessible.
      * @throws StringParseException                 When there are logical rules when parsing the given string
      */
     public static LogData<GenericEntry> generateLogData(String in_rootDir, String in_fileFilter,
-            String in_jsonParseDefinitionFilePath) throws InstantiationException, IllegalAccessException,
-            StringParseException, ParseDefinitionImportExportException {
+            String in_jsonParseDefinitionFilePath) throws StringParseException, ParseDefinitionImportExportException {
 
         return LogDataFactory.generateLogData(in_rootDir, in_fileFilter,
                 ParseDefinitionFactory.importParseDefinition(in_jsonParseDefinitionFilePath));
@@ -258,7 +206,7 @@ public class LogDataFactory {
         List<String> l_foundFilesList = new ArrayList<>();
         l_foundFilesIterator.forEachRemaining(f -> l_foundFilesList.add(f.getAbsolutePath()));
         log.info("Searching within the {} matching files :", l_foundFilesList.size());
-        l_foundFilesList.stream().forEach(log::info);
+        l_foundFilesList.forEach(log::info);
         return l_foundFilesList;
     }
 }
