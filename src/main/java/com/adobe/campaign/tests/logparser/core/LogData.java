@@ -230,13 +230,6 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
@@ -294,13 +287,6 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public LogData<GenericEntry> groupBy(List<String> in_parseDefinitionEntryKeyList)
@@ -320,13 +306,6 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException
      *         If the key is not in the ParseDefinitions of the Log data entry
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
      *
      */
     public LogData<GenericEntry> groupBy(String in_parseDefinitionEntryKey)
@@ -433,6 +412,7 @@ public class LogData<T extends StdLogEntry> {
      * Definition as the name
      *
      * @return a CSV file containing the LogData
+     * @throws LogDataExportToFileException If the file could not be exported
      */
     public File exportLogDataToCSV() throws LogDataExportToFileException {
         Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
@@ -454,6 +434,7 @@ public class LogData<T extends StdLogEntry> {
      * @param in_headerSet A set of headers to be used as keys for exporting
      * @param in_csvFileName The file name to export
      * @return a CSV file containing the LogData
+     * @throws LogDataExportToFileException If the file could not be exported
      */
     public File exportLogDataToCSV(Set<String> in_headerSet, String in_csvFileName)
             throws LogDataExportToFileException {

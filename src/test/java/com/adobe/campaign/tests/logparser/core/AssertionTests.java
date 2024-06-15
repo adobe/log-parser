@@ -79,9 +79,7 @@ public class AssertionTests {
      * <p>
      * Author : gandomi
      *
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws StringParseException
+     * @throws StringParseException When we have a problem parding the file with the definitions
      */
     @Test
     public void testLogDataFactory()
@@ -127,9 +125,7 @@ public class AssertionTests {
      * <p>
      * Author : gandomi
      *
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws StringParseException
+     * @throws StringParseException When we have a problem parsing the log file with the definitions
      */
     @Test
     public void testLogDataFactory_NegativeExceptionThrown()

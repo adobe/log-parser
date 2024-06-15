@@ -387,13 +387,11 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
     public void testgroupBy()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -453,13 +451,11 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
     public void testgroupBy_Default()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -518,8 +514,6 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
@@ -591,13 +585,11 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
     public void testGroupBy_Chaining()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -660,13 +652,11 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
     public void testMultipleGroupBy_Default()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -731,8 +721,6 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
@@ -804,8 +792,6 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
@@ -933,8 +919,6 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
@@ -1002,8 +986,6 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test
@@ -1076,8 +1058,6 @@ public class LogDataTest {
      * Author : gandomi
      * 
      * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
      *
      */
     @Test

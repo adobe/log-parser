@@ -48,15 +48,8 @@ public class LogDataFactory {
      * @param in_parseDefinition
      *        A ParseDefinition Object defining the parsing rules
      * @return A LogData Object containing the found entries from the logs
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
-     *         When there are logical rules when parsing the given string
+     *         When there are logical rules that fail when parsing the given string
      *
      */
     public static LogData<GenericEntry> generateLogData(List<String> in_filePathList,
@@ -134,15 +127,8 @@ public class LogDataFactory {
      * @return A LogData Object containing the found entries from the logs
      * @throws ParseDefinitionImportExportException
      *         Thrown if there is a problem with the given parseDefinition file
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
-     *         When there are logical rules when parsing the given string
+     *         When there are logical rules that fail when parsing the given string
      *
      */
     public static LogData<GenericEntry> generateLogData(List<String> in_filePathList,
@@ -163,11 +149,6 @@ public class LogDataFactory {
      * @param in_parseDefinition A ParseDefinition Object defining the parsing rules
      * @return A LogData Object containing the found entries from the logs
      * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
-     * @throws InstantiationException               if this {@code Class} represents an abstract class, an interface, an
-     *                                              array class, a primitive type, or void; or if the class has no
-     *                                              nullary constructor; or if the instantiation fails for some other
-     *                                              reason.
-     * @throws IllegalAccessException               if the class or its nullary constructor is not accessible.
      * @throws StringParseException                 When there are logical rules when parsing the given string
      */
     public static LogData<GenericEntry> generateLogData(String in_rootDir, String in_fileFilter,
