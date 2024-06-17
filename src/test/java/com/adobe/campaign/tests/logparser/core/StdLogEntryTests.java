@@ -25,7 +25,7 @@ public class StdLogEntryTests {
     public void testSimplePut() {
 
         GenericEntry l_inputData = new GenericEntry();
-        l_inputData.fetchValueMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("AAZ", "12");
 
         GenericEntry l_inputData2 = new GenericEntry();
         l_inputData2.put("AAZ", "12");
@@ -110,27 +110,27 @@ public class StdLogEntryTests {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_newEntry = l_inputData.copy();
 
         assertThat("The new entry should be the same as the old one", l_inputData, equalTo(l_newEntry));
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "12");
-        l_inputData2.fetchValueMap().put("ZZZ", "34");
-        l_inputData2.fetchValueMap().put("BAU", "14");
-        l_inputData2.fetchValueMap().put("DAT", "DDD");
+        l_inputData2.getValuesMap().put("AAZ", "12");
+        l_inputData2.getValuesMap().put("ZZZ", "34");
+        l_inputData2.getValuesMap().put("BAU", "14");
+        l_inputData2.getValuesMap().put("DAT", "DDD");
 
         GenericEntry l_newEntry2 = l_inputData2.copy();
         assertThat("The new entry should be the same as the old one", l_inputData2, equalTo(l_newEntry2));
 
         assertThat("The new entries should not be the same", l_newEntry2, not(equalTo(l_newEntry)));
         
-        l_newEntry2.fetchValueMap().put("BAU", "15");
+        l_newEntry2.getValuesMap().put("BAU", "15");
         
         assertThat("The new entry should no longer be the same as the old one", l_inputData2, equalTo(l_newEntry2));
 
@@ -151,10 +151,10 @@ public class StdLogEntryTests {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         Map<String, Object> l_filterMap = new HashMap<>();
         l_filterMap.put("BAU", "13");

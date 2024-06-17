@@ -717,7 +717,7 @@ public class TestLogParsing {
 
         l_entry.setValuesFromMap(l_values);
 
-        assertThat("We should have the correct key", l_entry.fetchValueMap().keySet(),
+        assertThat("We should have the correct key", l_entry.getValuesMap().keySet(),
                 Matchers.containsInAnyOrder("API", "verb"));
     }
 
@@ -787,12 +787,12 @@ public class TestLogParsing {
                 is(equalTo("GET - abc")));
 
         assertThat(l_ale.fetchPrintOut(),
-                is(equalTo(l_ale.makeKey() + testPrintOutPadding + l_ale.fetchValueMap().get("verb")
-                        + testPrintOutPadding + l_ale.fetchValueMap().get("path") + testPrintOutPadding
+                is(equalTo(l_ale.makeKey() + testPrintOutPadding + l_ale.getValuesMap().get("verb")
+                        + testPrintOutPadding + l_ale.getValuesMap().get("path") + testPrintOutPadding
                         + 1)));
 
         assertThat(l_ale.fetchValuesAsList(),
-                Matchers.contains(l_ale.makeKey(),l_ale.fetchValueMap().get("verb"),l_ale.fetchValueMap().get("path"),"1"));
+                Matchers.contains(l_ale.makeKey(),l_ale.getValuesMap().get("verb"),l_ale.getValuesMap().get("path"),"1"));
 
     }
 
@@ -820,7 +820,7 @@ public class TestLogParsing {
         GenericEntry l_entry = new GenericEntry(l_definition);
 
         assertThat("We should have the correct key", l_entry.fetchHeaders(),
-                Matchers.contains("API", "verb"));
+                Matchers.contains(StdLogEntry.STD_DATA_KEY, "API", "verb", StdLogEntry.STD_DATA_FREQUENCE));
 
         assertThat("We should have the actual headers", l_entry.fetchStoredHeaders(), Matchers.contains(StdLogEntry.STD_DATA_KEY,"API", "verb",StdLogEntry.STD_DATA_FREQUENCE));
     }
@@ -849,6 +849,6 @@ public class TestLogParsing {
 
         GenericEntry l_entry = new GenericEntry(l_definition);
 
-        assertThat("We should have the correct key", l_entry.fetchHeaders(), Matchers.contains("API"));
+        assertThat("We should have the correct key", l_entry.fetchHeaders(), Matchers.contains(StdLogEntry.STD_DATA_KEY, "API", StdLogEntry.STD_DATA_FREQUENCE));
     }
 }

@@ -19,6 +19,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -65,8 +66,31 @@ public class SDKTests {
         AssertLogData.assertLogContains(l_entries, "errorMessage",
                 "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
 
-        l_entries.exportLogDataToCSV(l_entries.getEntries().values().iterator().next().fetchHeaders(),
-                "./z.csv");
+        assertThat("We should have a file name", l_entries.getEntries().values().iterator().next().getFileName(),
+                is(equalTo("useCase1.log")));
+
+        //l_entries.exportLogDataToCSV(l_entries.getEntries().values().iterator().next().fetchHeaders(),
+        //        "./z.csv");
+    }
+
+    @Test
+    public void testSimpleLogACC_SDK_nested()
+            throws StringParseException, LogDataExportToFileException {
+
+        ParseDefinition l_pDefinition = getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "src/test/resources/sdk/";
+
+        LogData<SDKCaseSTD> l_entries = LogDataFactory.generateLogData(l_file, "*.log", l_pDefinition,
+                SDKCaseSTD.class);
+        assertThat("We should have a correct number of errors", l_entries.getEntries().size(), is(equalTo(14)));
+        AssertLogData.assertLogContains(l_entries, "errorMessage",
+                "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
+
+        assertThat("We should have a file name", l_entries.getEntries().values().iterator().next().getFileName(),
+                is(equalTo("useCase1.log")));
+
     }
 
     @Test
@@ -109,5 +133,29 @@ public class SDKTests {
                 () -> LogDataFactory.generateLogData(Arrays.asList(l_file), l_pDefinition,
                         SDKCasePrivateDefConstructor.class));
 
+    }
+
+
+    @Test(enabled = false)
+    public void testAllLogsACC_SDK()
+            throws StringParseException, LogDataExportToFileException {
+
+        ParseDefinition l_pDefinition = getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "/Users/gandomi/Downloads/archive_3/";
+
+        LogData<SDKCaseSTD> l_entries = LogDataFactory.generateLogData(l_file, "*.log",l_pDefinition,
+                SDKCaseSTD.class);
+
+
+       // assertThat("We should have a correct number of errors", l_entries.getEntries().size(), is(equalTo(14)));
+     //   AssertLogData.assertLogContains(l_entries, "errorMessage",
+     //           "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
+
+        //l_entries.exportLogDataToCSV(l_entries.getEntries().values().iterator().next().fetchHeaders(),
+        //        "./z.csv");
+
+        l_entries.exportLogDataToCSV();
     }
 }

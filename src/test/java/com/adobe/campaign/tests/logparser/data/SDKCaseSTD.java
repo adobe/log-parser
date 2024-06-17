@@ -17,11 +17,6 @@ public class SDKCaseSTD extends StdLogEntry {
     String code;
     String errorMessage;
 
-    @Override
-    public Set<String> fetchStoredHeaders() {
-        return super.fetchStoredHeaders();
-    }
-
     public SDKCaseSTD() {
     }
 
@@ -68,9 +63,9 @@ public class SDKCaseSTD extends StdLogEntry {
                 .substring(in_valueMap.get("errorContent").indexOf(" ") + 1) : in_valueMap.get("errorContent");
     }
 
-    @Override
     protected List<String> fetchValuesAsList() {
 
         return this.fetchHeaders().stream().map(e -> fetchValueMap().get(e).toString()).collect(Collectors.toList());
     }
+
 }

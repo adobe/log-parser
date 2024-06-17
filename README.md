@@ -11,23 +11,42 @@ The basic method for using this library is, that you create a definition for you
 ![The Processes](diagrams/Log_Parser-Processes.png)
 
 # Table of contents
-
-- [Installation](#installation)
-  - [Maven](#maven)
-- [Parse Definitions](#parse-definitions)
-  - [Defining a Parsing](#defining-a-parsing)
-  - [Defining an entry](#defining-an-entry)
-  - [How parsing works](#how-parsing-works)
-  - [Code Example](#code-example)
-  - [Import and Export](#import-and-export)
-- [Using the Standard Method](#using-the-standard-method)
-- [Using the SDK](#using-the-sdk)
-- [Code Structure](#code-structure)
-- [Searching a organizing log data](#searching-a-organizing-log-data)
-  - [Search and Filter Mechanisms](#search-and-filter-mechanisms)
-  - [GroupBy Mechanisms](#groupby-mechanisms)
-- [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
-- [Release Notes](#release-notes)
+<!-- TOC -->
+  * [Installation](#installation)
+    * [Maven](#maven)
+  * [Parse Definitions](#parse-definitions)
+    * [Defining a Parsing](#defining-a-parsing)
+    * [Defining an entry](#defining-an-entry)
+    * [How parsing works](#how-parsing-works)
+    * [Code Example](#code-example)
+    * [Import and Export](#import-and-export)
+  * [Using the Standard Method](#using-the-standard-method)
+  * [Using the SDK](#using-the-sdk)
+    * [Writing your own SDK](#writing-your-own-sdk)
+      * [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
+      * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
+      * [Declaring the Key](#declaring-the-key)
+      * [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
+  * [Code Structure](#code-structure)
+  * [Searching and organizing log data](#searching-and-organizing-log-data)
+    * [Search and Filter Mechanisms](#search-and-filter-mechanisms)
+    * [GroupBy Mechanisms](#groupby-mechanisms)
+      * [Passing a list](#passing-a-list)
+      * [Chaining GroupBy](#chaining-groupby)
+  * [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
+  * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
+  * [Release Notes](#release-notes)
+    * [1.11.0 (next version)](#1110--next-version-)
+    * [1.0.10](#1010)
+    * [1.0.8.2](#1082)
+    * [1.0.8](#108)
+    * [1.0.7](#107)
+    * [1.0.6](#106)
+    * [1.0.5](#105)
+    * [1.0.4](#104)
+    * [1.0.3](#103)
+    * [1.0.1](#101)
+<!-- TOC -->
 
 ## Installation
 For now we are using this library with maven, in later iteration we will publish other build system examples:
@@ -123,7 +142,23 @@ By default each entry for your lag parsing will be stored as a Generic entry. Th
 ## Using the SDK
 Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors.
 
-In order to use this feature you need to define a class that extends the class StdLogEntry
+### Writing your own SDK
+In order to use this feature you need to define a class that extends the class StdLogEntry.
+
+You will often want to transform the parsed information into a more manageable object by defining your own fields in the SDK class.
+
+#### Declaring a Default and Copy Constructor
+You will need to declare a default constructor and a copy constructor. The copy constructor will allow you to copy the values from one object to another.
+
+#### Declaring the transformation Rules in setValuesFromMap
+You will need to declare how the parsed variables are transformed into your SDL. This is done in the method `setValuesFromMap()`.
+
+#### Declaring the Key
+You will need to define how a unique line will look like. Although this is already done in the Definition Rules, you may want to provide more precisions. This is doen in the method `makeKey()`.
+
+#### Declare the HeaderMap, and ValueMap
+Depending on the fields you have defined, you will want to define how the results are represented when they are stored in your system.
+
 
 ## Code Structure
 Below is a diagram representing the class structure:
@@ -248,7 +283,8 @@ We now have the possibility to export the log data results into a CSV file. The 
 - [#68](https://github.com/adobe/log-parser/issues/68) We now present a report of the findings at the end of the analysis.
 - [#55](https://github.com/adobe/log-parser/issues/55) We can now export the log parsing results into a CSV file.
 - [#102](https://github.com/adobe/log-parser/issues/102) Corrected bug where Log parser could silently stop with no error when confronted with CharSet incompatibilities.
-
+- [#120](https://github.com/adobe/log-parser/issues/120) Corrected the export system as it did not work well with SDK defined entries.
+- Removed ambiguities in the methods for StdLogEntry. For example "fetchValueMap" is no longer abstract, but it can be overriden.
 ### 1.0.8.2
 - Building with java8. 
 - Upgraded Jackson XML to remove critical version

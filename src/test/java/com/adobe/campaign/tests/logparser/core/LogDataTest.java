@@ -49,10 +49,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -82,10 +82,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -111,16 +111,16 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
         l_cubeData.addEntry(l_inputData2);
@@ -141,10 +141,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -164,10 +164,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -195,10 +195,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -219,10 +219,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -314,10 +314,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -348,16 +348,16 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "12");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "12");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -373,8 +373,8 @@ public class LogDataTest {
                 l_cubeData.getEntries().containsKey(l_inputData.get("AAZ")));
 
         assertThat("We should have the correct value",
-                l_cubeData.get(l_inputData.get("AAZ").toString()).fetchValueMap(),
-                is(equalTo(l_inputData.fetchValueMap())));
+                l_cubeData.get(l_inputData.get("AAZ").toString()).getValuesMap(),
+                is(equalTo(l_inputData.getValuesMap())));
 
         assertThat("The frequence should have been incremented",
                 l_cubeData.get(l_inputData.get("AAZ").toString()).getFrequence(), is(equalTo(2)));
@@ -397,22 +397,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -453,22 +453,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -510,22 +510,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -573,22 +573,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -633,22 +633,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -694,22 +694,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -758,22 +758,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AAA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -822,12 +822,12 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -851,8 +851,8 @@ public class LogDataTest {
         assertThat("Both objects should be equal", l_cubeData, not(equalTo(l_cubeData2)));
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "1122");
-        l_inputData3.fetchValueMap().put("ZZZ", "1142");
+        l_inputData3.getValuesMap().put("AAZ", "1122");
+        l_inputData3.getValuesMap().put("ZZZ", "1142");
 
         LogData<GenericEntry> l_cubeData3 = new LogData<GenericEntry>();
         l_cubeData3.addEntry(l_inputData);
@@ -878,22 +878,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -937,22 +937,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AAA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -1001,22 +1001,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AAA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -1277,6 +1277,8 @@ public class LogDataTest {
                     l_exportedFile);
 
             for (GenericEntry l_ge : l_logData.getEntries().values()) {
+                List x = l_ge.fetchValuesAsList();
+                List y = l_fetchedResult.get(l_ge.makeKey());
                 assertThat(l_ge.fetchValuesAsList(), Matchers.equalTo(l_fetchedResult.get(l_ge.makeKey())));
             }
         } finally {

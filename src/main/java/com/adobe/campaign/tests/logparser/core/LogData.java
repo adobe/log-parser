@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import org.apache.commons.csv.CSVFormat;
@@ -418,7 +419,7 @@ public class LogData<T extends StdLogEntry> {
         Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
 
         if (l_firstEntry.isPresent()) {
-            return exportLogDataToCSV(l_firstEntry.get().fetchStoredHeaders(), l_firstEntry.get().getParseDefinition()
+            return exportLogDataToCSV(l_firstEntry.get().fetchHeaders(), l_firstEntry.get().getParseDefinition()
                     .fetchEscapedTitle()
                     + "-export.csv");
         } else {
@@ -451,7 +452,8 @@ public class LogData<T extends StdLogEntry> {
             printer.printRecord(in_headerSet);
 
             for (StdLogEntry lt_entry : this.getEntries().values()) {
-                printer.printRecord(lt_entry.fetchValuesAsList());
+                Map lt_values = lt_entry.fetchValueMap();
+                printer.printRecord(in_headerSet.stream().map(h -> lt_values.get(h)).collect(Collectors.toList()));
             }
 
         } catch (IOException ex) {

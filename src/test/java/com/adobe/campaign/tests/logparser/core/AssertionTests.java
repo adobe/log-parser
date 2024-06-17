@@ -41,16 +41,16 @@ public class AssertionTests {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
         l_cubeData.addEntry(l_inputData2);

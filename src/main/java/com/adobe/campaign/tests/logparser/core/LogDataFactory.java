@@ -209,4 +209,27 @@ public class LogDataFactory {
         l_foundFilesList.forEach(log::info);
         return l_foundFilesList;
     }
+
+    /**
+     * A factory method for LogData. By default we create GenricEntries. Given a root directory path and a wildcard for
+     * finding files, it generates a LogDataObject containing all the data the log parser finds in the files matching
+     * the search query
+     * <p>
+     * Author : gandomi
+     *
+     * @param in_rootDir         A list of file paths containing log/generated data
+     * @param in_fileFilter      A wildcard to be used for filtering the files
+     * @param in_parseDefinition A ParseDefinition Object defining the parsing rules
+     * @param in_logEntryClass               A log entry class that defines how the found data is to be transformed
+     * @param <T>                            The type of entry we want to be generated while parsing logs. The type
+     *                                       should be a child of {@link StdLogEntry}
+     * @return A LogData Object containing the found entries from the logs
+     * @throws ParseDefinitionImportExportException Thrown if there is a problem with the given parseDefinition file
+     * @throws StringParseException                 When there are logical rules when parsing the given string
+     */
+    public static <T extends StdLogEntry> LogData<T> generateLogData(String in_rootDir, String in_fileFilter, ParseDefinition in_parseDefinition, Class<T> in_logEntryClass)
+            throws StringParseException {
+        List<String> l_foundFilesList = findFilePaths(in_rootDir, in_fileFilter);
+        return generateLogData(l_foundFilesList, in_parseDefinition, in_logEntryClass);
+    }
 }
