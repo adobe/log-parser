@@ -10,6 +10,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -149,7 +150,7 @@ public class StringParseFactory {
         }
 
         if (in_parseDefinition.isStoreFilePath()) {
-            lt_entry.setFilePath(lt_fileObject.exists()  ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
+            lt_entry.updatePath(lt_fileObject.exists() ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
         }
 
         final String lt_currentKey = lt_entry.makeKey();

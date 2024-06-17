@@ -33,9 +33,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ParseDefinition {
 
     protected static final String TITLE_PLACEHOLDER = "parseDefinitionResult";
+
     private String title;
     private boolean storeFileName = false;
     private boolean storeFilePath = false;
+    private String storePathFrom = "";
     private String keyPadding = "#";
     private List<String> keyOrder;
     private String printOutPadding = ";";
@@ -69,6 +71,9 @@ public class ParseDefinition {
         this.keyPadding = in_oldParseDefinition.keyPadding;
         this.keyOrder = in_oldParseDefinition.keyOrder;
         this.printOutPadding = in_oldParseDefinition.printOutPadding;
+        this.setStoreFileName(in_oldParseDefinition.isStoreFileName());
+        this.setStoreFilePath(in_oldParseDefinition.storeFilePath);
+        this.setStorePathFrom(in_oldParseDefinition.getStorePathFrom());
     }
 
     /**
@@ -263,5 +268,13 @@ public class ParseDefinition {
 
     public void setStoreFilePath(boolean storeFilePath) {
         this.storeFilePath = storeFilePath;
+    }
+
+    public String getStorePathFrom() {
+        return storePathFrom;
+    }
+
+    public void setStorePathFrom(String storePathFrom) {
+        this.storePathFrom = storePathFrom;
     }
 }

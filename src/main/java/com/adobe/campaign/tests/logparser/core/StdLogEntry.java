@@ -291,5 +291,17 @@ public abstract class StdLogEntry {
     public void setFilePath(String in_logFile) {
         this.filePath = in_logFile;
     }
+
+    /**
+     * Updates the store path of the log entry. We also remove training "/" to have a clean path
+     * @param in_newPath The path we want to store
+     */
+    public void updatePath(String in_newPath) {
+        var l_pathDelta = StringUtils.difference(this.getParseDefinition().getStorePathFrom(),
+                in_newPath);
+        l_pathDelta = (l_pathDelta.startsWith("/")) ? l_pathDelta.substring(1) : l_pathDelta;
+        l_pathDelta = (l_pathDelta.endsWith("/")) ? l_pathDelta.substring(0, l_pathDelta.length() - 1) : l_pathDelta;
+        setFilePath(l_pathDelta);
+    }
 }
 

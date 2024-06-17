@@ -171,4 +171,31 @@ public class StdLogEntryTests {
                 !l_inputData.matches(l_filterMap3));
 
     }
+
+    @Test
+    public void testInsertingOfAPath() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        l_definition.setStoreFilePath(true);
+        l_definition.setStorePathFrom("ABC");
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.updatePath("ABCDEF");
+
+        assertThat("We should have stored the correct value", l_inputData.getFilePath(), is(equalTo("DEF")));
+
+        l_inputData.updatePath("non existant");
+        assertThat("We should have stored the correct value", l_inputData.getFilePath(), is(equalTo("non existant")));
+
+        l_inputData.updatePath("ABC/DEF/");
+        assertThat("We should have stored the correct value", l_inputData.getFilePath(), is(equalTo("DEF")));
+
+    }
 }

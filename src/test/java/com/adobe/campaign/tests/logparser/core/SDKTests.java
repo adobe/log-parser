@@ -136,26 +136,5 @@ public class SDKTests {
     }
 
 
-    @Test(enabled = false)
-    public void testAllLogsACC_SDK()
-            throws StringParseException, LogDataExportToFileException {
 
-        ParseDefinition l_pDefinition = getTestParseDefinition();
-        l_pDefinition.setStoreFileName(true);
-
-        String l_file = "/Users/gandomi/Downloads/archive_3/";
-
-        LogData<SDKCaseSTD> l_entries = LogDataFactory.generateLogData(l_file, "*.log",l_pDefinition,
-                SDKCaseSTD.class);
-
-
-       // assertThat("We should have a correct number of errors", l_entries.getEntries().size(), is(equalTo(14)));
-     //   AssertLogData.assertLogContains(l_entries, "errorMessage",
-     //           "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
-
-        //l_entries.exportLogDataToCSV(l_entries.getEntries().values().iterator().next().fetchHeaders(),
-        //        "./z.csv");
-
-        l_entries.exportLogDataToCSV();
-    }
 }

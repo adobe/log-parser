@@ -38,17 +38,18 @@ public class SDKCaseSTD extends StdLogEntry {
     @Override
     public Set<String> fetchHeaders() {
         Set<String> lr_headerSet = new LinkedHashSet<>();
-        lr_headerSet.addAll(Arrays.asList("fileName","code", "errorMessage", "frequence"));
+        lr_headerSet.addAll(Arrays.asList(StdLogEntry.STD_DATA_FILE_PATH, StdLogEntry.STD_DATA_FILE_NAME,"code", "errorMessage", "frequence"));
         return lr_headerSet;
     }
 
     @Override
     public Map<String, Object> fetchValueMap() {
         Map<String, Object> lr_map = new HashMap<>();
-        lr_map.put("fileName", this.getFileName());
+        lr_map.put(StdLogEntry.STD_DATA_FILE_PATH, this.getFilePath());
+        lr_map.put(StdLogEntry.STD_DATA_FILE_NAME, this.getFileName());
         lr_map.put("code", this.makeKey());
         lr_map.put("errorMessage", this.errorMessage);
-        lr_map.put("frequence", this.getFrequence());
+        lr_map.put(StdLogEntry.STD_DATA_FREQUENCE, this.getFrequence());
 
         return lr_map;
     }
