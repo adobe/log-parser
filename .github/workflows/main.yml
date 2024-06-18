@@ -15,6 +15,6 @@ jobs:
         uses: enflo/curl-action@v1.2
         with:
           # curl arguments
-          curl: --user ${{ secrets.MAVEN_USERNAME }}:${{ secrets.MAVEN_PASSWORD }} https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
+          curl: --user ${{ secrets.OSSRH_ARTIFACTORY_USER }}:${{ secrets.OSSRH_ARTIFACTORY_API_TOKEN }} https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
       
           
