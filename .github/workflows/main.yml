@@ -15,6 +15,6 @@ jobs:
         uses: enflo/curl-action@v1.2
         with:
           # curl arguments
-          curl: -v --user ${{ secrets.OSSRH_ARTIFACTORY_USER }}:${{ secrets.OSSRH_ARTIFACTORY_TOKEN }} https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
+          curl: -v --user ${{ secrets.OSSRH_ARTIFACTORY_USER }}:${{ secrets.OSSRH_ARTIFACTORY_TOKEN }} --url https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
       
           
