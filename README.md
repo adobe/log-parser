@@ -20,13 +20,14 @@ The basic method for using this library is, that you create a definition for you
     * [How parsing works](#how-parsing-works)
     * [Code Example](#code-example)
     * [Import and Export](#import-and-export)
-  * [Using the Standard Method](#using-the-standard-method)
-  * [Using the SDK](#using-the-sdk)
-    * [Writing your own SDK](#writing-your-own-sdk)
-      * [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
-      * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
-      * [Declaring the Key](#declaring-the-key)
-      * [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
+  * [Extracting Data from Logs](#extracting-data-from-logs)
+    * [Using the Standard Method](#using-the-standard-method)
+    * [Using the SDK](#using-the-sdk)
+      * [Writing your own SDK](#writing-your-own-sdk)
+        * [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
+        * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
+        * [Declaring the Key](#declaring-the-key)
+        * [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
   * [Code Structure](#code-structure)
   * [Searching and organizing log data](#searching-and-organizing-log-data)
     * [Search and Filter Mechanisms](#search-and-filter-mechanisms)
@@ -133,31 +134,37 @@ At the end we can see that each data is stored in a map with the parse defnition
 ### Import and Export
 You can import or store a Parse Definition to or from a JSON file.
 
-## Using the Standard Method
+## Extracting Data from Logs
+
+### Using the Standard Method
 By default each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
 - Key
 - A set of values
 - The frequence of the key as found in the logs
 
-## Using the SDK
+### Using the SDK
 Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors.
 
-### Writing your own SDK
+#### Writing your own SDK
 In order to use this feature you need to define a class that extends the class StdLogEntry.
 
 You will often want to transform the parsed information into a more manageable object by defining your own fields in the SDK class.
 
-#### Declaring a Default and Copy Constructor
+##### Declaring a Default and Copy Constructor
 You will need to declare a default constructor and a copy constructor. The copy constructor will allow you to copy the values from one object to another.
 
-#### Declaring the transformation Rules in setValuesFromMap
+##### Declaring the transformation Rules in setValuesFromMap
 You will need to declare how the parsed variables are transformed into your SDL. This is done in the method `setValuesFromMap()`.
 
-#### Declaring the Key
+In there you can define a fine-grained extraction of the variables. This could be extracting hidden data in strings of the extracted data, or simple data transformations such as integer or dates.
+
+##### Declaring the Key
 You will need to define how a unique line will look like. Although this is already done in the Definition Rules, you may want to provide more precisions. This is doen in the method `makeKey()`.
 
-#### Declare the HeaderMap, and ValueMap
+##### Declare the HeaderMap, and ValueMap
 Depending on the fields you have defined, you will want to define how the results are represented when they are stored in your system.
+
+You will need to give names to the headers, and provide a map that extracts the values.
 
 
 ## Code Structure
