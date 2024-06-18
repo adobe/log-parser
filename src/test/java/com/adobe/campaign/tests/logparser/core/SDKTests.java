@@ -11,7 +11,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
-import com.adobe.campaign.tests.logparser.exceptions.SDKCaseNoDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCaseSTD;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;

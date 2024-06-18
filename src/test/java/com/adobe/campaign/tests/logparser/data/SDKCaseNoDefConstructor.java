@@ -6,7 +6,7 @@
  * accordance with the terms of the Adobe license agreement accompanying
  * it.
  */
-package com.adobe.campaign.tests.logparser.exceptions;
+package com.adobe.campaign.tests.logparser.data;
 
 import com.adobe.campaign.tests.logparser.core.StdLogEntry;
 
