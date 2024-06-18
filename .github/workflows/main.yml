@@ -15,6 +15,6 @@ jobs:
         uses: enflo/curl-action@v1.2
         with:
           # curl arguments
-          curl: -v --url https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
+          curl: --request GET -v --url https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
       
           
