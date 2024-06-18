@@ -1,0 +1,20 @@
+name: sendCurl
+
+# Run workflow on commits to default branch
+on: 
+  
+  workflow_dispatch :
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: CURL-ACTION
+        # You may pin to the exact commit or the version.
+        # uses: enflo/curl-action@fabe347922c7a9e88bafa15c4b7d6326ea802695
+        uses: enflo/curl-action@v1.2
+        with:
+          # curl arguments
+          curl: -v --user ${{ secrets.MAVEN_USERNAME }}:${{ secrets.MAVEN_PASSWORD }} https://oss.sonatype.org/content/repositories/snapshots/com/adobe/campaign/tests/log-parser/
+      
+          
