@@ -23,13 +23,6 @@ jobs:
           # Default is 200,201,204
           accept: 200,201,204
 
-          # Params can be passed through with a json object string
-          params: '{ "param1": "value", "param2": "value2" }'
-
-          # Body request
-          # Apply only to POST|PUT request
-          body: '{ "name": "breeze",  "job": "devops" }'
-
           # Request timeout (millisec)
           # Default: 1000
           timeout: 1000
