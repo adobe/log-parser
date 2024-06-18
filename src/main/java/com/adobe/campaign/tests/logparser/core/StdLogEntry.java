@@ -33,7 +33,6 @@ public abstract class StdLogEntry {
 
 
     protected static final String STD_DATA_KEY = "key";
-
     protected static final String STD_DATA_FREQUENCE = "frequence";
     protected static final String STD_DATA_FILE_NAME = "fileName";
     protected static final String STD_DATA_FILE_PATH = "filePath";
@@ -87,29 +86,11 @@ public abstract class StdLogEntry {
      * @return a String for the print out
      */
     public String fetchPrintOut() {
-        List<String> l_printOutList = fetchValuesAsList();
-        return StringUtils.join(l_printOutList, this.getParseDefinition().getPrintOutPadding());
+        return StringUtils.join(fetchValuesAsList(), this.getParseDefinition().getPrintOutPadding());
     }
 
     protected List<String> fetchValuesAsList() {
-        List<String> l_printOutList = new ArrayList<>();
-
-        final Map<String, Object> l_valueMap = this.fetchValueMap();
-
-        l_printOutList.add(makeKey());
-        if (getParseDefinition().isStoreFileName()) {
-            l_printOutList.add(getFileName());
-        }
-
-        if (getParseDefinition().isStoreFilePath()) {
-            l_printOutList.add(getFilePath());
-        }
-        for (String lt_header : this.fetchHeaders()) {
-
-            l_printOutList.add(l_valueMap.get(lt_header).toString());
-        }
-        l_printOutList.add(getFrequence().toString());
-        return l_printOutList;
+        return this.fetchHeaders().stream().map(e -> fetchValueMap().get(e).toString()).collect(Collectors.toList());
     }
 
     /**
@@ -125,12 +106,27 @@ public abstract class StdLogEntry {
     /**
      * Returns a set of objects you have defined for your log class. When using Generic Object no changes are made to
      * it.
-     * <p>
+     * When defining an SDK you should override this method.
      * Author : gandomi
      *
-     * @return A Maps of extentions of StdLogEntry
+     * @return A Maps of values for the LogEntry
      */
-    public abstract Map<String, Object> fetchValueMap();
+    public Map<String, Object> fetchValueMap() {
+        final Map<String, Object> l_valueMap = this.getValuesMap();
+
+        l_valueMap.put(STD_DATA_KEY, makeKey());
+        if (getParseDefinition().isStoreFileName()) {
+            l_valueMap.put(STD_DATA_FILE_NAME, getFileName());
+        }
+
+        if (getParseDefinition().isStoreFilePath()) {
+            l_valueMap.put(STD_DATA_FILE_PATH, getFilePath());
+        }
+
+        l_valueMap.put(STD_DATA_FREQUENCE , getFrequence().toString());
+
+        return valuesMap;
+    };
 
     /**
      * Increments the frequence
@@ -205,12 +201,12 @@ public abstract class StdLogEntry {
     }
 
     public void put(String in_dataTitle, String in_value) {
-        this.fetchValueMap().put(in_dataTitle, in_value);
+        this.getValuesMap().put(in_dataTitle, in_value);
 
     }
 
     public Object get(String in_dataTitle) {
-        return this.fetchValueMap().get(in_dataTitle);
+        return this.getValuesMap().get(in_dataTitle);
     }
 
     /**
@@ -229,7 +225,7 @@ public abstract class StdLogEntry {
                 log.warn("The filter key {} could not be found among the log entry headers.", lt_filterKey);
                 return false;
             }
-            if (!this.get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
+            if (!this.fetchValueMap().get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
                 return false;
             }
         }
@@ -294,6 +290,18 @@ public abstract class StdLogEntry {
 
     public void setFilePath(String in_logFile) {
         this.filePath = in_logFile;
+    }
+
+    /**
+     * Updates the store path of the log entry. We also remove training "/" to have a clean path
+     * @param in_newPath The path we want to store
+     */
+    public void updatePath(String in_newPath) {
+        var l_pathDelta = StringUtils.difference(this.getParseDefinition().getStorePathFrom(),
+                in_newPath);
+        l_pathDelta = (l_pathDelta.startsWith("/")) ? l_pathDelta.substring(1) : l_pathDelta;
+        l_pathDelta = (l_pathDelta.endsWith("/")) ? l_pathDelta.substring(0, l_pathDelta.length() - 1) : l_pathDelta;
+        setFilePath(l_pathDelta);
     }
 }
 

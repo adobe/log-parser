@@ -10,6 +10,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StringParseFactory {
 
@@ -65,6 +67,8 @@ public class StringParseFactory {
         //Fetch File
         for (String l_currentLogFile : in_logFiles) {
             int lt_foundEntryCount = 0;
+
+
             int i = 0;
             totalBytesAnalyzed+= new File(l_currentLogFile).length();
             log.info("Parsing file {}", l_currentLogFile);
@@ -91,13 +95,15 @@ public class StringParseFactory {
         }
 
         log.info("RESULT : Entry Report for Parse Definition '{}' per file:", in_parseDefinition.getTitle());
-        l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
+        AtomicInteger l_totalEntries = new AtomicInteger();
+        l_foundEntries.forEach((k,v) -> {log.info("Found {} entries in file {}", v, k); l_totalEntries.addAndGet(v);});
 
         // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
         long fileSizeInKB = totalBytesAnalyzed / 1024;
         // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
         long fileSizeInMB = fileSizeInKB / 1024;
-        log.info("RESULT : Found {} unique keys in {} files, and {}Mb of data.", lr_entries.keySet().size(), l_foundEntries.keySet().size(),fileSizeInMB);
+        log.info("RESULT : Found {} entries, {} unique keys in {} files, and {}Mb of data.", l_totalEntries, lr_entries.keySet().size(), l_foundEntries.keySet().size(),fileSizeInMB);
+
         return lr_entries;
     }
 
@@ -136,7 +142,7 @@ public class StringParseFactory {
         }
 
         lt_entry.setParseDefinition(in_parseDefinition);
-        lt_entry.setValuesFromMap(lt_lineResult);
+
 
         var lt_fileObject = new File(in_logFile != null ? in_logFile : STD_DEFAULT_ENTRY_FILENAME);
         if (in_parseDefinition.isStoreFileName()) {
@@ -144,8 +150,10 @@ public class StringParseFactory {
         }
 
         if (in_parseDefinition.isStoreFilePath()) {
-            lt_entry.setFilePath(lt_fileObject.exists()  ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
+            lt_entry.updatePath(lt_fileObject.exists() ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
         }
+
+        lt_entry.setValuesFromMap(lt_lineResult);
 
         final String lt_currentKey = lt_entry.makeKey();
 

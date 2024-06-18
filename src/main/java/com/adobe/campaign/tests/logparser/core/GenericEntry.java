@@ -46,10 +46,11 @@ public class GenericEntry extends StdLogEntry {
                 .map(e -> valuesMap.get(e).toString()).collect(Collectors.toList()));
     }
 
+
     @Override
     public Set<String> fetchHeaders() {
 
-        return getParseDefinition().fetchHeaders();
+        return super.fetchStoredHeaders();
 
     }
 
@@ -59,7 +60,7 @@ public class GenericEntry extends StdLogEntry {
     @Override
     public Map<String, Object> fetchValueMap() {
 
-        return getValuesMap();
+        return super.fetchValueMap();
     }
 
     @Override
