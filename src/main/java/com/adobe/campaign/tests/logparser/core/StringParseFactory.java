@@ -142,7 +142,7 @@ public class StringParseFactory {
         }
 
         lt_entry.setParseDefinition(in_parseDefinition);
-        lt_entry.setValuesFromMap(lt_lineResult);
+
 
         var lt_fileObject = new File(in_logFile != null ? in_logFile : STD_DEFAULT_ENTRY_FILENAME);
         if (in_parseDefinition.isStoreFileName()) {
@@ -152,6 +152,8 @@ public class StringParseFactory {
         if (in_parseDefinition.isStoreFilePath()) {
             lt_entry.updatePath(lt_fileObject.exists() ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
         }
+
+        lt_entry.setValuesFromMap(lt_lineResult);
 
         final String lt_currentKey = lt_entry.makeKey();
 

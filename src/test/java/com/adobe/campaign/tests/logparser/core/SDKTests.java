@@ -8,16 +8,14 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
-import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
-import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
-import com.adobe.campaign.tests.logparser.data.SDKCaseSTD;
+import com.adobe.campaign.tests.logparser.data.*;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,8 +86,37 @@ public class SDKTests {
         AssertLogData.assertLogContains(l_entries, "errorMessage",
                 "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
 
-        assertThat("We should have a file name", l_entries.getEntries().values().iterator().next().getFileName(),
+        var selectedItem = l_entries.getEntries().values().iterator().next();
+        assertThat("We should have a file name", selectedItem.getFileName(),
                 is(equalTo("useCase1.log")));
+
+    }
+
+    @Test
+    public void testSimpleLogACC_SDK_nestedWithPath()
+            throws StringParseException, LogDataExportToFileException {
+
+        ParseDefinition l_pDefinition = getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+        l_pDefinition.setStoreFilePath(true);
+
+
+        String l_file = "src/test/resources/sdk/";
+
+        l_pDefinition.setStorePathFrom((new File("src")).getAbsolutePath());
+
+        LogData<ACCLogs> l_entries = LogDataFactory.generateLogData(l_file, "*.log", l_pDefinition,
+                ACCLogs.class);
+
+        assertThat("We should have a correct number of errors", l_entries.getEntries().size(), is(equalTo(14)));
+        AssertLogData.assertLogContains(l_entries, "errorMessage",
+                "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
+
+        var selectedItem = l_entries.getEntries().values().iterator().next();
+        assertThat("We should have a file name", selectedItem.getFileName(),
+                is(equalTo("useCase1.log")));
+
+        l_entries.exportLogDataToCSV();
 
     }
 
