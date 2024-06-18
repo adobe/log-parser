@@ -1,6 +1,6 @@
 name: Example of cURL action
 
-on: [push,workflow_run]
+on: [workflow_dispatch]
 jobs:
   test-curl-action:
     name: "Perform REST API request"
