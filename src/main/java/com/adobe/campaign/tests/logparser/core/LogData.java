@@ -416,18 +416,25 @@ public class LogData<T extends StdLogEntry> {
         return new File(in_csvFileName);
     }
 
+    /**
+     * This method compares two LogData objects and returns the differences. The difference is map of
+     * LogDataComparisons. The values of the delta and the deltaRatio are negative if the frequency is decreasing or has
+     * been removed.
+     *
+     * @param in_logData A LogData
+     * @return A Map of LogDataComparisons containing the differences
+     */
     public Map<String, LogDataComparison> compare(LogData<T> in_logData) {
         Map<String, LogDataComparison> lr_diff = new HashMap<>();
 
-
         for (String lt_key : this.getEntries().keySet()) {
             if (!in_logData.getEntries().containsKey(lt_key)) {
-                lr_diff.put(lt_key,new LogDataComparison(this.get(lt_key), LogDataComparison.ChangeType.REMOVED,
-                        this.get(lt_key).getFrequence(),0));
-        } else if (in_logData.get(lt_key).getFrequence() != this.get(lt_key).getFrequence()) {
+                lr_diff.put(lt_key, new LogDataComparison(this.get(lt_key), LogDataComparison.ChangeType.REMOVED,
+                        this.get(lt_key).getFrequence(), 0));
+            } else if (in_logData.get(lt_key).getFrequence() != this.get(lt_key).getFrequence()) {
 
                 lr_diff.put(lt_key, new LogDataComparison(in_logData.get(lt_key), LogDataComparison.ChangeType.MODIFIED,
-                        this.get(lt_key).getFrequence(),in_logData.get(lt_key).getFrequence()));
+                        this.get(lt_key).getFrequence(), in_logData.get(lt_key).getFrequence()));
             }
         }
 
