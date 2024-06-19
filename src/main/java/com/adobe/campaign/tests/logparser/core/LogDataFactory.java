@@ -11,10 +11,11 @@ package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.commons.io.FileUtils;
@@ -231,5 +232,65 @@ public class LogDataFactory {
             throws StringParseException {
         List<String> l_foundFilesList = findFilePaths(in_rootDir, in_fileFilter);
         return generateLogData(l_foundFilesList, in_parseDefinition, in_logEntryClass);
+    }
+
+    /**
+     * A factory method that creates an html Report of the differences of two log data
+     * @param in_logDataLeft
+     * @param in_logDataRight
+     * @param in_reportName Name of the export file
+     */
+    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataLeft, LogData<T> in_logDataRight, String in_reportName, List<String> in_headers) {
+        Map<String, LogDataComparison> comparisonReport = in_logDataLeft.compare(in_logDataRight);
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        sb.append("<head>");
+        sb.append("<style>");
+        sb.append("table, th, td {");
+        sb.append("    border: 1px solid black;");
+        sb.append("}");
+        sb.append("table.center {");
+                sb.append("    margin-left: auto;");
+                        sb.append("    margin-right: auto;");
+                                sb.append("}");
+                                        sb.append("</style>");
+                                                sb.append("</head>");
+                                                        sb.append("<body>");
+        comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().forEach(l_changeType -> {
+            List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).collect(
+                    Collectors.toList());
+            sb.append("<h1>").append(l_changeType).append("</h1>");
+            sb.append("<table>");
+            sb.append("<tr>");
+            in_headers.forEach(h -> sb.append("<th>").append(h).append("</th>"));
+            sb.append("<th>delta</th>");
+            sb.append("<th>deltaRatio</th>");
+            sb.append("</tr>");
+            l_entries.forEach(l -> {
+                sb.append("<tr>");
+                in_headers.forEach(h -> sb.append("<td>").append(l.getLogEntry().fetchValueMap().get(h)).append("</td>"));
+                sb.append("<td>").append(l.getDelta()).append("</td>");
+                sb.append("<td>").append(l.getDeltaRatio()).append("</td>");
+                sb.append("</tr>");
+            });
+            sb.append("</table>");
+        });
+        sb.append("</body>");
+        File l_exportFile = new File(in_reportName + ".html");
+
+        if (l_exportFile.exists()) {
+            log.info("Deleting existing log export file {}...", l_exportFile.getPath());
+            if (!l_exportFile.delete()) {
+                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
+            }
+        }
+
+        try {
+            //FileUtils.writeStringToFile(l_exportFile, );
+            FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
+        } catch (Exception e) {
+            throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
+        }
+        return l_exportFile;
     }
 }

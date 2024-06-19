@@ -11,6 +11,7 @@ package com.adobe.campaign.tests.logparser.core;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +158,31 @@ public class TestDifference {
         assertThat("We should classify this as removed", l_diff.get("13").getChangeType(),
                 Matchers.equalTo(LogDataComparison.ChangeType.ADDED));
     }
+
+    @Test
+    public void simpleAddedRemovedComplex() {
+        ParseDefinition l_definition = fetchSTDDefinition();
+
+        //Create first log data
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
+
+        //Create second log data
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.getValuesMap().put("AAZ", "12");
+        LogData<GenericEntry> l_cubeData2 = new LogData<>(l_inputData2);
+        l_cubeData2.addEntry(l_inputData2);
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.getValuesMap().put("AAZ", "14");
+        l_cubeData2.addEntry(l_inputData3);
+
+        Map<String, LogDataComparison> l_diff = l_cubeData.compare(l_cubeData2);
+
+        LogDataFactory.generateDiffReport(l_cubeData,l_cubeData2, "SimpleDiffReport", Arrays.asList("AAZ"));
+    }
+
+
 
 
 
