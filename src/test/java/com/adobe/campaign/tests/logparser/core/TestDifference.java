@@ -142,7 +142,6 @@ public class TestDifference {
 
         Map<String, LogDataComparison> l_diff = l_cubeData.compare(l_cubeData2);
 
-
         assertThat("We should have the correct number of keys", l_diff.size(), is(2));
         assertThat("We should have the correct key", l_diff.keySet(), Matchers.containsInAnyOrder("12", "13"));
         assertThat("We should have the correct delta",

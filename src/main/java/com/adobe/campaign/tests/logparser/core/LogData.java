@@ -431,7 +431,7 @@ public class LogData<T extends StdLogEntry> {
             if (!in_logData.getEntries().containsKey(lt_key)) {
                 lr_diff.put(lt_key, new LogDataComparison(this.get(lt_key), LogDataComparison.ChangeType.REMOVED,
                         this.get(lt_key).getFrequence(), 0));
-            } else if (in_logData.get(lt_key).getFrequence() != this.get(lt_key).getFrequence()) {
+            } else if (!in_logData.get(lt_key).getFrequence().equals(this.get(lt_key).getFrequence())) {
 
                 lr_diff.put(lt_key, new LogDataComparison(in_logData.get(lt_key), LogDataComparison.ChangeType.MODIFIED,
                         this.get(lt_key).getFrequence(), in_logData.get(lt_key).getFrequence()));
