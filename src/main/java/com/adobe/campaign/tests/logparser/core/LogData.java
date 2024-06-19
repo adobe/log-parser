@@ -8,6 +8,13 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
+import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,16 +22,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
-
 /**
  * The main log object that contains the log information
+ *
  * @param <T> The log information is always of the type @{@link StdLogEntry}
  */
 public class LogData<T extends StdLogEntry> {
@@ -47,6 +47,7 @@ public class LogData<T extends StdLogEntry> {
 
     /**
      * A map of String and @{@link StdLogEntry}
+     *
      * @param in_logMap A Map of generated Keys and @{@link StdLogEntry data}
      */
     public LogData(Map<String, T> in_logMap) {
@@ -68,14 +69,12 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * This method adds an entry to the log data. If the entry already exists we
-     * just increment the frequence
+     * This method adds an entry to the log data. If the entry already exists we just increment the frequence
      * <p>
      * Author : gandomi
      * <p>
-     * @param lt_cubeEntry
-     *        An object of the type {@link StdLogEntry}
      *
+     * @param lt_cubeEntry An object of the type {@link StdLogEntry}
      */
     public void addEntry(T lt_cubeEntry) {
 
@@ -90,34 +89,27 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * This method allows you to access an entry in the log data. For this you
-     * need the key of the Data
+     * This method allows you to access an entry in the log data. For this you need the key of the Data
      * <p>
      * Author : gandomi
      *
-     * @param in_dataEntryKey
-     *        The key with which the data has been stored
+     * @param in_dataEntryKey The key with which the data has been stored
      * @return The StdLogEntry for the given entry. null if not found
-     *
      */
     public T get(String in_dataEntryKey) {
         return this.getEntries().get(in_dataEntryKey);
     }
 
     /**
-     * This method allows you to access a value within the cube map. For this
-     * you need the key of the Data and the title of the value
+     * This method allows you to access a value within the cube map. For this you need the key of the Data and the title
+     * of the value
      * <p>
      * Author : gandomi
      *
-     * @param in_dataEntryKey
-     *        The key with which the data has been stored
-     * @param in_valueKey
-     *        The identity of the value.
+     * @param in_dataEntryKey The key with which the data has been stored
+     * @param in_valueKey     The identity of the value.
      * @return The key value for the given entry. null if not found
-     * @throws IncorrectParseDefinitionException
-     *         If the given valueKey was not found in the definition
-     *
+     * @throws IncorrectParseDefinitionException If the given valueKey was not found in the definition
      */
     public Object get(String in_dataEntryKey, String in_valueKey) throws IncorrectParseDefinitionException {
 
@@ -137,21 +129,15 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * This method allows you to change a specific value in the log data. For
-     * this, you need the key and the parse definition title to find the value
+     * This method allows you to change a specific value in the log data. For this, you need the key and the parse
+     * definition title to find the value
      * <p>
      * Author : gandomi
      *
-     * @param in_dataEntryKey
-     *        The key with which the data has been stored
-     * @param in_valueKey
-     *        The identity of the value.
-     * @param in_newValue
-     *        The new value of the entry value
-     * @throws IncorrectParseDefinitionException
-     *         When there is no entry for the given in_dataEntryKey and
-     *         in_valueKey
-     *
+     * @param in_dataEntryKey The key with which the data has been stored
+     * @param in_valueKey     The identity of the value.
+     * @param in_newValue     The new value of the entry value
+     * @throws IncorrectParseDefinitionException When there is no entry for the given in_dataEntryKey and in_valueKey
      */
     public void put(String in_dataEntryKey, String in_valueKey, Object in_newValue)
             throws IncorrectParseDefinitionException {
@@ -174,38 +160,37 @@ public class LogData<T extends StdLogEntry> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         LogData<?> other = (LogData<?>) obj;
         if (entries == null) {
-            if (other.entries != null)
+            if (other.entries != null) {
                 return false;
-        } else if (!entries.equals(other.entries))
+            }
+        } else if (!entries.equals(other.entries)) {
             return false;
+        }
         return true;
     }
 
     /**
-     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
-     * This method performs a groupby for the given value. The frequence will
-     * also take into account the original frequence
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry. This method performs a groupby for the
+     * given value. The frequence will also take into account the original frequence
      * <p>
      * Author : gandomi
      *
-     * @param in_parseDefinitionEntryKey
-     *        The key name of the parse definition perform the GroupBy on
-     * @param in_transformationClass
-     *        The class to which we should transform the cube data
-     * @param <U>
-     *        The return type of the group by cube.
+     * @param in_parseDefinitionEntryKey The key name of the parse definition perform the GroupBy on
+     * @param in_transformationClass     The class to which we should transform the cube data
+     * @param <U>                        The return type of the group by cube.
      * @return a new LogData Object containing the groupBy values
-     * @throws IncorrectParseDefinitionException
-     *         If the key is not in the ParseDefinitions of the Log data entry
-     *
+     * @throws IncorrectParseDefinitionException If the key is not in the ParseDefinitions of the Log data entry
      */
     public <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
             Class<U> in_transformationClass)
@@ -215,23 +200,16 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
-     * This method performs a groupby for the given value. The frequence will
-     * also take into account the original frequence
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry. This method performs a groupby for the
+     * given value. The frequence will also take into account the original frequence
      * <p>
      * Author : gandomi
      *
-     * @param in_parseDefinitionEntryKeyList
-     *        The list of key names of the parse definition perform the GroupBy
-     *        on
-     * @param in_transformationClass
-     *        The class to which we should transform the cube data
-     * @param <U>
-     *        The return type of the group by cube.
+     * @param in_parseDefinitionEntryKeyList The list of key names of the parse definition perform the GroupBy on
+     * @param in_transformationClass         The class to which we should transform the cube data
+     * @param <U>                            The return type of the group by cube.
      * @return a new LogData Object containing the groupBy values
-     * @throws IncorrectParseDefinitionException
-     *         If the key is not in the ParseDefinitions of the Log data entry
-     *
+     * @throws IncorrectParseDefinitionException If the key is not in the ParseDefinitions of the Log data entry
      */
     public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
             Class<U> in_transformationClass)
@@ -252,7 +230,8 @@ public class LogData<T extends StdLogEntry> {
             U lt_cubeEntry = null;
             try {
                 lt_cubeEntry = in_transformationClass.getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
             lt_cubeEntry.setParseDefinition(l_cubeDefinition);
@@ -276,19 +255,14 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
-     * This method performs a groupby for the given value. The frequence will
-     * also take into account the original frequence
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry. This method performs a groupby for the
+     * given value. The frequence will also take into account the original frequence
      * <p>
      * Author : gandomi
      *
-     * @param in_parseDefinitionEntryKeyList
-     *        The list of key names of the parse definition perform the GroupBy
-     *        on
+     * @param in_parseDefinitionEntryKeyList The list of key names of the parse definition perform the GroupBy on
      * @return a new LogData Object containing the groupBy values
-     * @throws IncorrectParseDefinitionException
-     *         If the key is not in the ParseDefinitions of the Log data entry
-     *
+     * @throws IncorrectParseDefinitionException If the key is not in the ParseDefinitions of the Log data entry
      */
     public LogData<GenericEntry> groupBy(List<String> in_parseDefinitionEntryKeyList)
             throws IncorrectParseDefinitionException {
@@ -296,18 +270,14 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * Here we create a new LogDataObject with the given ParseDefinitionEntry.
-     * This method performs a groupby for the given value. The frequence will
-     * also take into account the original frequence
+     * Here we create a new LogDataObject with the given ParseDefinitionEntry. This method performs a groupby for the
+     * given value. The frequence will also take into account the original frequence
      * <p>
      * Author : gandomi
      *
-     * @param in_parseDefinitionEntryKey
-     *        The key name of the parse definition perform the GroupBy on
+     * @param in_parseDefinitionEntryKey The key name of the parse definition perform the GroupBy on
      * @return a new LogData Object containing the groupBy values
-     * @throws IncorrectParseDefinitionException
-     *         If the key is not in the ParseDefinitions of the Log data entry
-     *
+     * @throws IncorrectParseDefinitionException If the key is not in the ParseDefinitions of the Log data entry
      */
     public LogData<GenericEntry> groupBy(String in_parseDefinitionEntryKey)
             throws IncorrectParseDefinitionException {
@@ -319,11 +289,8 @@ public class LogData<T extends StdLogEntry> {
      * <p>
      * Author : gandomi
      *
-     * @param in_filterKeyValues
-     *        A map of &lt;String,Object&gt; representation the values we want
-     *        to find
+     * @param in_filterKeyValues A map of &lt;String,Object&gt; representation the values we want to find
      * @return a new LogDataObject containing only the filtered values
-     *
      */
     public LogData<T> filterBy(Map<String, Object> in_filterKeyValues) {
         LogData<T> lr_filteredLogData = new LogData<>();
@@ -338,18 +305,13 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * This method searches the LogData for an enry with a specific value for a
-     * parse definition entry name
+     * This method searches the LogData for an enry with a specific value for a parse definition entry name
      * <p>
      * Author : gandomi
      *
-     * @param in_parseDefinitionName
-     *        The name of the parse definition entry under which we search for a
-     *        value
-     * @param in_searchValue
-     *        The search value
+     * @param in_parseDefinitionName The name of the parse definition entry under which we search for a value
+     * @param in_searchValue         The search value
      * @return a new LogDataObject containing only the searched values
-     *
      */
     public LogData<T> searchEntries(String in_parseDefinitionName, String in_searchValue) {
         Map<String, Object> l_filterProperties = new HashMap<>();
@@ -363,11 +325,8 @@ public class LogData<T extends StdLogEntry> {
      * <p>
      * Author : gandomi
      *
-     * @param in_searchKeyValues
-     *        A map of &lt;String,Object&gt; representation the values we want
-     *        to find
+     * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want to find
      * @return a new LogDataObject containing only the filtered values
-     *
      */
     public LogData<T> searchEntries(Map<String, Object> in_searchKeyValues) {
 
@@ -379,13 +338,9 @@ public class LogData<T extends StdLogEntry> {
      * <p>
      * Author : gandomi
      *
-     * @param in_parseDefinitionName
-     *        The name of the parse definition entry under which we search for a
-     *        value
-     * @param in_searchValue
-     *        The search value
+     * @param in_parseDefinitionName The name of the parse definition entry under which we search for a value
+     * @param in_searchValue         The search value
      * @return true if the search terms could be found. Otherwise false
-     *
      */
     public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue) {
         Map<String, Object> l_searchProperties = new HashMap<>();
@@ -399,10 +354,8 @@ public class LogData<T extends StdLogEntry> {
      * <p>
      * Author : gandomi
      *
-     * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want
-     *        to find
+     * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want to find
      * @return true if the search terms could be found. Otherwise false
-     *
      */
     public boolean isEntryPresent(Map<String, Object> in_searchKeyValues) {
         return searchEntries(in_searchKeyValues).getEntries().size() > 0;
@@ -432,7 +385,7 @@ public class LogData<T extends StdLogEntry> {
     /**
      * Exports the current LogData to a CSV file.
      *
-     * @param in_headerSet A set of headers to be used as keys for exporting
+     * @param in_headerSet   A set of headers to be used as keys for exporting
      * @param in_csvFileName The file name to export
      * @return a CSV file containing the LogData
      * @throws LogDataExportToFileException If the file could not be exported
@@ -444,7 +397,7 @@ public class LogData<T extends StdLogEntry> {
         if (l_exportFile.exists()) {
             log.info("Deleting existing log export file {}...", in_csvFileName);
             if (!l_exportFile.delete()) {
-                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
+                throw new LogDataExportToFileException("We were unable to delete the file " + l_exportFile.getPath());
             }
         }
 
@@ -461,5 +414,30 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return new File(in_csvFileName);
+    }
+
+    public Map<String, LogDataComparison> compare(LogData<T> in_logData) {
+        Map<String, LogDataComparison> lr_diff = new HashMap<>();
+
+
+        for (String lt_key : this.getEntries().keySet()) {
+            if (!in_logData.getEntries().containsKey(lt_key)) {
+                lr_diff.put(lt_key,new LogDataComparison(this.get(lt_key), LogDataComparison.ChangeType.REMOVED,
+                        this.get(lt_key).getFrequence(),0));
+        } else if (in_logData.get(lt_key).getFrequence() != this.get(lt_key).getFrequence()) {
+
+                lr_diff.put(lt_key, new LogDataComparison(in_logData.get(lt_key), LogDataComparison.ChangeType.MODIFIED,
+                        this.get(lt_key).getFrequence(),in_logData.get(lt_key).getFrequence()));
+            }
+        }
+
+        for (String lt_key : in_logData.getEntries().keySet()) {
+            if (!this.getEntries().containsKey(lt_key)) {
+                lr_diff.put(lt_key, new LogDataComparison(in_logData.get(lt_key), LogDataComparison.ChangeType.ADDED,
+                        0, in_logData.get(lt_key).getFrequence()));
+            }
+        }
+
+        return lr_diff;
     }
 }
