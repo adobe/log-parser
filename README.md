@@ -12,6 +12,8 @@ The basic method for using this library is, that you create a definition for you
 
 # Table of contents
 <!-- TOC -->
+* [log-parser](#log-parser)
+* [Table of contents](#table-of-contents)
   * [Installation](#installation)
     * [Maven](#maven)
   * [Parse Definitions](#parse-definitions)
@@ -34,7 +36,7 @@ The basic method for using this library is, that you create a definition for you
     * [GroupBy Mechanisms](#groupby-mechanisms)
       * [Passing a list](#passing-a-list)
       * [Chaining GroupBy](#chaining-groupby)
-  * [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
+    * [Comparing Log Data](#comparing-log-data)
   * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
   * [Release Notes](#release-notes)
     * [1.11.0 (next version)](#1110--next-version-)
@@ -291,9 +293,9 @@ We now have the possibility to export the log data results into a CSV file. The 
 ## Release Notes
 
 ### 1.11.0 (next version)
-- (new feature) [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
-- (new feature) [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
-- (new feature) [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
+- **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
+- **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
+- **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
