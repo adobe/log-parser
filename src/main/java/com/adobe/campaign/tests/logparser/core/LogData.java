@@ -230,8 +230,7 @@ public class LogData<T extends StdLogEntry> {
             U lt_cubeEntry = null;
             try {
                 lt_cubeEntry = in_transformationClass.getDeclaredConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
             lt_cubeEntry.setParseDefinition(l_cubeDefinition);
