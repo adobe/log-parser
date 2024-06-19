@@ -396,7 +396,7 @@ public class LogData<T extends StdLogEntry> {
         if (l_exportFile.exists()) {
             log.info("Deleting existing log export file {}...", in_csvFileName);
             if (!l_exportFile.delete()) {
-                throw new LogDataExportToFileException("We were unable to delete the file " + l_exportFile.getPath());
+                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
             }
         }
 
