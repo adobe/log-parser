@@ -18,7 +18,7 @@ public class LogDataComparison<T extends StdLogEntry> {
         this.logEntry = in_LogEntry;
         this.changeType = in_changeType;
         this.delta = in_newFrequence - in_originalFrequence;
-        this.deltaRatio = Math.signum(this.delta) * ((in_newFrequence*in_originalFrequence==0) ? 1 : (double) in_originalFrequence / in_newFrequence);
+        this.deltaRatio = Math.signum(this.delta) * (((in_newFrequence*in_originalFrequence==0) ? 1 : (double) in_newFrequence/ in_originalFrequence)*100);
     }
 
     public T getLogEntry() {

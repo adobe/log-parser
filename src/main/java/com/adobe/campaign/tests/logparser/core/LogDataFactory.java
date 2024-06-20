@@ -236,43 +236,78 @@ public class LogDataFactory {
 
     /**
      * A factory method that creates an html Report of the differences of two log data
-     * @param in_logDataLeft
-     * @param in_logDataRight
+     * @param in_logDataReference The Log data that is used as a referen‡ce base
+     * @param in_logDataTarget The log data t be compared with the reference
      * @param in_reportName Name of the export file
      */
-    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataLeft, LogData<T> in_logDataRight, String in_reportName, List<String> in_headers) {
-        Map<String, LogDataComparison> comparisonReport = in_logDataLeft.compare(in_logDataRight);
+    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget, String in_reportName, List<String> in_headers) {
+        Map<String, LogDataComparison> comparisonReport = in_logDataReference.compare(in_logDataTarget);
         StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>");
         sb.append("<html>");
         sb.append("<head>");
-        sb.append("<style>");
-        sb.append("table, th, td {");
-        sb.append("    border: 1px solid black;");
-        sb.append("}");
-        sb.append("table.center {");
-                sb.append("    margin-left: auto;");
-                        sb.append("    margin-right: auto;");
-                                sb.append("}");
-                                        sb.append("</style>");
-                                                sb.append("</head>");
-                                                        sb.append("<body>");
+        sb.append("<link rel='stylesheet' href='src/main/resources/diffTable.css'>");
+        sb.append("</head>");
+        sb.append("<body>");
+        sb.append("<h1>Overview</h1>");
+        sb.append("Here is an overview of the differences between the two log data sets.");
+        sb.append("<table class='diffOverView'>");
+        sb.append("<thead>");
+        sb.append("<tr>");
+        sb.append("<th>Metrics</th>");
+        sb.append("<th>#</th>");
+        sb.append("</thead> <tbody>");
+        sb.append("<tr>");
+        sb.append("<th>New Errors</th>");
+        sb.append("<td>");
+        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.ADDED)).count());
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<th>Increased Error Numbers</th>");
+        sb.append("<td>");
+        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() > 0).count());
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<th>Removed Errors</th>");
+        sb.append("<td>");
+        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count());
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<th>Decreased Error Numbers</th>");
+        sb.append("<td>");
+        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() < 0).count());
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("</tbody>");
+        sb.append("</table>");
+        sb.append("<h1>Detailed</h1>");
+        sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
         comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().forEach(l_changeType -> {
-            List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).collect(
+            List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
                     Collectors.toList());
-            sb.append("<h1>").append(l_changeType).append("</h1>");
+            Collections.reverse(l_entries);
+            //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
+            sb.append("<h3>").append(l_changeType).append("</h3>");
             sb.append("<table>");
+            sb.append("<thead>");
             sb.append("<tr>");
             in_headers.forEach(h -> sb.append("<th>").append(h).append("</th>"));
             sb.append("<th>delta</th>");
             sb.append("<th>deltaRatio</th>");
+            sb.append("</thead><tbody>");
             sb.append("</tr>");
             l_entries.forEach(l -> {
                 sb.append("<tr>");
                 in_headers.forEach(h -> sb.append("<td>").append(l.getLogEntry().fetchValueMap().get(h)).append("</td>"));
                 sb.append("<td>").append(l.getDelta()).append("</td>");
-                sb.append("<td>").append(l.getDeltaRatio()).append("</td>");
+                sb.append("<td>").append(l.getDeltaRatio()).append(" %</td>");
                 sb.append("</tr>");
             });
+            sb.append("</tbody>");
+
             sb.append("</table>");
         });
         sb.append("</body>");
