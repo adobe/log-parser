@@ -238,6 +238,7 @@ public class LogDataFactory {
      * @param in_logDataReference The Log data that is used as a referen‡ce base
      * @param in_logDataTarget The log data t be compared with the reference
      * @param in_reportName Name of the export file
+     * @return The file that was created
      */
     public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget, String in_reportName, List<String> in_headers) {
         Map<String, LogDataComparison> comparisonReport = in_logDataReference.compare(in_logDataTarget);
