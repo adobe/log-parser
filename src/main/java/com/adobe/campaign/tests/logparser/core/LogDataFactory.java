@@ -249,6 +249,7 @@ public class LogDataFactory {
         sb.append("<link rel='stylesheet' href='src/main/resources/diffTable.css'>");
         sb.append("</head>");
         sb.append("<body>");
+        //Creating the overview report
         sb.append("<h1>Overview</h1>");
         sb.append("Here is an overview of the differences between the two log data sets.");
         sb.append("<table class='diffOverView'>");
@@ -283,6 +284,7 @@ public class LogDataFactory {
         sb.append("</tr>");
         sb.append("</tbody>");
         sb.append("</table>");
+        //Creating the Detailed report
         sb.append("<h1>Detailed</h1>");
         sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
         comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().forEach(l_changeType -> {
