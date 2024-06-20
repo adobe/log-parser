@@ -193,11 +193,16 @@ public class TestDifference {
         l_cubeData2.addEntry(l_inputData4b);
 
         Map<String, LogDataComparison> l_diff = l_cubeData.compare(l_cubeData2);
+        File l_file = LogDataFactory.generateDiffReport(l_cubeData, l_cubeData2, "SimpleDiffReport",
+                Arrays.asList("AAZ"));
 
-        File l_file = LogDataFactory.generateDiffReport(l_cubeData,l_cubeData2, "SimpleDiffReport", Arrays.asList("AAZ"));
-
-        assertThat("We should have created a file", l_file.exists());
-        assertThat("We should have created a file with the correct name", l_file.getName(), Matchers.equalTo("SimpleDiffReport.html"));
+        try {
+            assertThat("We should have created a file", l_file.exists());
+            assertThat("We should have created a file with the correct name", l_file.getName(),
+                    Matchers.equalTo("SimpleDiffReport.html"));
+        } finally {
+            FileUtils.cleanFile(l_file);
+        }
 
     }
 
