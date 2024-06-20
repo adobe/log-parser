@@ -11,7 +11,6 @@ package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -260,7 +259,7 @@ public class LogDataFactory {
         sb.append("<tr>");
         sb.append("<th>New Errors</th>");
         sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.ADDED)).count());
+        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count());
         sb.append("</td>");
         sb.append("</tr>");
         sb.append("<tr>");
@@ -313,12 +312,7 @@ public class LogDataFactory {
         sb.append("</body>");
         File l_exportFile = new File(in_reportName + ".html");
 
-        if (l_exportFile.exists()) {
-            log.info("Deleting existing log export file {}...", l_exportFile.getPath());
-            if (!l_exportFile.delete()) {
-                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
-            }
-        }
+        com.adobe.campaign.tests.logparser.utils.FileUtils.cleanFile(l_exportFile);
 
         try {
             //FileUtils.writeStringToFile(l_exportFile, );
@@ -328,4 +322,5 @@ public class LogDataFactory {
         }
         return l_exportFile;
     }
+
 }

@@ -260,17 +260,21 @@ In this case we get :
 
 ### Comparing Log Data
 As of version 1.11.0 we have introduced the possibility to compare two LogData objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency. The method `compare` returns a `LogDataComparison` object that contains the results of the comparison. A comparison can be of three types:
-* Added : The entry has been added
+* NEW : The entry has been added
 * Removed : The entry has been removed
 * Changed : The entry has changed in frequency
 
 Apart from this we return the :
 * delta : The difference in frequency
-* deltaRatio : The difference in frequency as a ratio
+* deltaRatio : The difference in frequency as a ratio in %
 
 These values are negative if the values have decreased.
 
-```java
+Creating a differentiation report is done with the method `LogData.compare(LogData<T> in_logData)`. This method returns a `LogDataComparison` object that contains the results of the comparison.
+
+#### Creating a Differentiation Report
+We can generate an HTML Report where the differences are high-lighted. This is done with the method `LogDataFactory.generateComparisonReport(LogData reference, LogData target, String filename)`. This method will generate an HTML Report detailing the found differences.
+
 
 ## Assertions and LogDataAssertions
 As of version 1.0.5 we have introduced the notion of assertions. Assertions can either take a LogData object or a set of files as input.
@@ -294,6 +298,7 @@ We now have the possibility to export the log data results into a CSV file. The 
 
 ### 1.11.0 (next version)
 - **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
+  - **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 - **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11

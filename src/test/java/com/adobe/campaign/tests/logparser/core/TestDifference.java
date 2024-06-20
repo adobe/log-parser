@@ -8,12 +8,17 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
+import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.utils.FileUtils;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -96,7 +101,7 @@ public class TestDifference {
                 l_diff.get("12").getDelta(), Matchers.equalTo(2));
         assertThat("We should have the correct key",
                 l_diff.get("12").getDeltaRatio(), Matchers.equalTo(100.0));
-        assertThat("We should classify this as removed", l_diff.get("12").getChangeType(), Matchers.equalTo(LogDataComparison.ChangeType.ADDED));
+        assertThat("We should classify this as removed", l_diff.get("12").getChangeType(), Matchers.equalTo(LogDataComparison.ChangeType.NEW));
 
         assertThat("We should have stored the original logData", l_diff.get("12").getLogEntry(), Matchers.equalTo(l_cubeData2.get("12")));
     }
@@ -157,7 +162,7 @@ public class TestDifference {
         assertThat("We should classify this as removed", l_diff.get("12").getChangeType(),
                 Matchers.equalTo(LogDataComparison.ChangeType.REMOVED));
         assertThat("We should classify this as removed", l_diff.get("13").getChangeType(),
-                Matchers.equalTo(LogDataComparison.ChangeType.ADDED));
+                Matchers.equalTo(LogDataComparison.ChangeType.NEW));
     }
 
     @Test
@@ -195,9 +200,6 @@ public class TestDifference {
         assertThat("We should have created a file with the correct name", l_file.getName(), Matchers.equalTo("SimpleDiffReport.html"));
 
     }
-
-
-
 
     private static ParseDefinition fetchSTDDefinition() {
         ParseDefinition l_definition = new ParseDefinition("tmp");

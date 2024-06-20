@@ -40,6 +40,6 @@ public class LogDataComparison<T extends StdLogEntry> {
 
 
     enum ChangeType {
-        ADDED, REMOVED, MODIFIED
+        NEW, REMOVED, MODIFIED
     };
 }
