@@ -11,12 +11,14 @@ package com.adobe.campaign.tests.logparser.core;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -315,12 +317,11 @@ public class LogDataFactory {
         sb.append("</body>");
         File l_exportFile = new File(in_reportName + ".html");
 
-        com.adobe.campaign.tests.logparser.utils.FileUtils.cleanFile(l_exportFile);
+        LogParserFileUtils.cleanFile(l_exportFile);
 
         try {
-            //FileUtils.writeStringToFile(l_exportFile, );
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
         }
         return l_exportFile;

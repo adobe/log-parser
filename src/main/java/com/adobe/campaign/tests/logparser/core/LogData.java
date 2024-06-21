@@ -10,7 +10,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
-import com.adobe.campaign.tests.logparser.utils.FileUtils;
+import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.LogManager;
@@ -394,7 +394,7 @@ public class LogData<T extends StdLogEntry> {
             throws LogDataExportToFileException {
         File l_exportFile = new File(in_csvFileName);
 
-        FileUtils.cleanFile(l_exportFile);
+        LogParserFileUtils.cleanFile(l_exportFile);
 
         try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {
             printer.printRecord(in_headerSet);

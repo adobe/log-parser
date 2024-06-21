@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-public class FileUtils {
+public class LogParserFileUtils {
     protected static Logger log = LogManager.getLogger();
 
     /**
@@ -22,9 +22,8 @@ public class FileUtils {
      * @param in_file a file to delete
      */
     public static void cleanFile(File in_file) {
-        if (in_file.exists()) {
+        if (in_file.exists() && in_file.delete()) {
             log.info("Deleting existing log export file {}...", in_file.getPath());
-            in_file.delete();
         }
     }
 }

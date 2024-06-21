@@ -9,20 +9,21 @@
 package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
-import com.adobe.campaign.tests.logparser.utils.FileUtils;
+import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
+import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matchers;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.testng.Assert.assertThrows;
 
 /**
@@ -166,7 +167,7 @@ public class TestDifference {
     }
 
     @Test
-    public void simpleAddedRemovedComplex() {
+    public void testReportGeneration() {
         ParseDefinition l_definition = fetchSTDDefinition();
 
         //Create first log data
@@ -201,9 +202,35 @@ public class TestDifference {
             assertThat("We should have created a file with the correct name", l_file.getName(),
                     Matchers.equalTo("SimpleDiffReport.html"));
         } finally {
-            FileUtils.cleanFile(l_file);
+            LogParserFileUtils.cleanFile(l_file);
         }
+    }
 
+    @Test
+    public void testReportGenerationException() {
+        try (MockedStatic<FileUtils> mockFileUtils = Mockito.mockStatic(FileUtils.class)) {
+            mockFileUtils.when(() -> FileUtils.writeStringToFile(Mockito.any(), Mockito.any(), Mockito.anyString()))
+                    .thenThrow(new IOException("Duuh"));
+
+            ParseDefinition l_definition = fetchSTDDefinition();
+
+            //Create first log data
+            GenericEntry l_inputData = new GenericEntry(l_definition);
+            l_inputData.getValuesMap().put("AAZ", "12");
+            LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
+
+
+            //Create second log data
+            GenericEntry l_inputData2 = new GenericEntry(l_definition);
+            l_inputData2.getValuesMap().put("AAZ", "12");
+            LogData<GenericEntry> l_cubeData2 = new LogData<>(l_inputData2);
+            l_cubeData2.addEntry(l_inputData2);
+
+
+            Map<String, LogDataComparison> l_diff = l_cubeData.compare(l_cubeData2);
+            assertThrows(LogDataExportToFileException.class, () -> LogDataFactory.generateDiffReport(l_cubeData, l_cubeData2, "SimpleDiffReport",
+                    Arrays.asList("AAZ")));
+        }
     }
 
     private static ParseDefinition fetchSTDDefinition() {
