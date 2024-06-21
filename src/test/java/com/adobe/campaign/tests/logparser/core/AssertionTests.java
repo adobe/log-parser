@@ -26,7 +26,7 @@ public class AssertionTests {
 
     /**
      * Testing that we correctly create a cube
-     * <p>
+     *
      * Author : gandomi
      */
     @Test
@@ -76,7 +76,7 @@ public class AssertionTests {
 
     /**
      * Testing a possible usecase. This test is a copy of the test {@link LogDataTest#testLogDataFactory()}
-     * <p>
+     *
      * Author : gandomi
      *
      * @throws StringParseException When we have a problem parding the file with the definitions
@@ -122,7 +122,7 @@ public class AssertionTests {
     /**
      * Testing a possible usecase. This test is a copy of the test {@link LogDataTest#testLogDataFactory()}. Testing
      * Exception
-     * <p>
+     *
      * Author : gandomi
      *
      * @throws StringParseException When we have a problem parsing the log file with the definitions

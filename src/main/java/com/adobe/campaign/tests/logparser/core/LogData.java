@@ -10,6 +10,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.LogManager;
@@ -393,12 +394,7 @@ public class LogData<T extends StdLogEntry> {
             throws LogDataExportToFileException {
         File l_exportFile = new File(in_csvFileName);
 
-        if (l_exportFile.exists()) {
-            log.info("Deleting existing log export file {}...", in_csvFileName);
-            if (!l_exportFile.delete()) {
-                throw new LogDataExportToFileException("We were unable to delete the file "+ l_exportFile.getPath());
-            }
-        }
+        LogParserFileUtils.cleanFile(l_exportFile);
 
         try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {
             printer.printRecord(in_headerSet);
@@ -439,7 +435,7 @@ public class LogData<T extends StdLogEntry> {
 
         for (String lt_key : in_logData.getEntries().keySet()) {
             if (!this.getEntries().containsKey(lt_key)) {
-                lr_diff.put(lt_key, new LogDataComparison(in_logData.get(lt_key), LogDataComparison.ChangeType.ADDED,
+                lr_diff.put(lt_key, new LogDataComparison(in_logData.get(lt_key), LogDataComparison.ChangeType.NEW,
                         0, in_logData.get(lt_key).getFrequence()));
             }
         }

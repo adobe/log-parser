@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Exceptions for managing problems with import and export
  */
-public class LogDataExportToFileException extends Exception {
+public class LogDataExportToFileException extends RuntimeException {
 
     public LogDataExportToFileException(String s, Exception ex) {
         super(s, ex);

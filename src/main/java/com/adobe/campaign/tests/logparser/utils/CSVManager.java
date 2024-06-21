@@ -24,7 +24,7 @@ public class CSVManager {
 
     /**
      * This method fetches a map of the data stored in the given file
-     * <p>
+     *
      * Author : gandomi
      *
      * @param in_fileToLoad A file to fetch
