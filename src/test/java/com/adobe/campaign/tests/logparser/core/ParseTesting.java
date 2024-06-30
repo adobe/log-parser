@@ -1192,4 +1192,39 @@ public class ParseTesting {
         assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
     }
 
+    @Test
+    public void testReplacementCorresponds_empty() {
+        String l_storedString =  "string {} and string {}";
+
+        String l_candidateString ="";
+
+        assertThat("Both strings should NOT correspond", !StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_universal() {
+        //This is quite useless
+        String l_storedString =  "{}";
+
+        String l_candidateString ="lmvcxmkvcxmlkvcx";
+
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_compareStartAndEnd() {
+        //This is quite useless
+        String l_storedString =  "{} abs";
+
+        String l_candidateString ="lmvcxmkv abs";
+
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+
+        String l_storedStringEnd =  "lmvcxmkv {}";
+
+        String l_candidateStringEnd ="lmvcxmkv abs";
+
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedStringEnd, l_candidateStringEnd));
+    }
+
 }
