@@ -1167,4 +1167,29 @@ public class ParseTesting {
 
     }
 
+    @Test
+    public void testReplacementEquals() {
+        String l_candidateString = "string 1 and string 2";
+
+        assertThat("Both strings should be equal", StringParseFactory.stringsCorespond(l_candidateString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_1part() {
+        String l_storedString =  "string {} and string 2";
+
+        String l_candidateString ="string 1 and string 2";
+
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_2parts() {
+        String l_storedString =  "string {} and string {}";
+
+        String l_candidateString ="string 1 and string 2";
+
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+    }
+
 }

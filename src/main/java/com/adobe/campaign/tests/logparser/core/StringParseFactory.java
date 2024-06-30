@@ -333,4 +333,23 @@ public class StringParseFactory {
         return isStringCompliant(in_logString, in_parseDefinition.getDefinitionEntries());
     }
 
+    /**
+     * This method lets us know if the foundStrinf corresponds to the stored string. The stored string will have escape
+     * characters like the log4J FormatMessages I.e. '{}
+     *
+     * @param in_storedStringReference A stored string reference containing the standard escape chracters '{}
+     * @param in_foundString
+     * @return
+     */
+    public static boolean stringsCorespond(String in_storedStringReference, String in_foundString) {
+
+        String[] l_stringParts = in_storedStringReference.split("\\{\\}");
+
+        for (String lt_currentStringPart : l_stringParts) {
+            if (!in_foundString.contains(lt_currentStringPart)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
