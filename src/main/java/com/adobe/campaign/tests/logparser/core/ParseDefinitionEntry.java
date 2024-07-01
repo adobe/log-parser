@@ -10,6 +10,9 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
  * This class allows for the definition of one rule that allows you to extract
  * one piece of data from a string.
@@ -26,6 +29,8 @@ public class ParseDefinitionEntry {
     private boolean caseSensitive = true;
     private boolean trimQuotes = false;
     private boolean toPreserve = true;
+    private Set<String> anonymizers = new LinkedHashSet<>();
+
 
     public ParseDefinitionEntry(String in_title) {
         this.title = in_title;
@@ -42,6 +47,7 @@ public class ParseDefinitionEntry {
         this.caseSensitive = in_oldDefinitionEntry.caseSensitive;
         this.trimQuotes = in_oldDefinitionEntry.trimQuotes;
         this.toPreserve = in_oldDefinitionEntry.toPreserve;
+        this.anonymizers = in_oldDefinitionEntry.anonymizers;
     }
 
     public String getTitle() {
@@ -303,4 +309,15 @@ public class ParseDefinitionEntry {
         return true;
     }
 
+    public Set<String> getAnonymizers() {
+        return anonymizers;
+    }
+
+    public void setAnonymizers(Set<String> anonymizers) {
+        this.anonymizers = anonymizers;
+    }
+
+    public void addAnonymizer(String anonymizer) {
+        this.anonymizers.add(anonymizer);
+    }
 }

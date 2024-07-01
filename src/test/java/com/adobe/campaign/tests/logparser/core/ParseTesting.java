@@ -12,11 +12,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertThrows;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
@@ -1171,7 +1169,11 @@ public class ParseTesting {
     public void testReplacementEquals() {
         String l_candidateString = "string 1 and string 2";
 
-        assertThat("Both strings should be equal", StringParseFactory.stringsCorespond(l_candidateString, l_candidateString));
+        assertThat("Both strings should be equal", StringParseFactory.stringsCorrespond(l_candidateString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_candidateString,l_candidateString), Matchers.equalTo(l_candidateString));
+
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_candidateString,l_candidateString), Matchers.equalTo(l_candidateString));
     }
 
     @Test
@@ -1180,7 +1182,22 @@ public class ParseTesting {
 
         String l_candidateString ="string 1 and string 2";
 
-        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_1part() {
+        String l_storedString =  "string [] and string 2";
+
+        String l_candidateString ="string 1 and string 2";
+
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_candidateString));
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_candidateString));
+
     }
 
     @Test
@@ -1189,7 +1206,49 @@ public class ParseTesting {
 
         String l_candidateString ="string 1 and string 2";
 
-        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+
+
+        String l_storedString2 =  "string {} and string {} and";
+
+        String l_candidateString2 ="string 1 and string 2 and many more";
+
+
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorrespond(l_storedString2, l_candidateString2));
+
+
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_2parts() {
+        String l_storedString =  "string [] and string {}";
+
+        String l_candidateString ="string 1 and string 2";
+
+
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo("string 1 and string {}"));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_2partsSame() {
+        String l_storedString =  "string [] and string []";
+
+        String l_candidateString ="string 1 and string 2 jkjkj";
+
+
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_2partsExtended() {
+        String l_storedString =  "string [] and string {}";
+
+        String l_candidateString ="string 1 and string 2 and many more";
+
+
+        assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo("string 1 and string {}"));
     }
 
     @Test
@@ -1198,7 +1257,7 @@ public class ParseTesting {
 
         String l_candidateString ="";
 
-        assertThat("Both strings should NOT correspond", !StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+        assertThat("Both strings should NOT correspond", !StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
     }
 
     @Test
@@ -1208,7 +1267,7 @@ public class ParseTesting {
 
         String l_candidateString ="lmvcxmkvcxmlkvcx";
 
-        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
     }
 
     @Test
@@ -1218,13 +1277,63 @@ public class ParseTesting {
 
         String l_candidateString ="lmvcxmkv abs";
 
-        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedString, l_candidateString));
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
 
         String l_storedStringEnd =  "lmvcxmkv {}";
 
         String l_candidateStringEnd ="lmvcxmkv abs";
 
-        assertThat("Both strings should correspond", StringParseFactory.stringsCorespond(l_storedStringEnd, l_candidateStringEnd));
+        assertThat("Both strings should correspond", StringParseFactory.stringsCorrespond(l_storedStringEnd, l_candidateStringEnd));
+    }
+
+    @Test
+    public void fetchReplaceVariablesInTemplate() {
+        String l_variable = "This is a template with a variable";
+        String l_template = "This is a [] with a {}";
+
+        String l_result = StringParseFactory.fetchCorresponding(l_template, l_variable);
+
+        assertThat("The result should be the variable", l_result, Matchers.equalTo("This is a template with a {}"));
+    }
+
+    @Test
+    public void fetchReplaceVariablesInTemplateDifferentOrder() {
+        String l_variable = "This is a template with a variable";
+        String l_template = "This is a {} with a []";
+
+       // String l_result = StringParseFactory.findKeepVariables(l_template, l_variable);
+        String l_result = StringParseFactory.fetchCorresponding(l_template, l_variable);
+
+
+        assertThat("The result should be the variable", l_result, Matchers.equalTo("This is a {} with a variable"));
+    }
+
+
+    @Test
+    public void testAnonymization() throws StringParseException {
+        String logString = "HTTP/1.1|X-Security-Token:@tTD6JQ5HcTfzCWt5OkJcJ_BfmC8mfw==|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|";
+
+        ParseDefinition pd = new ParseDefinition("Anonymization");
+        //Create a parse definition
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
+
+        l_definitionCI.setTitle("path");
+        l_definitionCI.setStart("HTTP/1.1|");
+        l_definitionCI.setEnd("|Content-Length");
+        l_definitionCI.setCaseSensitive(false);
+        l_definitionCI.setAnonymizers(new HashSet<>(Arrays.asList("X-Security-Token:{}|SOAPAction:[]")));
+        pd.addEntry(l_definitionCI);
+
+        assertThat("We should have correctly anonymized the string",
+                StringParseFactory.fetchCorresponding("X-Security-Token:{}|SOAPAction:[]", logString),
+                Matchers.equalTo("X-Security-Token:{}|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|"));
+
+        Map<String, String> l_entries = StringParseFactory.parseString(logString, pd);
+
+
+        assertThat(l_entries.values().stream().findFirst().get(), is(notNullValue()));
+        assertThat(l_entries.values().stream().findFirst().get(), Matchers.equalTo("X-Security-Token:{}|SOAPAction:xtk%3aqueryDef#ExecuteQuery"));
+
     }
 
 }

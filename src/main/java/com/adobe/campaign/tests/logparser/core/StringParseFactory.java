@@ -10,7 +10,6 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -267,7 +266,12 @@ public class StringParseFactory {
                     + in_parseDefinition.getTitle() + " in string \n" + in_stringValue + ".");
         }
 
-        return in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        //Anonymize
+        var rawExtraction = in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        for (String lt_anonymizer : in_parseDefinition.getAnonymizers()) {
+            rawExtraction = fetchCorresponding(lt_anonymizer.trim(), rawExtraction);
+        }
+        return rawExtraction;
 
     }
 
@@ -337,19 +341,57 @@ public class StringParseFactory {
      * This method lets us know if the foundStrinf corresponds to the stored string. The stored string will have escape
      * characters like the log4J FormatMessages I.e. '{}
      *
-     * @param in_storedStringReference A stored string reference containing the standard escape chracters '{}
-     * @param in_foundString
+     * @param in_templateString A stored string reference containing the standard escape chracters '{}
+     * @param in_candidateString
      * @return
      */
-    public static boolean stringsCorespond(String in_storedStringReference, String in_foundString) {
-
-        String[] l_stringParts = in_storedStringReference.split("\\{\\}");
-
-        for (String lt_currentStringPart : l_stringParts) {
-            if (!in_foundString.contains(lt_currentStringPart)) {
+    public static boolean stringsCorrespond(String in_templateString, String in_candidateString) {
+        int currentSpot = -1;
+        for (String lt_anonymizer : in_templateString.split("\\{\\}")) {
+            int lt_currentLocation = in_candidateString.indexOf(lt_anonymizer, currentSpot + 1);
+            if (lt_currentLocation <= currentSpot) {
                 return false;
             }
+            currentSpot = lt_currentLocation;
         }
+
         return true;
+    }
+
+
+    public static String fetchCorresponding(String in_templateString, String in_candidateString) {
+        String lr_string = "";
+        int l_replace = in_templateString.indexOf('{');
+        l_replace = (l_replace < 0) ? 100000 : l_replace;
+        int l_keep = in_templateString.indexOf('[');
+        l_keep = (l_keep < 0) ? 100000 : l_keep;
+
+
+        //If replace is before keep recursively call the function up to the keep
+        if (l_replace < l_keep) {
+
+            int candSearchString = Math.min(in_templateString.indexOf('{', l_replace+1)*-1, in_templateString.indexOf('[', l_replace+1)*-1)*-1;
+            int fromCandidate = in_candidateString.indexOf( (candSearchString < 0) ? in_templateString.substring(l_replace+2) : in_templateString.substring(l_replace+2, candSearchString));
+            lr_string+= in_templateString.substring(0,l_replace)+"{}";
+            if (l_replace+2 < in_templateString.length()) {
+                lr_string += fetchCorresponding(in_templateString.substring(l_replace + 2),
+                        in_candidateString.substring(fromCandidate));
+            }
+
+        } else if (l_replace > l_keep) {
+            int candSearchString = Math.min(in_templateString.indexOf('{', l_keep+1)*-1, in_templateString.indexOf('[', l_keep+1)*-1)*-1;
+            int fromCandidate = in_candidateString.indexOf( (candSearchString < 0) ? in_templateString.substring(l_keep+2) : in_templateString.substring(l_keep+2, candSearchString));
+
+            lr_string+= in_candidateString.substring(0,fromCandidate);
+
+            //If keep is before replace recursively call the function up to the replace
+            lr_string+= fetchCorresponding(in_templateString.substring(l_keep+2), in_candidateString.substring(fromCandidate));
+        } else {
+            //If both are equal we can replace the values
+            lr_string+= in_candidateString;
+        }
+
+        return lr_string;
+
     }
 }
