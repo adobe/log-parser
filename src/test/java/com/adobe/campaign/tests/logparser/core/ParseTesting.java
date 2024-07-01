@@ -1175,7 +1175,7 @@ public class ParseTesting {
         //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_candidateString,l_candidateString), Matchers.equalTo(l_candidateString));
 
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_candidateString, l_candidateString),
+                StringParseFactory.anonymizeString(l_candidateString, l_candidateString),
                 Matchers.equalTo(l_candidateString));
     }
 
@@ -1190,7 +1190,7 @@ public class ParseTesting {
 
         //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_storedString, l_candidateString),
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo(l_storedString));
     }
 
@@ -1202,7 +1202,7 @@ public class ParseTesting {
 
         //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_candidateString));
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_storedString, l_candidateString),
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo(l_candidateString));
 
     }
@@ -1217,7 +1217,7 @@ public class ParseTesting {
                 StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
         //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_storedString, l_candidateString),
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo(l_storedString));
 
         String l_storedString2 = "string {} and string {} and";
@@ -1235,7 +1235,7 @@ public class ParseTesting {
         String l_candidateString = "string 1 and string 2 jkjkj";
 
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_storedString, l_candidateString),
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo(l_candidateString));
     }
 
@@ -1246,7 +1246,7 @@ public class ParseTesting {
         String l_candidateString = "string 1 and string 2";
 
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_storedString, l_candidateString),
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo("string 1 and string {}"));
     }
 
@@ -1257,7 +1257,7 @@ public class ParseTesting {
         String l_candidateString = "string 1 and string 2 and many more";
 
         assertThat("we should get the same value",
-                StringParseFactory.fetchCorresponding(l_storedString, l_candidateString),
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo("string 1 and string {}"));
     }
 
@@ -1316,7 +1316,7 @@ public class ParseTesting {
         pd.addEntry(l_definitionCI);
 
         assertThat("We should have correctly anonymized the string",
-                StringParseFactory.fetchCorresponding("X-Security-Token:{}|SOAPAction:[]", logString),
+                StringParseFactory.anonymizeString("X-Security-Token:{}|SOAPAction:[]", logString),
                 Matchers.equalTo("X-Security-Token:{}|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|"));
 
         Map<String, String> l_entries = StringParseFactory.parseString(logString, pd);

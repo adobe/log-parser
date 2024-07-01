@@ -269,7 +269,7 @@ public class StringParseFactory {
         //Anonymize
         var rawExtraction = in_stringValue.substring(l_startLocation, l_endLocation).trim();
         for (String lt_anonymizer : in_parseDefinition.getAnonymizers()) {
-            rawExtraction = fetchCorresponding(lt_anonymizer.trim(), rawExtraction);
+            rawExtraction = anonymizeString(lt_anonymizer.trim(), rawExtraction);
         }
         return rawExtraction;
 
@@ -359,36 +359,55 @@ public class StringParseFactory {
     }
 
 
-    public static String fetchCorresponding(String in_templateString, String in_candidateString) {
+    /**
+     * This method anonymizes a string based on a template string. If the template contains {} the corresponding value in the candidate string will be replaced. We also have the opportuning to ignore certain parts of the string by passing [].
+     *
+     * Author : gandomi
+     *
+     * @param in_templateString
+     *        A string that is to be parsed
+     * @param in_candidateString
+     *        A list of parse definitions that will be used to fetch the values
+     *        in the given string
+     * @return A string that is anonymized based on the template string
+     *
+     */
+    public static String anonymizeString(String in_templateString, String in_candidateString) {
         String lr_string = "";
         int l_replace = in_templateString.indexOf('{');
         l_replace = (l_replace < 0) ? 100000 : l_replace;
         int l_keep = in_templateString.indexOf('[');
         l_keep = (l_keep < 0) ? 100000 : l_keep;
 
-
         //If replace is before keep recursively call the function up to the keep
         if (l_replace < l_keep) {
 
-            int candSearchString = Math.min(in_templateString.indexOf('{', l_replace+1)*-1, in_templateString.indexOf('[', l_replace+1)*-1)*-1;
-            int fromCandidate = in_candidateString.indexOf( (candSearchString < 0) ? in_templateString.substring(l_replace+2) : in_templateString.substring(l_replace+2, candSearchString));
-            lr_string+= in_templateString.substring(0,l_replace)+"{}";
-            if (l_replace+2 < in_templateString.length()) {
-                lr_string += fetchCorresponding(in_templateString.substring(l_replace + 2),
+            int candSearchString = Math.min(in_templateString.indexOf('{', l_replace + 1) * -1,
+                    in_templateString.indexOf('[', l_replace + 1) * -1) * -1;
+            int fromCandidate = in_candidateString.indexOf(
+                    (candSearchString < 0) ? in_templateString.substring(l_replace + 2) : in_templateString.substring(
+                            l_replace + 2, candSearchString));
+            lr_string += in_templateString.substring(0, l_replace) + "{}";
+            if (l_replace + 2 < in_templateString.length()) {
+                lr_string += anonymizeString(in_templateString.substring(l_replace + 2),
                         in_candidateString.substring(fromCandidate));
             }
 
         } else if (l_replace > l_keep) {
-            int candSearchString = Math.min(in_templateString.indexOf('{', l_keep+1)*-1, in_templateString.indexOf('[', l_keep+1)*-1)*-1;
-            int fromCandidate = in_candidateString.indexOf( (candSearchString < 0) ? in_templateString.substring(l_keep+2) : in_templateString.substring(l_keep+2, candSearchString));
+            int candSearchString = Math.min(in_templateString.indexOf('{', l_keep + 1) * -1,
+                    in_templateString.indexOf('[', l_keep + 1) * -1) * -1;
+            int fromCandidate = in_candidateString.indexOf(
+                    (candSearchString < 0) ? in_templateString.substring(l_keep + 2) : in_templateString.substring(
+                            l_keep + 2, candSearchString));
 
-            lr_string+= in_candidateString.substring(0,fromCandidate);
+            lr_string += in_candidateString.substring(0, fromCandidate);
 
             //If keep is before replace recursively call the function up to the replace
-            lr_string+= fetchCorresponding(in_templateString.substring(l_keep+2), in_candidateString.substring(fromCandidate));
+            lr_string += anonymizeString(in_templateString.substring(l_keep + 2),
+                    in_candidateString.substring(fromCandidate));
         } else {
             //If both are equal we can replace the values
-            lr_string+= in_candidateString;
+            lr_string += in_candidateString;
         }
 
         return lr_string;
