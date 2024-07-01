@@ -373,44 +373,47 @@ public class StringParseFactory {
      *
      */
     public static String anonymizeString(String in_templateString, String in_candidateString) {
-        String lr_string = "";
+        StringBuilder lr_string = new StringBuilder();
         int l_replace = in_templateString.indexOf('{');
         l_replace = (l_replace < 0) ? 100000 : l_replace;
         int l_keep = in_templateString.indexOf('[');
         l_keep = (l_keep < 0) ? 100000 : l_keep;
+        int l_escapeIdx = Math.min(l_replace, l_keep);
 
         //If replace is before keep recursively call the function up to the keep
         if (l_replace < l_keep) {
 
-            int candSearchString = Math.min(in_templateString.indexOf('{', l_replace + 1) * -1,
-                    in_templateString.indexOf('[', l_replace + 1) * -1) * -1;
-            int fromCandidate = in_candidateString.indexOf(
-                    (candSearchString < 0) ? in_templateString.substring(l_replace + 2) : in_templateString.substring(
-                            l_replace + 2, candSearchString));
-            lr_string += in_templateString.substring(0, l_replace) + "{}";
-            if (l_replace + 2 < in_templateString.length()) {
-                lr_string += anonymizeString(in_templateString.substring(l_replace + 2),
-                        in_candidateString.substring(fromCandidate));
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString, l_escapeIdx);
+
+            lr_string.append(in_templateString.substring(0, l_escapeIdx)).append("{}");
+            if (l_escapeIdx + 2 < in_templateString.length()) {
+                lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
+                        in_candidateString.substring(nextCandidateIdx)));
             }
 
         } else if (l_replace > l_keep) {
-            int candSearchString = Math.min(in_templateString.indexOf('{', l_keep + 1) * -1,
-                    in_templateString.indexOf('[', l_keep + 1) * -1) * -1;
-            int fromCandidate = in_candidateString.indexOf(
-                    (candSearchString < 0) ? in_templateString.substring(l_keep + 2) : in_templateString.substring(
-                            l_keep + 2, candSearchString));
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString, l_escapeIdx);
 
-            lr_string += in_candidateString.substring(0, fromCandidate);
+            lr_string.append(in_candidateString.substring(0, nextCandidateIdx));
 
             //If keep is before replace recursively call the function up to the replace
-            lr_string += anonymizeString(in_templateString.substring(l_keep + 2),
-                    in_candidateString.substring(fromCandidate));
+            lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
+                    in_candidateString.substring(nextCandidateIdx)));
         } else {
             //If both are equal we can replace the values
-            lr_string += in_candidateString;
+            lr_string.append(in_candidateString);
         }
 
-        return lr_string;
+        return lr_string.toString();
 
+    }
+
+    private static int fetchNextExtractionIdxOfCandidate(String in_templateString, String in_candidateString, int l_replace) {
+        int candSearchString = Math.min(in_templateString.indexOf('{', l_replace + 1) * -1,
+                in_templateString.indexOf('[', l_replace + 1) * -1) * -1;
+
+        return in_candidateString.indexOf(
+                (candSearchString < 0) ? in_templateString.substring(l_replace + 2) : in_templateString.substring(
+                        l_replace + 2, candSearchString));
     }
 }
