@@ -358,19 +358,16 @@ public class StringParseFactory {
         return true;
     }
 
-
     /**
-     * This method anonymizes a string based on a template string. If the template contains {} the corresponding value in the candidate string will be replaced. We also have the opportuning to ignore certain parts of the string by passing [].
-     *
+     * This method anonymizes a string based on a template string. If the template contains {} the corresponding value
+     * in the candidate string will be replaced. We also have the opportuning to ignore certain parts of the string by
+     * passing [].
+     * <p>
      * Author : gandomi
      *
-     * @param in_templateString
-     *        A string that is to be parsed
-     * @param in_candidateString
-     *        A list of parse definitions that will be used to fetch the values
-     *        in the given string
+     * @param in_templateString  A string that is to be parsed
+     * @param in_candidateString A list of parse definitions that will be used to fetch the values in the given string
      * @return A string that is anonymized based on the template string
-     *
      */
     public static String anonymizeString(String in_templateString, String in_candidateString) {
         StringBuilder lr_string = new StringBuilder();
@@ -383,7 +380,8 @@ public class StringParseFactory {
         //If replace is before keep recursively call the function up to the keep
         if (l_replace < l_keep) {
 
-            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString, l_escapeIdx);
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
+                    l_escapeIdx);
 
             lr_string.append(in_templateString.substring(0, l_escapeIdx)).append("{}");
             if (l_escapeIdx + 2 < in_templateString.length()) {
@@ -392,7 +390,8 @@ public class StringParseFactory {
             }
 
         } else if (l_replace > l_keep) {
-            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString, l_escapeIdx);
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
+                    l_escapeIdx);
 
             lr_string.append(in_candidateString.substring(0, nextCandidateIdx));
 
@@ -408,7 +407,8 @@ public class StringParseFactory {
 
     }
 
-    private static int fetchNextExtractionIdxOfCandidate(String in_templateString, String in_candidateString, int l_replace) {
+    private static int fetchNextExtractionIdxOfCandidate(String in_templateString, String in_candidateString,
+            int l_replace) {
         int candSearchString = Math.min(in_templateString.indexOf('{', l_replace + 1) * -1,
                 in_templateString.indexOf('[', l_replace + 1) * -1) * -1;
 
