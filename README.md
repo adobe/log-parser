@@ -10,18 +10,18 @@ The basic method for using this library is, that you create a definition for you
 
 ![The Processes](diagrams/Log_Parser-Processes.png)
 
-# Table of contents
+## Table of contents
 <!-- TOC -->
-* [log-parser](#log-parser)
-* [Table of contents](#table-of-contents)
   * [Installation](#installation)
     * [Maven](#maven)
   * [Parse Definitions](#parse-definitions)
     * [Defining a Parsing](#defining-a-parsing)
     * [Defining an entry](#defining-an-entry)
     * [How parsing works](#how-parsing-works)
+      * [Anonymizing Data](#anonymizing-data)
     * [Code Example](#code-example)
     * [Import and Export](#import-and-export)
+    * [Importing a JSON File](#importing-a-json-file)
   * [Extracting Data from Logs](#extracting-data-from-logs)
     * [Using the Standard Method](#using-the-standard-method)
     * [Using the SDK](#using-the-sdk)
@@ -37,6 +37,8 @@ The basic method for using this library is, that you create a definition for you
       * [Passing a list](#passing-a-list)
       * [Chaining GroupBy](#chaining-groupby)
     * [Comparing Log Data](#comparing-log-data)
+      * [Creating a Differentiation Report](#creating-a-differentiation-report)
+  * [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
   * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
   * [Release Notes](#release-notes)
     * [1.11.0 (next version)](#1110--next-version-)
@@ -83,6 +85,7 @@ Each entry for a Parse Definition allows us to define:
 - The end pattern of the string that will contain the value (null if in the end of a line)
 - Case Sensitive search
 - Is to be kept. In some cases we just need to find a line with certain particularities, but we don't actually want to store the value.
+- Anonymizers, we can provide a set of anonymizers so that some values are skipped when parsing a line.
 
 ### How parsing works
 When you have defined your parsing you use the LogDataFactory by passing it:
@@ -92,6 +95,36 @@ When you have defined your parsing you use the LogDataFactory by passing it:
 By using the StringParseFactory we get a LogData object with allows us to manage the logs data you have found.
 
 ![Parsing a log line](diagrams/Log_Parser-log-parsing.png)
+
+#### Anonymizing Data
+We have discovered that it would be useful to anonymize data. This will aloow you to group some log data that contains variables. Anonymization has two features:
+* Replacing Data using `{}`,
+* Ignoring Data using `[]`.
+
+For example if you store an anonymizer with the value:
+```
+Storing key '{}' in the system
+
+```
+
+the log-parser will merge all lines that contain the same text, but with different values for the key. For example:
+* Storing key 'F' in the system
+* Storing key 'B' in the system
+* Storing key 'G' in the system
+
+will all be stored as `Storing key '{}' in the system`. 
+
+Sometimes we just want to anonymize part of a line. This is useful if you want to do post-treatment. For example in our previous example as explained `Storing key 'G' in the system`, would be merged, however `NEO-1234 : Storing key 'G' in the system` would not be merged. In this cas we can do a partial anonymization using the `[]` notation. For example if we enrich our original template:
+```
+[]Storing key '{}' in the system
+```
+
+In this case the lines:
+* `NEO-1234 : Storing key 'G' in the system` will be stored as `NEO-1234 : Storing key '{}' in the system`
+* `NEO-1234 : Storing key 'H' in the system` will be stored as `NEO-1234 : Storing key '{}' in the system`
+* `EXA-1234 : Storing key 'Z' in the system` will be stored as `EXA-1234 : Storing key '{}' in the system`
+* `EXA-1234 : Storing key 'X' in the system` will be stored as `EXA-1234 : Storing key '{}' in the system`
+
 
 ### Code Example
 Here is an example of how we can parse a string. The method is leveraged to perform the same parsing in one or many files.
@@ -135,6 +168,35 @@ At the end we can see that each data is stored in a map with the parse defnition
 
 ### Import and Export
 You can import or store a Parse Definition to or from a JSON file.
+
+### Importing a JSON File
+You can define a Parse Definition in a JSON file. 
+
+This can then be imported and used for parsing using the method `ParseDefinitionFactory.importParseDefinition`. Here is small example of how the JSON would look like:
+
+```JSON
+{
+  "title": "Anonymization",
+  "storeFileName": false,
+  "storeFilePath": false,
+  "storePathFrom": "",
+  "keyPadding": "#",
+  "keyOrder": [],
+  "definitionEntries": [
+    {
+      "title": "path",
+      "start": "HTTP/1.1|",
+      "end": "|Content-Length",
+      "caseSensitive": false,
+      "trimQuotes": false,
+      "toPreserve": true,
+      "anonymizers": [
+        "X-Security-Token:{}|SOAPAction:[]"
+      ]
+    }
+  ]
+}
+```
 
 ## Extracting Data from Logs
 
@@ -298,7 +360,8 @@ We now have the possibility to export the log data results into a CSV file. The 
 
 ### 1.11.0 (next version)
 - **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
-  - **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
+- **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
+- **(new feature)** [#138](https://github.com/adobe/log-parser/issues/138) We now have the possibility of anonymizing log data during parsing. For more information please read the section on [Anonymizing Data](#anonymizing-data).
 - **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11

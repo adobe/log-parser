@@ -10,7 +10,6 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -267,7 +266,12 @@ public class StringParseFactory {
                     + in_parseDefinition.getTitle() + " in string \n" + in_stringValue + ".");
         }
 
-        return in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        //Anonymize
+        var rawExtraction = in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        for (String lt_anonymizer : in_parseDefinition.getAnonymizers()) {
+            rawExtraction = anonymizeString(lt_anonymizer.trim(), rawExtraction);
+        }
+        return rawExtraction;
 
     }
 
@@ -333,4 +337,83 @@ public class StringParseFactory {
         return isStringCompliant(in_logString, in_parseDefinition.getDefinitionEntries());
     }
 
+    /**
+     * This method lets us know if the foundStrinf corresponds to the stored string. The stored string will have escape
+     * characters like the log4J FormatMessages I.e. '{}
+     *
+     * @param in_templateString A stored string reference containing the standard escape chracters '{}
+     * @param in_candidateString
+     * @return
+     */
+    public static boolean stringsCorrespond(String in_templateString, String in_candidateString) {
+        int currentSpot = -1;
+        for (String lt_anonymizer : in_templateString.split("\\{\\}")) {
+            int lt_currentLocation = in_candidateString.indexOf(lt_anonymizer, currentSpot + 1);
+            if (lt_currentLocation <= currentSpot) {
+                return false;
+            }
+            currentSpot = lt_currentLocation;
+        }
+
+        return true;
+    }
+
+    /**
+     * This method anonymizes a string based on a template string. If the template contains {} the corresponding value
+     * in the candidate string will be replaced. We also have the opportuning to ignore certain parts of the string by
+     * passing [].
+     * <p>
+     * Author : gandomi
+     *
+     * @param in_templateString  A string that is to be parsed
+     * @param in_candidateString A list of parse definitions that will be used to fetch the values in the given string
+     * @return A string that is anonymized based on the template string
+     */
+    public static String anonymizeString(String in_templateString, String in_candidateString) {
+        StringBuilder lr_string = new StringBuilder();
+        int l_replace = in_templateString.indexOf('{');
+        l_replace = (l_replace < 0) ? 100000 : l_replace;
+        int l_keep = in_templateString.indexOf('[');
+        l_keep = (l_keep < 0) ? 100000 : l_keep;
+        int l_escapeIdx = Math.min(l_replace, l_keep);
+
+        //If replace is before keep recursively call the function up to the keep
+        if (l_replace < l_keep) {
+
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
+                    l_escapeIdx);
+
+            lr_string.append(in_templateString.substring(0, l_escapeIdx)).append("{}");
+            if (l_escapeIdx + 2 < in_templateString.length()) {
+                lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
+                        in_candidateString.substring(nextCandidateIdx)));
+            }
+
+        } else if (l_replace > l_keep) {
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
+                    l_escapeIdx);
+
+            lr_string.append(in_candidateString.substring(0, nextCandidateIdx));
+
+            //If keep is before replace recursively call the function up to the replace
+            lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
+                    in_candidateString.substring(nextCandidateIdx)));
+        } else {
+            //If both are equal we can replace the values
+            lr_string.append(in_candidateString);
+        }
+
+        return lr_string.toString();
+
+    }
+
+    private static int fetchNextExtractionIdxOfCandidate(String in_templateString, String in_candidateString,
+            int l_replace) {
+        int candSearchString = Math.min(in_templateString.indexOf('{', l_replace + 1) * -1,
+                in_templateString.indexOf('[', l_replace + 1) * -1) * -1;
+
+        return in_candidateString.indexOf(
+                (candSearchString < 0) ? in_templateString.substring(l_replace + 2) : in_templateString.substring(
+                        l_replace + 2, candSearchString));
+    }
 }
