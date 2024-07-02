@@ -382,6 +382,9 @@ public class StringParseFactory {
 
             int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
                     l_escapeIdx);
+            if (nextCandidateIdx < 0) {
+                return in_candidateString;
+            }
 
             lr_string.append(in_templateString.substring(0, l_escapeIdx+2));
             if (l_escapeIdx + 2 < in_templateString.length()) {
@@ -392,6 +395,10 @@ public class StringParseFactory {
         } else if (l_replace > l_keep) {
             int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
                     l_escapeIdx);
+
+            if (nextCandidateIdx < 0) {
+                return in_candidateString;
+            }
 
             lr_string.append(in_candidateString.substring(0, nextCandidateIdx));
 
@@ -408,12 +415,13 @@ public class StringParseFactory {
     }
 
     private static int fetchNextExtractionIdxOfCandidate(String in_templateString, String in_candidateString,
-            int l_replace) {
-        int candSearchString = Math.min(in_templateString.indexOf('{', l_replace + 1) * -1,
-                in_templateString.indexOf('[', l_replace + 1) * -1) * -1;
+            int in_fromIdx) {
+        //find the next point of interest
+        int candSearchString = Math.min(in_templateString.indexOf("{}", in_fromIdx + 1) * -1,
+                in_templateString.indexOf("[]", in_fromIdx + 1) * -1) * -1;
 
         return in_candidateString.indexOf(
-                (candSearchString < 0) ? in_templateString.substring(l_replace + 2) : in_templateString.substring(
-                        l_replace + 2, candSearchString));
+                (candSearchString < 0) ? in_templateString.substring(in_fromIdx + 2) : in_templateString.substring(
+                        in_fromIdx + 2, candSearchString));
     }
 }
