@@ -32,10 +32,10 @@ public abstract class StdLogEntry {
     private String filePath;
 
 
-    protected static final String STD_DATA_KEY = "key";
-    protected static final String STD_DATA_FREQUENCE = "frequence";
-    protected static final String STD_DATA_FILE_NAME = "fileName";
-    protected static final String STD_DATA_FILE_PATH = "filePath";
+    public static final String STD_DATA_KEY = "key";
+    public static final String STD_DATA_FREQUENCE = "frequence";
+    public static final String STD_DATA_FILE_NAME = "fileName";
+    public static final String STD_DATA_FILE_PATH = "filePath";
 
     /**
      * A method that creates the key to identify each stored entry

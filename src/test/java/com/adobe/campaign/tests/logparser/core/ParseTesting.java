@@ -1195,6 +1195,21 @@ public class ParseTesting {
     }
 
     @Test
+    public void testReplacementCorresponds_1part_withChars() {
+        String l_storedString = "string {} and string 2 and {value 8}";
+
+        String l_candidateString = "string 1 and string 2 and {value 8}";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_storedString));
+    }
+
+    @Test
     public void testReplacementCorrespondsDoNotReplace_1part() {
         String l_storedString = "string [] and string 2";
 

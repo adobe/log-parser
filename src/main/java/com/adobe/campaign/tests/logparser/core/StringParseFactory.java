@@ -371,9 +371,9 @@ public class StringParseFactory {
      */
     public static String anonymizeString(String in_templateString, String in_candidateString) {
         StringBuilder lr_string = new StringBuilder();
-        int l_replace = in_templateString.indexOf('{');
+        int l_replace = in_templateString.indexOf("{}");
         l_replace = (l_replace < 0) ? 100000 : l_replace;
-        int l_keep = in_templateString.indexOf('[');
+        int l_keep = in_templateString.indexOf("[]");
         l_keep = (l_keep < 0) ? 100000 : l_keep;
         int l_escapeIdx = Math.min(l_replace, l_keep);
 
@@ -383,7 +383,7 @@ public class StringParseFactory {
             int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
                     l_escapeIdx);
 
-            lr_string.append(in_templateString.substring(0, l_escapeIdx)).append("{}");
+            lr_string.append(in_templateString.substring(0, l_escapeIdx+2));
             if (l_escapeIdx + 2 < in_templateString.length()) {
                 lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
                         in_candidateString.substring(nextCandidateIdx)));
