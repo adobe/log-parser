@@ -1229,7 +1229,7 @@ public class LogDataTest {
 
     /*************** #55 Exporting results **********************/
     @Test
-    public void testExportData()
+    public void testExportDataToCSV()
             throws StringParseException, IOException,
             LogDataExportToFileException {
         //Create a parse definition
@@ -1285,6 +1285,54 @@ public class LogDataTest {
             l_exportedFile.delete();
         }
 
+    }
+
+    @Test
+    public void testExportDataToHTML()
+            throws StringParseException, IOException,
+            LogDataExportToFileException {
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        final String apacheLogFile = "src/test/resources/nestedDirs/dirA/simpleLog.log";
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+        int l_nrOfEntries = l_logData.getEntries().keySet().size();
+        assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
+
+        File l_exportedFile = l_logData.exportLogDataToHTML(
+                l_logData.getEntries().values().stream().findFirst().get().fetchHeaders(), "Log Results",
+                "logDataExport");
+
+        try {
+            assertThat("We successfully created the file", l_exportedFile, notNullValue());
+            assertThat("We successfully created the file", l_exportedFile.exists());
+            assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        } finally {
+            l_exportedFile.delete();
+        }
     }
 
     @Test

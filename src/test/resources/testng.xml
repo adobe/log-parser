@@ -18,6 +18,8 @@
         <packages>
             <package
                 name="com.adobe.campaign.tests.logparser.core" />
+            <package
+                    name="com.adobe.campaign.tests.logparser.utils" />
         </packages>
     </test>
 </suite> <!-- Default suite -->

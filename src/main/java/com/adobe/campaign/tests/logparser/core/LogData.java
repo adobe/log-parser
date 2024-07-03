@@ -10,9 +10,11 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -409,6 +411,55 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return new File(in_csvFileName);
+    }
+
+
+    /**
+     * Exports the current LogData to an HTML file as a table.
+     *
+     * @param in_headerSet   A set of headers to be used as keys for exporting
+     * @param in_reportTitle The title of the report
+     * @param in_htmlFileName The file name to export
+     * @return an HTML file containing the LogData as a table
+     */
+    public File exportLogDataToHTML(Collection<String> in_headerSet, String in_reportTitle, String in_htmlFileName) {
+        File l_exportFile = new File(in_htmlFileName + ".html");
+
+        LogParserFileUtils.cleanFile(l_exportFile);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>");
+        sb.append("<html>");
+        sb.append("<head>");
+        sb.append("<link rel='stylesheet' href='src/main/resources/diffTable.css'>");
+        sb.append("</head>");
+        sb.append("<body>");
+        //Creating the overview report
+        sb.append("<h1>");
+        sb.append(in_reportTitle);
+        sb.append("</h1>");
+        sb.append("Here is an listing of out findings.");
+        sb.append("<table class='diffOverView'>");
+        sb.append(HTMLReportUtils.generateHeaders(in_headerSet));
+        sb.append("<tbody>");
+
+        for (StdLogEntry lt_entry : this.getEntries().values()) {
+            Map lt_values = lt_entry.fetchValueMap();
+            sb.append("<tr>");
+            in_headerSet.stream().map(h -> lt_values.get(h)).forEach(j -> sb.append("<td>").append(j).append("</td>"));
+            sb.append("</tr>");
+        }
+
+        sb.append("</tbody>");
+        sb.append("</table>");
+
+        try {
+            FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
+        } catch (IOException e) {
+            throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
+        }
+
+        return l_exportFile;
     }
 
     /**

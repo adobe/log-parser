@@ -14,10 +14,12 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -255,11 +257,8 @@ public class LogDataFactory {
         sb.append("<h1>Overview</h1>");
         sb.append("Here is an overview of the differences between the two log data sets.");
         sb.append("<table class='diffOverView'>");
-        sb.append("<thead>");
-        sb.append("<tr>");
-        sb.append("<th>Metrics</th>");
-        sb.append("<th>#</th>");
-        sb.append("</thead> <tbody>");
+        sb.append(HTMLReportUtils.generateHeaders(List.of("Metrics", "#")));
+        sb.append("<tbody>");
         sb.append("<tr>");
         sb.append("<th>New Errors</th>");
         sb.append("<td>");
@@ -296,12 +295,8 @@ public class LogDataFactory {
             //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
             sb.append("<h3>").append(l_changeType).append("</h3>");
             sb.append("<table>");
-            sb.append("<thead>");
-            sb.append("<tr>");
-            in_headers.forEach(h -> sb.append("<th>").append(h).append("</th>"));
-            sb.append("<th>delta</th>");
-            sb.append("<th>deltaRatio</th>");
-            sb.append("</thead><tbody>");
+            sb.append(HTMLReportUtils.generateHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
+            sb.append("<tbody>");
             sb.append("</tr>");
             l_entries.forEach(l -> {
                 sb.append("<tr>");
