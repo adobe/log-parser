@@ -8,12 +8,12 @@
  */
 package com.adobe.campaign.tests.logparser.exceptions;
 
-import java.io.IOException;
-
 /**
  * Exceptions for managing problems with import and export
  */
 public class LogDataExportToFileException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
 
     public LogDataExportToFileException(String s, Exception ex) {
         super(s, ex);
