@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -440,38 +438,33 @@ public class LogData<T extends StdLogEntry> {
 
         LogParserFileUtils.cleanFile(l_exportFile);
         try {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html>");
-        sb.append("<html>");
-        sb.append("<head>");
-        sb.append("<style>");
-        sb.append(new String(Files.readAllBytes(Paths.get("src/main/resources/diffTable.css"))));
-        sb.append("</style>");
-        sb.append("</head>");
-        sb.append("<body>");
-        //Creating the overview report
-        sb.append("<h1>");
-        sb.append(in_reportTitle);
-        sb.append("</h1>");
-        sb.append("Here is an listing of out findings.");
-        sb.append("<table class='diffOverView'>");
-        sb.append(HTMLReportUtils.generateHeaders(in_headerSet));
-        sb.append("<tbody>");
+            StringBuilder sb = new StringBuilder();
+            sb.append("<!DOCTYPE html>");
+            sb.append("<html>");
+            sb.append(HTMLReportUtils.fetchStyleInlineCSS("src/main/resources/diffTable.css"));
+            sb.append("<body>");
+            //Creating the overview report
+            sb.append(HTMLReportUtils.fetchHeader(1, in_reportTitle));
+            sb.append("Here is an listing of out findings.");
+            sb.append("<table class='diffOverView'>");
+            sb.append(HTMLReportUtils.fetchTableHeaders(in_headerSet));
+            sb.append("<tbody>");
 
-        for (StdLogEntry lt_entry : this.getEntries().values()) {
-            Map lt_values = lt_entry.fetchValueMap();
-            sb.append("<tr>");
-            in_headerSet.stream().map(h -> lt_values.get(h)).forEach(j -> sb.append("<td>").append(j).append("</td>"));
-            sb.append("</tr>");
-        }
+            for (StdLogEntry lt_entry : this.getEntries().values()) {
+                Map lt_values = lt_entry.fetchValueMap();
+                sb.append("<tr>");
+                in_headerSet.stream().map(h -> lt_values.get(h)).forEach(j -> sb.append(HTMLReportUtils.fetchCell_TD(j)));
+                sb.append("</tr>");
+            }
 
-        sb.append("</tbody>");
-        sb.append("</table>");
-
+            sb.append("</tbody>");
+            sb.append("</table>");
+            sb.append("</body>");
+            sb.append("</html>");
 
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
         } catch (IOException e) {
-            throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
+            throw new LogDataExportToFileException("We were unable to write to the file " + l_exportFile.getPath());
         }
 
         return l_exportFile;

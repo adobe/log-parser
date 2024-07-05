@@ -257,45 +257,35 @@ public class LogDataFactory {
             sb.append("<!DOCTYPE html>");
             sb.append("<html>");
             sb.append("<head>");
+            sb.append(HTMLReportUtils.fetchStyleInlineCSS("src/main/resources/diffTable.css"));
             sb.append("<style>");
             sb.append(new String(Files.readAllBytes(Paths.get("src/main/resources/diffTable.css"))));
             sb.append("</style>");
             sb.append("</head>");
             sb.append("<body>");
             //Creating the overview report
-            sb.append("<h1>Overview</h1>");
+            sb.append(HTMLReportUtils.fetchHeader(1, "Overview"));
             sb.append("Here is an overview of the differences between the two log data sets.");
             sb.append("<table class='diffOverView'>");
-            sb.append(HTMLReportUtils.generateHeaders(List.of("Metrics", "#")));
+            sb.append(HTMLReportUtils.fetchTableHeaders(List.of("Metrics", "#")));
             sb.append("<tbody>");
-            sb.append("<tr>");
-            sb.append("<th>New Errors</th>");
-            sb.append("<td>");
-            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count());
-            sb.append("</td>");
-            sb.append("</tr>");
-            sb.append("<tr>");
-            sb.append("<th>Increased Error Numbers</th>");
-            sb.append("<td>");
-            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() > 0).count());
-            sb.append("</td>");
-            sb.append("</tr>");
-            sb.append("<tr>");
-            sb.append("<th>Removed Errors</th>");
-            sb.append("<td>");
-            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count());
-            sb.append("</td>");
-            sb.append("</tr>");
-            sb.append("<tr>");
-            sb.append("<th>Decreased Error Numbers</th>");
-            sb.append("<td>");
-            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() < 0).count());
-            sb.append("</td>");
-            sb.append("</tr>");
+            sb.append(attachSummaryReportLine("New Errors", comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count()));
+            sb.append(attachSummaryReportLine("Increased Error Numbers", comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED))
+                    .filter(c -> c.getDelta() > 0).count()
+            ));
+            sb.append(attachSummaryReportLine("Removed Errors", comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count()
+            ));
+            sb.append(attachSummaryReportLine("Decreased Error Numbers", comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED))
+                    .filter(c -> c.getDelta() < 0).count()
+            ));
             sb.append("</tbody>");
             sb.append("</table>");
             //Creating the Detailed report
-            sb.append("<h1>Detailed</h1>");
+            sb.append(HTMLReportUtils.fetchHeader(1, "Detailed"));
             sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
             comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().sorted().forEach(l_changeType -> {
                 List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
@@ -304,14 +294,14 @@ public class LogDataFactory {
                 //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
                 sb.append("<h3>").append(l_changeType).append("</h3>");
                 sb.append("<table>");
-                sb.append(HTMLReportUtils.generateHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
+                sb.append(HTMLReportUtils.fetchTableHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
                 sb.append("<tbody>");
                 sb.append("</tr>");
                 l_entries.forEach(l -> {
                     sb.append("<tr>");
-                    in_headers.forEach(h -> sb.append("<td>").append(l.getLogEntry().fetchValueMap().get(h)).append("</td>"));
-                    sb.append("<td>").append(l.getDelta()).append("</td>");
-                    sb.append("<td>").append(l.getDeltaRatio()).append(" %</td>");
+                    in_headers.forEach(h -> sb.append(HTMLReportUtils.fetchCell_TD(l.getLogEntry().fetchValueMap().get(h))));
+                    sb.append(HTMLReportUtils.fetchCell_TD(l.getDelta()));
+                    sb.append(HTMLReportUtils.fetchCell_TD(l.getDeltaRatio() +" %"));
                     sb.append("</tr>");
                 });
                 sb.append("</tbody>");
@@ -321,12 +311,29 @@ public class LogDataFactory {
             sb.append("</body>");
             sb.append("</html>");
 
-
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
         } catch (IOException e) {
             throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
         }
         return l_exportFile;
+    }
+
+    /**
+     * A factory method that adds a line to the summary report
+     *
+     * @param in_header The header of the summary line
+     * @param in_number The number to be added for the report
+     * @return A string correspoding to the summary line
+     */
+    private static String attachSummaryReportLine(String in_header, Object in_number) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<tr>");
+        sb.append("<th>" + in_header + "</th>");
+        sb.append("<td>");
+        sb.append(in_number);
+        sb.append("</td>");
+        sb.append("</tr>");
+        return sb.toString();
     }
 
 }

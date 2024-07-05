@@ -10,7 +10,6 @@ package com.adobe.campaign.tests.logparser.utils;
 
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,7 +20,7 @@ public class HTMLReportUtilsTest {
     public void generateHeadersTest() {
         Collection<String> headers = List.of("header1", "header2", "header3");
 
-        String result = HTMLReportUtils.generateHeaders(headers);
+        String result = HTMLReportUtils.fetchTableHeaders(headers);
 
         assertThat("We should have the <thead> in the result", result.contains("<thead>"));
         assertThat("We should have the headers in the result", result.contains("header1"));
