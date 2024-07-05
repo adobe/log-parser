@@ -45,6 +45,14 @@ public class HTMLReportUtils {
     }
 
     /**
+     * Returns a standard table to be used with the CSS style
+     * @return A string containing the cell in HTML format
+     */
+    public static String fetchTableStartBracket() {
+        return "<table class='diffOverView'>";
+    }
+
+    /**
      * Returns a cell given a content
      * @param in_content A content object
      * @return A string containing the cell in HTML format

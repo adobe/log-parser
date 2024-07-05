@@ -1435,6 +1435,8 @@ public class LogDataTest {
         assertThat("The first entry should be the first one we added", l_first, equalTo(l_inputData));
 
         assertThat(l_cubeData.fetchFirst().getParseDefinition(), Matchers.equalTo(l_cubeData.fetchParseDefinition()));
+
+        assertThat((new LogData<>()).fetchParseDefinition(), Matchers.nullValue());
     }
 
 }

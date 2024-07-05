@@ -398,6 +398,7 @@ public class StringParseFactory {
                     l_escapeIdx);
 
             lr_string.append(in_templateString.substring(0, l_escapeIdx+2));
+
             if (l_escapeIdx + 2 < in_templateString.length()) {
                 lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
                         in_candidateString.substring(nextCandidateIdx)));
@@ -406,10 +407,6 @@ public class StringParseFactory {
         } else if (l_replace > l_keep) {
             int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
                     l_escapeIdx);
-
-            if (nextCandidateIdx < 0) {
-                return in_candidateString;
-            }
 
             lr_string.append(in_candidateString.substring(0, nextCandidateIdx));
 

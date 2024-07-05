@@ -452,7 +452,7 @@ public class LogData<T extends StdLogEntry> {
             //Creating the overview report
             sb.append(HTMLReportUtils.fetchHeader(1, in_reportTitle));
             sb.append("Here is an listing of out findings.");
-            sb.append("<table class='diffOverView'>");
+            sb.append(HTMLReportUtils.fetchTableStartBracket());
             sb.append(HTMLReportUtils.fetchTableHeaders(in_headerSet));
             sb.append("<tbody>");
 
@@ -521,10 +521,11 @@ public class LogData<T extends StdLogEntry> {
      * @return a ParseDefinition Object. Null if there are no entries in the log data
      */
     public ParseDefinition fetchParseDefinition() {
-        if (this.fetchFirst()==null) {
+        var l_firstEntry = this.fetchFirst();
+        if (l_firstEntry ==null) {
             return null;
         }
 
-        return this.fetchFirst().getParseDefinition();
+        return l_firstEntry.getParseDefinition();
     }
 }

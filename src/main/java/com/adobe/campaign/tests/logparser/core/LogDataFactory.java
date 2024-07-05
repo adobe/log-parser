@@ -266,7 +266,7 @@ public class LogDataFactory {
             //Creating the overview report
             sb.append(HTMLReportUtils.fetchHeader(1, "Overview"));
             sb.append("Here is an overview of the differences between the two log data sets.");
-            sb.append("<table class='diffOverView'>");
+            sb.append(HTMLReportUtils.fetchTableStartBracket());
             sb.append(HTMLReportUtils.fetchTableHeaders(List.of("Metrics", "#")));
             sb.append("<tbody>");
             sb.append(attachSummaryReportLine("New Errors", comparisonReport.values().stream()
@@ -292,7 +292,7 @@ public class LogDataFactory {
                         Collectors.toList());
                 Collections.reverse(l_entries);
                 //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
-                sb.append("<h3>").append(l_changeType).append("</h3>");
+                sb.append(HTMLReportUtils.fetchHeader(3, l_changeType.name()));
                 sb.append("<table>");
                 sb.append(HTMLReportUtils.fetchTableHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
                 sb.append("<tbody>");
