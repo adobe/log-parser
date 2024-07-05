@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -307,7 +309,7 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * This method searches the LogData for an enry with a specific value for a parse definition entry name
+     * This method searches the LogData for an entry with a specific value for a parse definition entry name
      * <p>
      * Author : gandomi
      *
@@ -413,6 +415,17 @@ public class LogData<T extends StdLogEntry> {
         return new File(in_csvFileName);
     }
 
+    /**
+     * Exports the current LogData to an HTML file as a table. The headers will be extracted directly from the entries.
+     *
+     * @param in_reportTitle The title of the report
+     * @param in_htmlFileName The file name to export
+     * @return an HTML file containing the LogData as a table
+     */
+    public File exportLogDataToHTML(String in_reportTitle, String in_htmlFileName) {
+        return exportLogDataToHTML(this.getEntries().values().stream().findFirst().get().fetchHeaders(), in_reportTitle,
+                in_htmlFileName);
+    }
 
     /**
      * Exports the current LogData to an HTML file as a table.
@@ -426,12 +439,14 @@ public class LogData<T extends StdLogEntry> {
         File l_exportFile = new File(in_htmlFileName + ".html");
 
         LogParserFileUtils.cleanFile(l_exportFile);
-
+        try {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html>");
         sb.append("<html>");
         sb.append("<head>");
-        sb.append("<link rel='stylesheet' href='src/main/resources/diffTable.css'>");
+        sb.append("<style>");
+        sb.append(new String(Files.readAllBytes(Paths.get("src/main/resources/diffTable.css"))));
+        sb.append("</style>");
         sb.append("</head>");
         sb.append("<body>");
         //Creating the overview report
@@ -453,7 +468,7 @@ public class LogData<T extends StdLogEntry> {
         sb.append("</tbody>");
         sb.append("</table>");
 
-        try {
+
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
         } catch (IOException e) {
             throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());

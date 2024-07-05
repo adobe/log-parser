@@ -12,6 +12,8 @@ package com.adobe.campaign.tests.logparser.core;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -247,74 +249,79 @@ public class LogDataFactory {
     public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget, String in_reportName, List<String> in_headers) {
         Map<String, LogDataComparison> comparisonReport = in_logDataReference.compare(in_logDataTarget);
         StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html>");
-        sb.append("<html>");
-        sb.append("<head>");
-        sb.append("<link rel='stylesheet' href='src/main/resources/diffTable.css'>");
-        sb.append("</head>");
-        sb.append("<body>");
-        //Creating the overview report
-        sb.append("<h1>Overview</h1>");
-        sb.append("Here is an overview of the differences between the two log data sets.");
-        sb.append("<table class='diffOverView'>");
-        sb.append(HTMLReportUtils.generateHeaders(List.of("Metrics", "#")));
-        sb.append("<tbody>");
-        sb.append("<tr>");
-        sb.append("<th>New Errors</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<th>Increased Error Numbers</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() > 0).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<th>Removed Errors</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<th>Decreased Error Numbers</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() < 0).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("</tbody>");
-        sb.append("</table>");
-        //Creating the Detailed report
-        sb.append("<h1>Detailed</h1>");
-        sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
-        comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().forEach(l_changeType -> {
-            List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
-                    Collectors.toList());
-            Collections.reverse(l_entries);
-            //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
-            sb.append("<h3>").append(l_changeType).append("</h3>");
-            sb.append("<table>");
-            sb.append(HTMLReportUtils.generateHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
-            sb.append("<tbody>");
-            sb.append("</tr>");
-            l_entries.forEach(l -> {
-                sb.append("<tr>");
-                in_headers.forEach(h -> sb.append("<td>").append(l.getLogEntry().fetchValueMap().get(h)).append("</td>"));
-                sb.append("<td>").append(l.getDelta()).append("</td>");
-                sb.append("<td>").append(l.getDeltaRatio()).append(" %</td>");
-                sb.append("</tr>");
-            });
-            sb.append("</tbody>");
-
-            sb.append("</table>");
-        });
-        sb.append("</body>");
         File l_exportFile = new File(in_reportName + ".html");
 
         LogParserFileUtils.cleanFile(l_exportFile);
 
         try {
+            sb.append("<!DOCTYPE html>");
+            sb.append("<html>");
+            sb.append("<head>");
+            sb.append("<style>");
+            sb.append(new String(Files.readAllBytes(Paths.get("src/main/resources/diffTable.css"))));
+            sb.append("</style>");
+            sb.append("</head>");
+            sb.append("<body>");
+            //Creating the overview report
+            sb.append("<h1>Overview</h1>");
+            sb.append("Here is an overview of the differences between the two log data sets.");
+            sb.append("<table class='diffOverView'>");
+            sb.append(HTMLReportUtils.generateHeaders(List.of("Metrics", "#")));
+            sb.append("<tbody>");
+            sb.append("<tr>");
+            sb.append("<th>New Errors</th>");
+            sb.append("<td>");
+            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count());
+            sb.append("</td>");
+            sb.append("</tr>");
+            sb.append("<tr>");
+            sb.append("<th>Increased Error Numbers</th>");
+            sb.append("<td>");
+            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() > 0).count());
+            sb.append("</td>");
+            sb.append("</tr>");
+            sb.append("<tr>");
+            sb.append("<th>Removed Errors</th>");
+            sb.append("<td>");
+            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count());
+            sb.append("</td>");
+            sb.append("</tr>");
+            sb.append("<tr>");
+            sb.append("<th>Decreased Error Numbers</th>");
+            sb.append("<td>");
+            sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() < 0).count());
+            sb.append("</td>");
+            sb.append("</tr>");
+            sb.append("</tbody>");
+            sb.append("</table>");
+            //Creating the Detailed report
+            sb.append("<h1>Detailed</h1>");
+            sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
+            comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().sorted().forEach(l_changeType -> {
+                List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
+                        Collectors.toList());
+                Collections.reverse(l_entries);
+                //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
+                sb.append("<h3>").append(l_changeType).append("</h3>");
+                sb.append("<table>");
+                sb.append(HTMLReportUtils.generateHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
+                sb.append("<tbody>");
+                sb.append("</tr>");
+                l_entries.forEach(l -> {
+                    sb.append("<tr>");
+                    in_headers.forEach(h -> sb.append("<td>").append(l.getLogEntry().fetchValueMap().get(h)).append("</td>"));
+                    sb.append("<td>").append(l.getDelta()).append("</td>");
+                    sb.append("<td>").append(l.getDeltaRatio()).append(" %</td>");
+                    sb.append("</tr>");
+                });
+                sb.append("</tbody>");
+
+                sb.append("</table>");
+            });
+            sb.append("</body>");
+            sb.append("</html>");
+
+
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
         } catch (IOException e) {
             throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
