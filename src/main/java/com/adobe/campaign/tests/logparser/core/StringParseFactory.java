@@ -372,17 +372,22 @@ public class StringParseFactory {
     public static String anonymizeString(String in_templateString, String in_candidateString) {
         StringBuilder lr_string = new StringBuilder();
         int l_replace = in_templateString.indexOf("{}");
-        l_replace = (l_replace < 0) ? 100000 : l_replace;
+        final int NOT_FOUND_COEF = 100000;
+        l_replace = (l_replace < 0) ? NOT_FOUND_COEF : l_replace;
         int l_keep = in_templateString.indexOf("[]");
-        l_keep = (l_keep < 0) ? 100000 : l_keep;
+        l_keep = (l_keep < 0) ? NOT_FOUND_COEF : l_keep;
         int l_escapeIdx = Math.min(l_replace, l_keep);
+
+        if (l_escapeIdx== NOT_FOUND_COEF || l_escapeIdx >= in_candidateString.length() || !in_templateString.substring(0, l_escapeIdx).equals(in_candidateString.substring(0,l_escapeIdx))) {
+            return in_candidateString;
+        }
 
         //If replace is before keep recursively call the function up to the keep
         if (l_replace < l_keep) {
 
             int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
                     l_escapeIdx);
-            if (nextCandidateIdx < 0) {
+            if (nextCandidateIdx < 0 ) {
                 return in_candidateString;
             }
 

@@ -1209,6 +1209,21 @@ public class ParseTesting {
     }
 
     @Test
+    public void testReplacementCorresponds_1part_issueWithDot() {
+        String l_storedString = "Null domain corresponding to KLIP {}.";
+
+        String l_candidateString = "DDD-123 Wrong configuration of remote redirection server. Please check the server configuration. (iRc=-55)";
+
+        assertThat("Both strings should correspond",
+                !StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString2), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
     public void testReplacementCorresponds_1part_withChars() {
         String l_storedString = "string {} and string 2 and {value 8}";
 
@@ -1357,6 +1372,9 @@ public class ParseTesting {
 
         assertThat("Both strings should correspond",
                 StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        assertThat("Return string should be the template",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString), Matchers.equalTo(l_storedString));
     }
 
     @Test
@@ -1392,9 +1410,9 @@ public class ParseTesting {
         l_definitionCI.addAnonymizer("X-Security-Token:{}|SOAPAction:[]");
         pd.addEntry(l_definitionCI);
 
-        assertThat("We should have correctly anonymized the string",
+        assertThat("before parsing the anonization will not work in its current format",
                 StringParseFactory.anonymizeString("X-Security-Token:{}|SOAPAction:[]", logString),
-                Matchers.equalTo("X-Security-Token:{}|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|"));
+                Matchers.equalTo(logString));
 
         Map<String, String> l_entries = StringParseFactory.parseString(logString, pd);
 
