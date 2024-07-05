@@ -10,6 +10,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.exceptions.LogParserPostManipulationException;
 import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.csv.CSVFormat;
@@ -234,7 +235,7 @@ public class LogData<T extends StdLogEntry> {
             try {
                 lt_cubeEntry = in_transformationClass.getDeclaredConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
+                throw new LogParserPostManipulationException("Problem creating new host for our new grouping.", e);
             }
             lt_cubeEntry.setParseDefinition(l_cubeDefinition);
 
@@ -445,10 +446,7 @@ public class LogData<T extends StdLogEntry> {
         LogParserFileUtils.cleanFile(l_exportFile);
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append("<!DOCTYPE html>");
-            sb.append("<html>");
-            sb.append(HTMLReportUtils.fetchStyleInlineCSS("src/main/resources/diffTable.css"));
-            sb.append("<body>");
+            sb.append(HTMLReportUtils.fetchSTDPageStart("src/main/resources/diffTable.css"));
             //Creating the overview report
             sb.append(HTMLReportUtils.fetchHeader(1, in_reportTitle));
             sb.append("Here is an listing of out findings.");
@@ -458,9 +456,9 @@ public class LogData<T extends StdLogEntry> {
 
             for (StdLogEntry lt_entry : this.getEntries().values()) {
                 Map lt_values = lt_entry.fetchValueMap();
-                sb.append("<tr>");
+                sb.append(HTMLReportUtils.ROW_START);
                 in_headerSet.stream().map(h -> lt_values.get(h)).forEach(j -> sb.append(HTMLReportUtils.fetchCell_TD(j)));
-                sb.append("</tr>");
+                sb.append(HTMLReportUtils.ROW_END);
             }
 
             sb.append("</tbody>");
@@ -484,8 +482,8 @@ public class LogData<T extends StdLogEntry> {
      * @param in_logData A LogData
      * @return A Map of LogDataComparisons containing the differences
      */
-    public Map<String, LogDataComparison> compare(LogData<T> in_logData) {
-        Map<String, LogDataComparison> lr_diff = new HashMap<>();
+    public Map<String, LogDataComparison<T>> compare(LogData<T> in_logData) {
+        Map<String, LogDataComparison<T>> lr_diff = new HashMap<>();
 
         for (String lt_key : this.getEntries().keySet()) {
             if (!in_logData.getEntries().containsKey(lt_key)) {

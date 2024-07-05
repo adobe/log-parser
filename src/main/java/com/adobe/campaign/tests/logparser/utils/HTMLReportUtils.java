@@ -15,6 +15,9 @@ import java.util.Collection;
 
 public class HTMLReportUtils {
 
+    public static final String ROW_END = "</tr>";
+    public static final String ROW_START = "<tr>";
+
     /**
      * Given a collection of headers, we will generate the HTML headers
      * @param headers a collection of headers
@@ -23,9 +26,9 @@ public class HTMLReportUtils {
     public static String fetchTableHeaders(Collection<String> headers) {
         StringBuilder lr_builder = new StringBuilder();
         lr_builder.append("<thead>");
-        lr_builder.append("<tr>");
+        lr_builder.append(ROW_START);
         headers.stream().forEach(j -> lr_builder.append("<th>").append(j).append("</th>"));
-        lr_builder.append("</tr>");
+        lr_builder.append(ROW_END);
         lr_builder.append("</thead>");
         return lr_builder.toString();
     }
@@ -74,6 +77,20 @@ public class HTMLReportUtils {
         sb.append("<h").append(in_headerLevel).append(">");
         sb.append(in_reportTitle);
         sb.append("</h").append(in_headerLevel).append(">");
+        return sb.toString();
+    }
+
+    /**
+     * Creates the beginning of a standard HTML page
+     * @return a string containing the beginning of a standard HTML page
+     * @param in_path the path to the css file
+     */
+    public static String fetchSTDPageStart(String in_path) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>");
+        sb.append("<html>");
+        sb.append(fetchStyleInlineCSS(in_path));
+        sb.append("<body>");
         return sb.toString();
     }
 }

@@ -12,8 +12,6 @@ package com.adobe.campaign.tests.logparser.core;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -247,22 +245,15 @@ public class LogDataFactory {
      * @return The file that was created
      */
     public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget, String in_reportName, List<String> in_headers) {
-        Map<String, LogDataComparison> comparisonReport = in_logDataReference.compare(in_logDataTarget);
+        Map<String, LogDataComparison<T>> comparisonReport = in_logDataReference.compare(in_logDataTarget);
         StringBuilder sb = new StringBuilder();
         File l_exportFile = new File(in_reportName + ".html");
 
         LogParserFileUtils.cleanFile(l_exportFile);
 
         try {
-            sb.append("<!DOCTYPE html>");
-            sb.append("<html>");
-            sb.append("<head>");
-            sb.append(HTMLReportUtils.fetchStyleInlineCSS("src/main/resources/diffTable.css"));
-            sb.append("<style>");
-            sb.append(new String(Files.readAllBytes(Paths.get("src/main/resources/diffTable.css"))));
-            sb.append("</style>");
-            sb.append("</head>");
-            sb.append("<body>");
+            sb.append(HTMLReportUtils.fetchSTDPageStart("src/main/resources/diffTable.css"));
+
             //Creating the overview report
             sb.append(HTMLReportUtils.fetchHeader(1, "Overview"));
             sb.append("Here is an overview of the differences between the two log data sets.");
@@ -293,16 +284,15 @@ public class LogDataFactory {
                 Collections.reverse(l_entries);
                 //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
                 sb.append(HTMLReportUtils.fetchHeader(3, l_changeType.name()));
-                sb.append("<table>");
+                sb.append(HTMLReportUtils.fetchTableStartBracket());
                 sb.append(HTMLReportUtils.fetchTableHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
                 sb.append("<tbody>");
-                sb.append("</tr>");
                 l_entries.forEach(l -> {
-                    sb.append("<tr>");
+                    sb.append(HTMLReportUtils.ROW_START);
                     in_headers.forEach(h -> sb.append(HTMLReportUtils.fetchCell_TD(l.getLogEntry().fetchValueMap().get(h))));
                     sb.append(HTMLReportUtils.fetchCell_TD(l.getDelta()));
                     sb.append(HTMLReportUtils.fetchCell_TD(l.getDeltaRatio() +" %"));
-                    sb.append("</tr>");
+                    sb.append(HTMLReportUtils.ROW_END);
                 });
                 sb.append("</tbody>");
 
