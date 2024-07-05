@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class StringParseFactory {
 
@@ -267,11 +268,15 @@ public class StringParseFactory {
         }
 
         //Anonymize
-        var rawExtraction = in_stringValue.substring(l_startLocation, l_endLocation).trim();
-        for (String lt_anonymizer : in_parseDefinition.getAnonymizers()) {
-            rawExtraction = anonymizeString(lt_anonymizer.trim(), rawExtraction);
+
+        String rawExtraction = in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        String lr_extraction = rawExtraction;
+        for (String lt_anonymizer : in_parseDefinition.getAnonymizers().stream().filter(a -> stringsCorrespond(a,
+                rawExtraction)).collect(
+            Collectors.toList())) {
+            lr_extraction = anonymizeString(lt_anonymizer.trim(), rawExtraction);
         }
-        return rawExtraction;
+        return lr_extraction;
 
     }
 
@@ -347,12 +352,15 @@ public class StringParseFactory {
      */
     public static boolean stringsCorrespond(String in_templateString, String in_candidateString) {
         int currentSpot = -1;
-        for (String lt_anonymizer : in_templateString.split("\\{\\}")) {
-            int lt_currentLocation = in_candidateString.indexOf(lt_anonymizer, currentSpot + 1);
-            if (lt_currentLocation <= currentSpot) {
-                return false;
+        for (String lt_anonymizerCurly : in_templateString.split("\\{\\}")) {
+            for (String lr_anonymizerSquare : lt_anonymizerCurly.split("\\[\\]")) {
+                int lt_currentLocation = in_candidateString.indexOf(lr_anonymizerSquare, currentSpot + 1);
+                if (lt_currentLocation <= currentSpot) {
+                    return false;
+                }
+                currentSpot = lt_currentLocation;
             }
-            currentSpot = lt_currentLocation;
+
         }
 
         return true;
@@ -370,6 +378,11 @@ public class StringParseFactory {
      * @return A string that is anonymized based on the template string
      */
     public static String anonymizeString(String in_templateString, String in_candidateString) {
+
+        if (!stringsCorrespond(in_templateString, in_candidateString)) {
+            return in_candidateString;
+        }
+
         StringBuilder lr_string = new StringBuilder();
         int l_replace = in_templateString.indexOf("{}");
         final int NOT_FOUND_COEF = 100000;
@@ -378,18 +391,11 @@ public class StringParseFactory {
         l_keep = (l_keep < 0) ? NOT_FOUND_COEF : l_keep;
         int l_escapeIdx = Math.min(l_replace, l_keep);
 
-        if (l_escapeIdx== NOT_FOUND_COEF || l_escapeIdx >= in_candidateString.length() || !in_templateString.substring(0, l_escapeIdx).equals(in_candidateString.substring(0,l_escapeIdx))) {
-            return in_candidateString;
-        }
-
         //If replace is before keep recursively call the function up to the keep
         if (l_replace < l_keep) {
 
             int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
                     l_escapeIdx);
-            if (nextCandidateIdx < 0 ) {
-                return in_candidateString;
-            }
 
             lr_string.append(in_templateString.substring(0, l_escapeIdx+2));
             if (l_escapeIdx + 2 < in_templateString.length()) {

@@ -1297,6 +1297,9 @@ public class ParseTesting {
                 StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo(l_candidateString));
 
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
     }
 
     @Test
@@ -1340,6 +1343,9 @@ public class ParseTesting {
         assertThat("we should get the same value",
                 StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo("string 1 and string {}"));
+
+        assertThat("The strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
     }
 
     @Test
@@ -1351,6 +1357,9 @@ public class ParseTesting {
         assertThat("we should get the same value",
                 StringParseFactory.anonymizeString(l_storedString, l_candidateString),
                 Matchers.equalTo("string 1 and string {}"));
+
+        assertThat("The strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
     }
 
     @Test
@@ -1412,7 +1421,7 @@ public class ParseTesting {
 
         assertThat("before parsing the anonization will not work in its current format",
                 StringParseFactory.anonymizeString("X-Security-Token:{}|SOAPAction:[]", logString),
-                Matchers.equalTo(logString));
+                Matchers.not(Matchers.equalTo(logString)));
 
         Map<String, String> l_entries = StringParseFactory.parseString(logString, pd);
 
