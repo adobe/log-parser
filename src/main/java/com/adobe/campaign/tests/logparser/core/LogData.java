@@ -371,15 +371,15 @@ public class LogData<T extends StdLogEntry> {
      * @throws LogDataExportToFileException If the file could not be exported
      */
     public File exportLogDataToCSV() throws LogDataExportToFileException {
-        Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
+        T l_firstEntry = this.fetchFirst();
 
-        if (l_firstEntry.isPresent()) {
-            return exportLogDataToCSV(l_firstEntry.get().fetchHeaders(), l_firstEntry.get().getParseDefinition()
+        if (l_firstEntry != null) {
+            return exportLogDataToCSV(l_firstEntry.fetchHeaders(), l_firstEntry.getParseDefinition()
                     .fetchEscapedTitle()
                     + "-export.csv");
         } else {
             log.warn("No Log data to export. Please load the log data before re-attempting");
-            return new File("Non-ExistingFile");
+            return null;
         }
 
     }
@@ -421,7 +421,13 @@ public class LogData<T extends StdLogEntry> {
      * @return an HTML file containing the LogData as a table
      */
     public File exportLogDataToHTML(String in_reportTitle, String in_htmlFileName) {
-        return exportLogDataToHTML(this.getEntries().values().stream().findFirst().get().fetchHeaders(), in_reportTitle,
+        T l_firstEntry = this.fetchFirst();
+
+        if (l_firstEntry == null) {
+            log.error("No Log data to export. Please load the log data before re-attempting");
+            return null;
+        }
+        return exportLogDataToHTML(l_firstEntry.fetchHeaders(), in_reportTitle,
                 in_htmlFileName);
     }
 
@@ -500,5 +506,25 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return lr_diff;
+    }
+
+    /**
+     * returns the first entry in the log data
+     * @return a LogDataEntry, null if there are no entries
+     */
+    protected T fetchFirst() {
+         return this.getEntries().values().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Returns the definition with which this LogData was created
+     * @return a ParseDefinition Object. Null if there are no entries in the log data
+     */
+    public ParseDefinition fetchParseDefinition() {
+        if (this.fetchFirst()==null) {
+            return null;
+        }
+
+        return this.fetchFirst().getParseDefinition();
     }
 }

@@ -1322,8 +1322,7 @@ public class LogDataTest {
         int l_nrOfEntries = l_logData.getEntries().keySet().size();
         assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
 
-        File l_exportedFile = l_logData.exportLogDataToHTML(
-                l_logData.getEntries().values().stream().findFirst().get().fetchHeaders(), "Log Results",
+        File l_exportedFile = l_logData.exportLogDataToHTML("Log Results",
                 "logDataExport");
 
         try {
@@ -1333,6 +1332,13 @@ public class LogDataTest {
         } finally {
             l_exportedFile.delete();
         }
+    }
+
+    @Test
+    public void testExportDataToHTML_negative() {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        assertThat(l_emptyLogData.exportLogDataToHTML("Log Results",
+                "logDataExport"), Matchers.nullValue());
     }
 
     @Test
@@ -1350,7 +1356,7 @@ public class LogDataTest {
         String l_searchItem1 = "extAccount/destroySharedAudience#GET";
         String l_searchItem2 = "extAccount/importSharedAudience#GET";
 
-        ParseDefinition l_pDefinition = l_logData.getEntries().values().stream().findFirst().get().getParseDefinition();
+        ParseDefinition l_pDefinition = l_logData.fetchParseDefinition();
         String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
 
         //Create the file so it is deleted
@@ -1386,7 +1392,49 @@ public class LogDataTest {
     public void exportLogData_negativeEmptyData() throws LogDataExportToFileException {
         LogData<GenericEntry> l_emptyLogData = new LogData<>();
         File l_shouldBeEmpty = l_emptyLogData.exportLogDataToCSV();
-        assertThat("The returned file should not exist", !l_shouldBeEmpty.exists());
+        assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
+    }
+
+    @Test
+    public void testFetchFirst() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        GenericEntry l_first = l_cubeData.fetchFirst();
+        assertThat("The first entry should be the first one we added", l_first, equalTo(l_inputData));
+
+        assertThat(l_cubeData.fetchFirst().getParseDefinition(), Matchers.equalTo(l_cubeData.fetchParseDefinition()));
     }
 
 }
