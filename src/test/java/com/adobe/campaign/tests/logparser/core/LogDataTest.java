@@ -16,7 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
+import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -24,10 +27,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
-import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class LogDataTest {
 
@@ -676,6 +675,36 @@ public class LogDataTest {
         assertThat("The entry BAU for 113 should be 1", l_myCube.get("113#AAA").getFrequence(),
                 is(equalTo(1)));
 
+    }
+
+    @Test
+    public void testgroupBy_negative()
+            throws IncorrectParseDefinitionException {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+
+        final ParseDefinitionEntry l_testParseDefinitionEntry = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntry);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("BAU", "13");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCaseBadDefConstructor.class));
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCaseNoDefConstructor.class));
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCasePrivateDefConstructor.class));
     }
 
 
