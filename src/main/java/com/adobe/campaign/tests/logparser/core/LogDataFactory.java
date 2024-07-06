@@ -239,13 +239,29 @@ public class LogDataFactory {
 
     /**
      * A factory method that creates an html Report of the differences of two log data
+     *
      * @param in_logDataReference The Log data that is used as a referen‡ce base
-     * @param in_logDataTarget The log data t be compared with the reference
-     * @param in_reportName Name of the export file
+     * @param in_logDataTarget    The log data t be compared with the reference
+     * @param in_headers          The headers that are to be used in the report
+     * @param in_reportName       Name of the export file
      * @return The file that was created
      */
-    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget, String in_reportName, List<String> in_headers) {
-        Map<String, LogDataComparison<T>> comparisonReport = in_logDataReference.compare(in_logDataTarget);
+    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget,
+            List<String> in_headers, String in_reportName) {
+
+        return generateDiffReport(in_logDataReference.compare(in_logDataTarget), in_headers, in_reportName);
+    }
+
+    /**
+     * A factory method that creates a html Report of the differences of two log data
+     *
+     * @param in_comparisonReport The comparison object that contains the differences between the two log data sets
+     * @param in_headers          The headers that are to be used in the report
+     * @param in_reportName       Name of the export file
+     * @return The file created, containing the DidderenceReport in HTML format
+     */
+    public static <T extends StdLogEntry> File generateDiffReport(Map<String, LogDataComparison<T>> in_comparisonReport,
+            List<String> in_headers, String in_reportName) {
         StringBuilder sb = new StringBuilder();
         File l_exportFile = new File(in_reportName + ".html");
 
@@ -260,16 +276,16 @@ public class LogDataFactory {
             sb.append(HTMLReportUtils.fetchTableStartBracket());
             sb.append(HTMLReportUtils.fetchTableHeaders(List.of("Metrics", "#")));
             sb.append("<tbody>");
-            sb.append(attachSummaryReportLine("New Errors", comparisonReport.values().stream()
+            sb.append(attachSummaryReportLine("New Errors", in_comparisonReport.values().stream()
                     .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count()));
-            sb.append(attachSummaryReportLine("Increased Error Numbers", comparisonReport.values().stream()
+            sb.append(attachSummaryReportLine("Increased Error Numbers", in_comparisonReport.values().stream()
                     .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED))
                     .filter(c -> c.getDelta() > 0).count()
             ));
-            sb.append(attachSummaryReportLine("Removed Errors", comparisonReport.values().stream()
+            sb.append(attachSummaryReportLine("Removed Errors", in_comparisonReport.values().stream()
                     .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count()
             ));
-            sb.append(attachSummaryReportLine("Decreased Error Numbers", comparisonReport.values().stream()
+            sb.append(attachSummaryReportLine("Decreased Error Numbers", in_comparisonReport.values().stream()
                     .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED))
                     .filter(c -> c.getDelta() < 0).count()
             ));
@@ -278,8 +294,8 @@ public class LogDataFactory {
             //Creating the Detailed report
             sb.append(HTMLReportUtils.fetchHeader(1, "Detailed"));
             sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
-            comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().sorted().forEach(l_changeType -> {
-                List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
+            in_comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().sorted().forEach(l_changeType -> {
+                List<LogDataComparison> l_entries = in_comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
                         Collectors.toList());
                 Collections.reverse(l_entries);
                 //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
