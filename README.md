@@ -363,6 +363,7 @@ We now have the possibility to export the log data results into a CSV file. The 
 - **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 - **(new feature)** [#138](https://github.com/adobe/log-parser/issues/138) We now have the possibility of anonymizing log data during parsing. For more information please read the section on [Anonymizing Data](#anonymizing-data).
 - **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
+- **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers

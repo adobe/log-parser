@@ -10,9 +10,12 @@ package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.exceptions.LogParserPostManipulationException;
+import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -232,7 +235,7 @@ public class LogData<T extends StdLogEntry> {
             try {
                 lt_cubeEntry = in_transformationClass.getDeclaredConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
+                throw new LogParserPostManipulationException("Problem creating new host for our new grouping.", e);
             }
             lt_cubeEntry.setParseDefinition(l_cubeDefinition);
 
@@ -305,7 +308,7 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
-     * This method searches the LogData for an enry with a specific value for a parse definition entry name
+     * This method searches the LogData for an entry with a specific value for a parse definition entry name
      * <p>
      * Author : gandomi
      *
@@ -369,15 +372,15 @@ public class LogData<T extends StdLogEntry> {
      * @throws LogDataExportToFileException If the file could not be exported
      */
     public File exportLogDataToCSV() throws LogDataExportToFileException {
-        Optional<T> l_firstEntry = this.getEntries().values().stream().findFirst();
+        T l_firstEntry = this.fetchFirst();
 
-        if (l_firstEntry.isPresent()) {
-            return exportLogDataToCSV(l_firstEntry.get().fetchHeaders(), l_firstEntry.get().getParseDefinition()
+        if (l_firstEntry != null) {
+            return exportLogDataToCSV(l_firstEntry.fetchHeaders(), l_firstEntry.getParseDefinition()
                     .fetchEscapedTitle()
                     + "-export.csv");
         } else {
             log.warn("No Log data to export. Please load the log data before re-attempting");
-            return new File("Non-ExistingFile");
+            return null;
         }
 
     }
@@ -412,6 +415,66 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
+     * Exports the current LogData to an HTML file as a table. The headers will be extracted directly from the entries.
+     *
+     * @param in_reportTitle The title of the report
+     * @param in_htmlFileName The file name to export
+     * @return an HTML file containing the LogData as a table
+     */
+    public File exportLogDataToHTML(String in_reportTitle, String in_htmlFileName) {
+        T l_firstEntry = this.fetchFirst();
+
+        if (l_firstEntry == null) {
+            log.error("No Log data to export. Please load the log data before re-attempting");
+            return null;
+        }
+        return exportLogDataToHTML(l_firstEntry.fetchHeaders(), in_reportTitle,
+                in_htmlFileName);
+    }
+
+    /**
+     * Exports the current LogData to an HTML file as a table.
+     *
+     * @param in_headerSet   A set of headers to be used as keys for exporting
+     * @param in_reportTitle The title of the report
+     * @param in_htmlFileName The file name to export
+     * @return an HTML file containing the LogData as a table
+     */
+    public File exportLogDataToHTML(Collection<String> in_headerSet, String in_reportTitle, String in_htmlFileName) {
+        File l_exportFile = new File(in_htmlFileName + ".html");
+
+        LogParserFileUtils.cleanFile(l_exportFile);
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(HTMLReportUtils.fetchSTDPageStart("src/main/resources/diffTable.css"));
+            //Creating the overview report
+            sb.append(HTMLReportUtils.fetchHeader(1, in_reportTitle));
+            sb.append("Here is an listing of out findings.");
+            sb.append(HTMLReportUtils.fetchTableStartBracket());
+            sb.append(HTMLReportUtils.fetchTableHeaders(in_headerSet));
+            sb.append("<tbody>");
+
+            for (StdLogEntry lt_entry : this.getEntries().values()) {
+                Map lt_values = lt_entry.fetchValueMap();
+                sb.append(HTMLReportUtils.ROW_START);
+                in_headerSet.stream().map(h -> lt_values.get(h)).forEach(j -> sb.append(HTMLReportUtils.fetchCell_TD(j)));
+                sb.append(HTMLReportUtils.ROW_END);
+            }
+
+            sb.append("</tbody>");
+            sb.append("</table>");
+            sb.append("</body>");
+            sb.append("</html>");
+
+            FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
+        } catch (IOException e) {
+            throw new LogDataExportToFileException("We were unable to write to the file " + l_exportFile.getPath());
+        }
+
+        return l_exportFile;
+    }
+
+    /**
      * This method compares two LogData objects and returns the differences. The difference is map of
      * LogDataComparisons. The values of the delta and the deltaRatio are negative if the frequency is decreasing or has
      * been removed.
@@ -419,8 +482,8 @@ public class LogData<T extends StdLogEntry> {
      * @param in_logData A LogData
      * @return A Map of LogDataComparisons containing the differences
      */
-    public Map<String, LogDataComparison> compare(LogData<T> in_logData) {
-        Map<String, LogDataComparison> lr_diff = new HashMap<>();
+    public Map<String, LogDataComparison<T>> compare(LogData<T> in_logData) {
+        Map<String, LogDataComparison<T>> lr_diff = new HashMap<>();
 
         for (String lt_key : this.getEntries().keySet()) {
             if (!in_logData.getEntries().containsKey(lt_key)) {
@@ -441,5 +504,26 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return lr_diff;
+    }
+
+    /**
+     * returns the first entry in the log data
+     * @return a LogDataEntry, null if there are no entries
+     */
+    protected T fetchFirst() {
+         return this.getEntries().values().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Returns the definition with which this LogData was created
+     * @return a ParseDefinition Object. Null if there are no entries in the log data
+     */
+    public ParseDefinition fetchParseDefinition() {
+        var l_firstEntry = this.fetchFirst();
+        if (l_firstEntry ==null) {
+            return null;
+        }
+
+        return l_firstEntry.getParseDefinition();
     }
 }

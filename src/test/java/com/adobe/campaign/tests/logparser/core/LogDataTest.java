@@ -16,7 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
+import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -24,10 +27,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
-import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class LogDataTest {
 
@@ -678,6 +677,36 @@ public class LogDataTest {
 
     }
 
+    @Test
+    public void testgroupBy_negative()
+            throws IncorrectParseDefinitionException {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+
+        final ParseDefinitionEntry l_testParseDefinitionEntry = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntry);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("BAU", "13");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCaseBadDefConstructor.class));
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCaseNoDefConstructor.class));
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCasePrivateDefConstructor.class));
+    }
+
 
     @Test(description = "Testing that we can do a filter")
     public void testFilter_Default() {
@@ -1229,7 +1258,7 @@ public class LogDataTest {
 
     /*************** #55 Exporting results **********************/
     @Test
-    public void testExportData()
+    public void testExportDataToCSV()
             throws StringParseException, IOException,
             LogDataExportToFileException {
         //Create a parse definition
@@ -1288,6 +1317,60 @@ public class LogDataTest {
     }
 
     @Test
+    public void testExportDataToHTML()
+            throws StringParseException, IOException,
+            LogDataExportToFileException {
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        final String apacheLogFile = "src/test/resources/nestedDirs/dirA/simpleLog.log";
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+        int l_nrOfEntries = l_logData.getEntries().keySet().size();
+        assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
+
+        File l_exportedFile = l_logData.exportLogDataToHTML("Log Results",
+                "logDataExport");
+
+        try {
+            assertThat("We successfully created the file", l_exportedFile, notNullValue());
+            assertThat("We successfully created the file", l_exportedFile.exists());
+            assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        } finally {
+            l_exportedFile.delete();
+        }
+    }
+
+    @Test
+    public void testExportDataToHTML_negative() {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        assertThat(l_emptyLogData.exportLogDataToHTML("Log Results",
+                "logDataExport"), Matchers.nullValue());
+    }
+
+    @Test
     public void testExportDataFileExists()
             throws StringParseException, IOException,
             LogDataExportToFileException {
@@ -1302,7 +1385,7 @@ public class LogDataTest {
         String l_searchItem1 = "extAccount/destroySharedAudience#GET";
         String l_searchItem2 = "extAccount/importSharedAudience#GET";
 
-        ParseDefinition l_pDefinition = l_logData.getEntries().values().stream().findFirst().get().getParseDefinition();
+        ParseDefinition l_pDefinition = l_logData.fetchParseDefinition();
         String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
 
         //Create the file so it is deleted
@@ -1338,7 +1421,51 @@ public class LogDataTest {
     public void exportLogData_negativeEmptyData() throws LogDataExportToFileException {
         LogData<GenericEntry> l_emptyLogData = new LogData<>();
         File l_shouldBeEmpty = l_emptyLogData.exportLogDataToCSV();
-        assertThat("The returned file should not exist", !l_shouldBeEmpty.exists());
+        assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
+    }
+
+    @Test
+    public void testFetchFirst() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        GenericEntry l_first = l_cubeData.fetchFirst();
+        assertThat("The first entry should be the first one we added", l_first, equalTo(l_inputData));
+
+        assertThat(l_cubeData.fetchFirst().getParseDefinition(), Matchers.equalTo(l_cubeData.fetchParseDefinition()));
+
+        assertThat((new LogData<>()).fetchParseDefinition(), Matchers.nullValue());
     }
 
 }

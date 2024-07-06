@@ -14,10 +14,12 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -237,94 +239,107 @@ public class LogDataFactory {
 
     /**
      * A factory method that creates an html Report of the differences of two log data
+     *
      * @param in_logDataReference The Log data that is used as a referen‡ce base
-     * @param in_logDataTarget The log data t be compared with the reference
-     * @param in_reportName Name of the export file
+     * @param in_logDataTarget    The log data t be compared with the reference
+     * @param in_headers          The headers that are to be used in the report
+     * @param in_reportName       Name of the export file
      * @return The file that was created
      */
-    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget, String in_reportName, List<String> in_headers) {
-        Map<String, LogDataComparison> comparisonReport = in_logDataReference.compare(in_logDataTarget);
-        StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html>");
-        sb.append("<html>");
-        sb.append("<head>");
-        sb.append("<link rel='stylesheet' href='src/main/resources/diffTable.css'>");
-        sb.append("</head>");
-        sb.append("<body>");
-        //Creating the overview report
-        sb.append("<h1>Overview</h1>");
-        sb.append("Here is an overview of the differences between the two log data sets.");
-        sb.append("<table class='diffOverView'>");
-        sb.append("<thead>");
-        sb.append("<tr>");
-        sb.append("<th>Metrics</th>");
-        sb.append("<th>#</th>");
-        sb.append("</thead> <tbody>");
-        sb.append("<tr>");
-        sb.append("<th>New Errors</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<th>Increased Error Numbers</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() > 0).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<th>Removed Errors</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<th>Decreased Error Numbers</th>");
-        sb.append("<td>");
-        sb.append(comparisonReport.values().stream().filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED)).filter(c -> c.getDelta() < 0).count());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("</tbody>");
-        sb.append("</table>");
-        //Creating the Detailed report
-        sb.append("<h1>Detailed</h1>");
-        sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
-        comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().forEach(l_changeType -> {
-            List<LogDataComparison> l_entries = comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
-                    Collectors.toList());
-            Collections.reverse(l_entries);
-            //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
-            sb.append("<h3>").append(l_changeType).append("</h3>");
-            sb.append("<table>");
-            sb.append("<thead>");
-            sb.append("<tr>");
-            in_headers.forEach(h -> sb.append("<th>").append(h).append("</th>"));
-            sb.append("<th>delta</th>");
-            sb.append("<th>deltaRatio</th>");
-            sb.append("</thead><tbody>");
-            sb.append("</tr>");
-            l_entries.forEach(l -> {
-                sb.append("<tr>");
-                in_headers.forEach(h -> sb.append("<td>").append(l.getLogEntry().fetchValueMap().get(h)).append("</td>"));
-                sb.append("<td>").append(l.getDelta()).append("</td>");
-                sb.append("<td>").append(l.getDeltaRatio()).append(" %</td>");
-                sb.append("</tr>");
-            });
-            sb.append("</tbody>");
+    public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget,
+            List<String> in_headers, String in_reportName) {
 
-            sb.append("</table>");
-        });
-        sb.append("</body>");
+        return generateDiffReport(in_logDataReference.compare(in_logDataTarget), in_headers, in_reportName);
+    }
+
+    /**
+     * A factory method that creates a html Report of the differences of two log data
+     *
+     * @param in_comparisonReport The comparison object that contains the differences between the two log data sets
+     * @param in_headers          The headers that are to be used in the report
+     * @param in_reportName       Name of the export file
+     * @return The file created, containing the DidderenceReport in HTML format
+     */
+    public static <T extends StdLogEntry> File generateDiffReport(Map<String, LogDataComparison<T>> in_comparisonReport,
+            List<String> in_headers, String in_reportName) {
+        StringBuilder sb = new StringBuilder();
         File l_exportFile = new File(in_reportName + ".html");
 
         LogParserFileUtils.cleanFile(l_exportFile);
 
         try {
+            sb.append(HTMLReportUtils.fetchSTDPageStart("src/main/resources/diffTable.css"));
+
+            //Creating the overview report
+            sb.append(HTMLReportUtils.fetchHeader(1, "Overview"));
+            sb.append("Here is an overview of the differences between the two log data sets.");
+            sb.append(HTMLReportUtils.fetchTableStartBracket());
+            sb.append(HTMLReportUtils.fetchTableHeaders(List.of("Metrics", "#")));
+            sb.append("<tbody>");
+            sb.append(attachSummaryReportLine("New Errors", in_comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.NEW)).count()));
+            sb.append(attachSummaryReportLine("Increased Error Numbers", in_comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED))
+                    .filter(c -> c.getDelta() > 0).count()
+            ));
+            sb.append(attachSummaryReportLine("Removed Errors", in_comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.REMOVED)).count()
+            ));
+            sb.append(attachSummaryReportLine("Decreased Error Numbers", in_comparisonReport.values().stream()
+                    .filter(l -> l.getChangeType().equals(LogDataComparison.ChangeType.MODIFIED))
+                    .filter(c -> c.getDelta() < 0).count()
+            ));
+            sb.append("</tbody>");
+            sb.append("</table>");
+            //Creating the Detailed report
+            sb.append(HTMLReportUtils.fetchHeader(1, "Detailed"));
+            sb.append("Detailed report of the differences between the two log data sets grouped by change type.<p>");
+            in_comparisonReport.values().stream().map(LogDataComparison::getChangeType).distinct().sorted().forEach(l_changeType -> {
+                List<LogDataComparison> l_entries = in_comparisonReport.values().stream().filter(l -> l.getChangeType().equals(l_changeType)).sorted(Comparator.comparing(LogDataComparison::getDelta)).collect(
+                        Collectors.toList());
+                Collections.reverse(l_entries);
+                //l_entries.sort(Comparator.comparing(LogDataComparison::getDelta));
+                sb.append(HTMLReportUtils.fetchHeader(3, l_changeType.name()));
+                sb.append(HTMLReportUtils.fetchTableStartBracket());
+                sb.append(HTMLReportUtils.fetchTableHeaders(Stream.concat(in_headers.stream(), Stream.of("delta", "deltaRatio")).collect(Collectors.toList())));
+                sb.append("<tbody>");
+                l_entries.forEach(l -> {
+                    sb.append(HTMLReportUtils.ROW_START);
+                    in_headers.forEach(h -> sb.append(HTMLReportUtils.fetchCell_TD(l.getLogEntry().fetchValueMap().get(h))));
+                    sb.append(HTMLReportUtils.fetchCell_TD(l.getDelta()));
+                    sb.append(HTMLReportUtils.fetchCell_TD(l.getDeltaRatio() +" %"));
+                    sb.append(HTMLReportUtils.ROW_END);
+                });
+                sb.append("</tbody>");
+
+                sb.append("</table>");
+            });
+            sb.append("</body>");
+            sb.append("</html>");
+
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
         } catch (IOException e) {
             throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
         }
         return l_exportFile;
+    }
+
+    /**
+     * A factory method that adds a line to the summary report
+     *
+     * @param in_header The header of the summary line
+     * @param in_number The number to be added for the report
+     * @return A string correspoding to the summary line
+     */
+    private static String attachSummaryReportLine(String in_header, Object in_number) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<tr>");
+        sb.append("<th>" + in_header + "</th>");
+        sb.append("<td>");
+        sb.append(in_number);
+        sb.append("</td>");
+        sb.append("</tr>");
+        return sb.toString();
     }
 
 }
