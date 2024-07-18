@@ -9,6 +9,7 @@
 package com.adobe.campaign.tests.logparser.utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
@@ -42,7 +43,8 @@ public class HTMLReportUtils {
     public static String fetchStyleInlineCSS(String in_path) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append("<style>");
-        sb.append(new String(Files.readAllBytes(Paths.get(in_path))));
+        var resourceAsStream = HTMLReportUtils.class.getClassLoader().getResourceAsStream(in_path);
+        sb.append(new String(resourceAsStream.readAllBytes()));
         sb.append("</style>");
         return sb.toString();
     }

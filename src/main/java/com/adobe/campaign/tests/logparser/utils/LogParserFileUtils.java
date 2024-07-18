@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 public class LogParserFileUtils {
+    public static final String LOG_PARSER_EXPORTS = "log_parser_output/exports";
+
     protected static Logger log = LogManager.getLogger();
 
     /**
@@ -25,5 +27,26 @@ public class LogParserFileUtils {
         if (in_file.exists() && in_file.delete()) {
             log.info("Deleting existing log export file {}...", in_file.getPath());
         }
+    }
+
+    /**
+     * Creates a file in the standard location
+     * @param in_fileName a file name
+     * @return the file object
+     */
+    public static File createFile(String in_fileName) {
+
+        return new File(LOG_PARSER_EXPORTS,in_fileName);
+    }
+
+    /**
+     * Creates a file and ensuring that it is totally new by deleting it if it exists. The files are created under the folder log_parser_output/exports
+     * @param in_fileName A file name
+     * @return a file object which is completely new and empty
+     */
+    public static File createNewFile(String in_fileName) {
+        File lr_file = createFile(in_fileName);
+        cleanFile(lr_file);
+        return lr_file;
     }
 }

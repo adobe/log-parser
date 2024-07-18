@@ -395,9 +395,7 @@ public class LogData<T extends StdLogEntry> {
      */
     public File exportLogDataToCSV(Set<String> in_headerSet, String in_csvFileName)
             throws LogDataExportToFileException {
-        File l_exportFile = new File(in_csvFileName);
-
-        LogParserFileUtils.cleanFile(l_exportFile);
+        File l_exportFile = LogParserFileUtils.createNewFile(in_csvFileName);
 
         try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {
             printer.printRecord(in_headerSet);
@@ -441,12 +439,11 @@ public class LogData<T extends StdLogEntry> {
      * @return an HTML file containing the LogData as a table
      */
     public File exportLogDataToHTML(Collection<String> in_headerSet, String in_reportTitle, String in_htmlFileName) {
-        File l_exportFile = new File(in_htmlFileName + ".html");
+        File l_exportFile = LogParserFileUtils.createNewFile(in_htmlFileName + ".html");
 
-        LogParserFileUtils.cleanFile(l_exportFile);
         try {
             StringBuilder sb = new StringBuilder();
-            sb.append(HTMLReportUtils.fetchSTDPageStart("src/main/resources/diffTable.css"));
+            sb.append(HTMLReportUtils.fetchSTDPageStart("diffTable.css"));
             //Creating the overview report
             sb.append(HTMLReportUtils.fetchHeader(1, in_reportTitle));
             sb.append("Here is an listing of out findings.");
