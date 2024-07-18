@@ -8,7 +8,7 @@ This project was created to allow us to parse and analyze log files in order to 
 
 The basic method for using this library is, that you create a definition for your parsing. This definition allows you to parse a set of log files and extract all entries that match this pattern.
 
-![The Processes](diagrams/Log_Parser-Processes.png)
+![The Processes](diagrams/Log_Parser-Processes.drawio.png)
 
 ## Table of contents
 <!-- TOC -->
@@ -94,7 +94,7 @@ When you have defined your parsing you use the LogDataFactory by passing it:
 
 By using the StringParseFactory we get a LogData object with allows us to manage the logs data you have found.
 
-![Parsing a log line](diagrams/Log_Parser-log-parsing.png)
+![Parsing a log line](diagrams/Log_Parser-log-parsing.drawio.png)
 
 #### Anonymizing Data
 We have discovered that it would be useful to anonymize data. This will aloow you to group some log data that contains variables. Anonymization has two features:
@@ -234,7 +234,7 @@ You will need to give names to the headers, and provide a map that extracts the 
 ## Code Structure
 Below is a diagram representing the class structure:
 
-![The Class relationship](diagrams/Log_Parser-Classes.png)
+![The Class relationship](diagrams/Log_Parser-Classes.drawio.png)
 
 ## Searching and organizing log data
 As of versions 1.0.4 & 1.0.5 we have a series of search and organizing the log data.
