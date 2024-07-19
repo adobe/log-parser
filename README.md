@@ -377,6 +377,7 @@ We now have the possibility to export the log data results into a CSV file. The 
 - [#55](https://github.com/adobe/log-parser/issues/55) We can now export the log parsing results into a CSV file.
 - [#102](https://github.com/adobe/log-parser/issues/102) Corrected bug where Log parser could silently stop with no error when confronted with CharSet incompatibilities.
 - [#120](https://github.com/adobe/log-parser/issues/120) Corrected the export system as it did not work well with SDK defined entries.
+- [#148](https://github.com/adobe/log-parser/issues/148) The LogData#groupBy method did not work well when it is based on an SDK. We now look at the headers and values of the SDK. Also the target for a groupBy will have to be a GenricEntry as cannot guarantee that the target class can support a groupBy.
 - Removed ambiguities in the methods for StdLogEntry. For example "fetchValueMap" is no longer abstract, but it can be overriden.
 ### 1.0.8.2
 - Building with java8. 

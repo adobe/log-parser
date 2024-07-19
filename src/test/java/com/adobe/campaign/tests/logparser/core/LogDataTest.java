@@ -419,9 +419,9 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData3);
 
         assertThrows(IncorrectParseDefinitionException.class,
-                () -> l_cubeData.groupBy("KAU", GenericEntry.class));
+                () -> l_cubeData.groupBy("KAU"));
 
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU", GenericEntry.class);
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU");
 
         assertThat(l_myCube.getEntries().values().iterator().next().getParseDefinition()
                 .getDefinitionEntries().size(), is(equalTo(1)));
@@ -531,7 +531,7 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT"), GenericEntry.class);
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT"));
 
         final ParseDefinition l_gpParseDefinition = l_myCube.getEntries().values().iterator().next()
                 .getParseDefinition();

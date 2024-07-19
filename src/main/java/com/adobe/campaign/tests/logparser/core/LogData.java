@@ -196,7 +196,7 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException If the key is not in the ParseDefinitions of the Log data entry
      */
-    public <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
+     <U extends StdLogEntry> LogData<U> groupBy(String in_parseDefinitionEntryKey,
             Class<U> in_transformationClass)
             throws IncorrectParseDefinitionException {
 
@@ -215,7 +215,7 @@ public class LogData<T extends StdLogEntry> {
      * @return a new LogData Object containing the groupBy values
      * @throws IncorrectParseDefinitionException If the key is not in the ParseDefinitions of the Log data entry
      */
-    public <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
+    <U extends StdLogEntry> LogData<U> groupBy(List<String> in_parseDefinitionEntryKeyList,
             Class<U> in_transformationClass)
             throws IncorrectParseDefinitionException {
         LogData<U> lr_cubeData = new LogData<>();
@@ -240,7 +240,8 @@ public class LogData<T extends StdLogEntry> {
             lt_cubeEntry.setParseDefinition(l_cubeDefinition);
 
             for (String lt_parseDefinitionEntryKey : in_parseDefinitionEntryKeyList) {
-                if (!lt_entry.getParseDefinition().fetchHeaders().contains(lt_parseDefinitionEntryKey)) {
+                //Merge with original headers
+                if (!lt_entry.fetchHeaders().contains(lt_parseDefinitionEntryKey)) {
                     throw new IncorrectParseDefinitionException("The given header name "
                             + lt_parseDefinitionEntryKey + " was not among the stored data");
                 }
