@@ -206,7 +206,7 @@ public abstract class StdLogEntry {
     }
 
     public Object get(String in_dataTitle) {
-        return this.getValuesMap().get(in_dataTitle);
+        return this.fetchValueMap().get(in_dataTitle);
     }
 
     /**

@@ -13,6 +13,7 @@ import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCaseSTD;
+import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
@@ -70,8 +71,34 @@ public class SDKTests {
         assertThat("We should have a file name", l_entries.getEntries().values().iterator().next().getFileName(),
                 is(equalTo("useCase1.log")));
 
-        //l_entries.exportLogDataToCSV(l_entries.getEntries().values().iterator().next().fetchHeaders(),
-        //        "./z.csv");
+    }
+
+    @Test
+    public void testSimpleLogACC_groupBy_SDK()
+            throws StringParseException, LogDataExportToFileException, IncorrectParseDefinitionException {
+
+        ParseDefinition l_pDefinition = getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "src/test/resources/sdk/";
+
+        LogData<SDKCaseSTD> l_entries = LogDataFactory.generateLogData(l_file, "*.log", l_pDefinition,
+                SDKCaseSTD.class);
+
+
+        assertThat("We should have a correct number of errors", l_entries.getEntries().size(), is(equalTo(14)));
+        AssertLogData.assertLogContains(l_entries, "errorMessage",
+                "The HTTP query returned a 'Internal Server Error' type error (500) (iRc=16384)");
+
+        assertThat("We should have a file name", l_entries.getEntries().values().iterator().next().getFileName(),
+                is(equalTo("useCase1.log")));
+
+        LogData<GenericEntry> l_gbEntry = l_entries.groupBy("fileName");
+
+        assertThat("We should get one entry", l_gbEntry.getEntries().size(), is(equalTo(1)));
+        assertThat("The entry should have the value useCase1.log",
+                l_gbEntry.getEntries().values().iterator().next().getValuesMap().get("fileName"),
+                is(equalTo("useCase1.log")));
     }
 
     @Test
