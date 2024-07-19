@@ -1,13 +1,10 @@
 /*
- * MIT License
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  *
- * © Copyright 2020 Adobe. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
  */
 package com.adobe.campaign.tests.logparser.core;
 
@@ -19,7 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
+import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
+import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
+import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -27,10 +27,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
-import com.adobe.campaign.tests.logparser.exceptions.ParseDefinitionImportExportException;
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class LogDataTest {
 
@@ -52,10 +48,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -85,10 +81,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -114,16 +110,16 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
         l_cubeData.addEntry(l_inputData2);
@@ -144,10 +140,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -167,10 +163,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -198,10 +194,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -222,10 +218,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
 
@@ -235,7 +231,7 @@ public class LogDataTest {
 
     @Test
     public void testLogDataFactory()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -267,15 +263,17 @@ public class LogDataTest {
 
         assertThat(l_logData.getEntries().get("xtk:persist#NewInstance").getFrequence(), is(equalTo(2)));
 
-        for (GenericEntry lt_entry : l_logData.getEntries().values()) {
+        for (StdLogEntry lt_entry : l_logData.getEntries().values()) {
             System.out.println(lt_entry.fetchPrintOut());
         }
+
+        l_logData.getEntries().values().stream().forEach(e -> System.out.println(e.fetchPrintOut()));
     }
     
     
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinition()
-            throws InstantiationException, IllegalAccessException, StringParseException,
+            throws StringParseException,
             ParseDefinitionImportExportException {
 
         
@@ -315,10 +313,10 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -349,16 +347,16 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "12");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "12");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -374,27 +372,18 @@ public class LogDataTest {
                 l_cubeData.getEntries().containsKey(l_inputData.get("AAZ")));
 
         assertThat("We should have the correct value",
-                l_cubeData.get(l_inputData.get("AAZ").toString()).fetchValueMap(),
-                is(equalTo(l_inputData.fetchValueMap())));
+                l_cubeData.get(l_inputData.get("AAZ").toString()).getValuesMap(),
+                is(equalTo(l_inputData.getValuesMap())));
 
         assertThat("The frequence should have been incremented",
                 l_cubeData.get(l_inputData.get("AAZ").toString()).getFrequence(), is(equalTo(2)));
 
     }
 
-    /**
-     * Testing that we can do a group by
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by")
     public void testgroupBy()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -407,22 +396,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -430,9 +419,9 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData3);
 
         assertThrows(IncorrectParseDefinitionException.class,
-                () -> l_cubeData.groupBy("KAU", GenericEntry.class));
+                () -> l_cubeData.groupBy("KAU"));
 
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU", GenericEntry.class);
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy("BAU");
 
         assertThat(l_myCube.getEntries().values().iterator().next().getParseDefinition()
                 .getDefinitionEntries().size(), is(equalTo(1)));
@@ -448,19 +437,9 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+    @Test(description = "Testing that we can do a group by")
     public void testgroupBy_Default()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -473,22 +452,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -513,19 +492,10 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -539,29 +509,29 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT"), GenericEntry.class);
+        LogData<GenericEntry> l_myCube = l_cubeData.groupBy(Arrays.asList("BAU", "DAT"));
 
         final ParseDefinition l_gpParseDefinition = l_myCube.getEntries().values().iterator().next()
                 .getParseDefinition();
@@ -586,19 +556,9 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+    @Test(description = "Testing that we can do a group by with two values")
     public void testGroupBy_Chaining()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -612,22 +572,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -655,19 +615,10 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a group by with two values
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy_Default()
-            throws IncorrectParseDefinitionException, InstantiationException, IllegalAccessException {
+            throws IncorrectParseDefinitionException {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
 
@@ -681,22 +632,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -726,17 +677,38 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a filter
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
     @Test
+    public void testgroupBy_negative()
+            throws IncorrectParseDefinitionException {
+
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+
+        final ParseDefinitionEntry l_testParseDefinitionEntry = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntry);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("BAU", "13");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCaseBadDefConstructor.class));
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCaseNoDefConstructor.class));
+
+        Assert.assertThrows(LogParserPostManipulationException.class,
+                () -> l_cubeData.groupBy("BAU", SDKCasePrivateDefConstructor.class));
+    }
+
+
+    @Test(description = "Testing that we can do a filter")
     public void testFilter_Default() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -751,22 +723,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -799,17 +771,8 @@ public class LogDataTest {
 
     }
 
-    /**
-     * Testing that we can do a filter using multiple fields
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a filter using multiple fields")
     public void testFilter_Multi() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -824,22 +787,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AAA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -888,12 +851,12 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -917,8 +880,8 @@ public class LogDataTest {
         assertThat("Both objects should be equal", l_cubeData, not(equalTo(l_cubeData2)));
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "1122");
-        l_inputData3.fetchValueMap().put("ZZZ", "1142");
+        l_inputData3.getValuesMap().put("AAZ", "1122");
+        l_inputData3.getValuesMap().put("ZZZ", "1142");
 
         LogData<GenericEntry> l_cubeData3 = new LogData<GenericEntry>();
         l_cubeData3.addEntry(l_inputData);
@@ -928,17 +891,8 @@ public class LogDataTest {
 
     }
     
-    /**
-     * Testing that we can do a search
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a search")
     public void testSearch_Default() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -953,22 +907,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -996,18 +950,8 @@ public class LogDataTest {
 
     }
     
-    
-    /**
-     * Testing that we can do a search using multiple fields
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can do a search using multiple fields")
     public void testsearch_Multi() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -1022,22 +966,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AAA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -1070,18 +1014,8 @@ public class LogDataTest {
 
     }
     
-    
-    /**
-     * Testing that we can detect if an element is present
-     *
-     * Author : gandomi
-     * 
-     * @throws IncorrectParseDefinitionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     *
-     */
-    @Test
+
+    @Test(description = "Testing that we can detect if an element is present")
     public void testIsPresent() {
 
         ParseDefinition l_definition = new ParseDefinition("tmp");
@@ -1096,22 +1030,22 @@ public class LogDataTest {
         l_definition.defineKeys(l_parseDefinitionEntryKey);
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
-        l_inputData.fetchValueMap().put("AAZ", "12");
-        l_inputData.fetchValueMap().put("ZZZ", "14");
-        l_inputData.fetchValueMap().put("BAU", "13");
-        l_inputData.fetchValueMap().put("DAT", "AA");
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
 
         GenericEntry l_inputData2 = new GenericEntry(l_definition);
-        l_inputData2.fetchValueMap().put("AAZ", "112");
-        l_inputData2.fetchValueMap().put("ZZZ", "114");
-        l_inputData2.fetchValueMap().put("BAU", "113");
-        l_inputData2.fetchValueMap().put("DAT", "AAA");
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
 
         GenericEntry l_inputData3 = new GenericEntry(l_definition);
-        l_inputData3.fetchValueMap().put("AAZ", "120");
-        l_inputData3.fetchValueMap().put("ZZZ", "14");
-        l_inputData3.fetchValueMap().put("BAU", "13");
-        l_inputData3.fetchValueMap().put("DAT", "AAA");
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
 
         LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
         l_cubeData.addEntry(l_inputData);
@@ -1136,7 +1070,7 @@ public class LogDataTest {
 
     @Test
     public void testNestedFileAccess()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -1218,7 +1152,7 @@ public class LogDataTest {
 
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinitionAndSearchFile()
-            throws InstantiationException, IllegalAccessException, StringParseException,
+            throws StringParseException,
             ParseDefinitionImportExportException {
 
         String l_rootPath = "src/test/resources/nestedDirs/";
@@ -1324,8 +1258,8 @@ public class LogDataTest {
 
     /*************** #55 Exporting results **********************/
     @Test
-    public void testExportData()
-            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+    public void testExportDataToCSV()
+            throws StringParseException, IOException,
             LogDataExportToFileException {
         //Create a parse definition
 
@@ -1368,10 +1302,12 @@ public class LogDataTest {
             assertThat("We successfully created the file correctly", l_exportedFile.getName(),
                     Matchers.endsWith(l_fileNameToExpect + "-export.csv"));
 
-            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCSVToMapList(StdLogEntry.STD_DATA_KEY,
                     l_exportedFile);
 
             for (GenericEntry l_ge : l_logData.getEntries().values()) {
+                List x = l_ge.fetchValuesAsList();
+                List y = l_fetchedResult.get(l_ge.makeKey());
                 assertThat(l_ge.fetchValuesAsList(), Matchers.equalTo(l_fetchedResult.get(l_ge.makeKey())));
             }
         } finally {
@@ -1381,8 +1317,62 @@ public class LogDataTest {
     }
 
     @Test
+    public void testExportDataToHTML()
+            throws StringParseException, IOException,
+            LogDataExportToFileException {
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        final String apacheLogFile = "src/test/resources/nestedDirs/dirA/simpleLog.log";
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+        int l_nrOfEntries = l_logData.getEntries().keySet().size();
+        assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
+
+        File l_exportedFile = l_logData.exportLogDataToHTML("Log Results",
+                "logDataExport");
+
+        try {
+            assertThat("We successfully created the file", l_exportedFile, notNullValue());
+            assertThat("We successfully created the file", l_exportedFile.exists());
+            assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        } finally {
+            l_exportedFile.delete();
+        }
+    }
+
+    @Test
+    public void testExportDataToHTML_negative() {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        assertThat(l_emptyLogData.exportLogDataToHTML("Log Results",
+                "logDataExport"), Matchers.nullValue());
+    }
+
+    @Test
     public void testExportDataFileExists()
-            throws StringParseException, InstantiationException, IllegalAccessException, IOException,
+            throws StringParseException, IOException,
             LogDataExportToFileException {
         String l_rootPath = "src/test/resources/nestedDirs/";
         String l_fileFilter = "simple*.log";
@@ -1395,7 +1385,7 @@ public class LogDataTest {
         String l_searchItem1 = "extAccount/destroySharedAudience#GET";
         String l_searchItem2 = "extAccount/importSharedAudience#GET";
 
-        ParseDefinition l_pDefinition = l_logData.getEntries().values().stream().findFirst().get().getParseDefinition();
+        ParseDefinition l_pDefinition = l_logData.fetchParseDefinition();
         String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
 
         //Create the file so it is deleted
@@ -1415,7 +1405,7 @@ public class LogDataTest {
             assertThat("We successfully created the file correctly", l_exportedFile.getName(),
                     Matchers.endsWith(l_fileNameToExpect));
 
-            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCoverageHistoryData(StdLogEntry.STD_DATA_KEY,
+            Map<String, List<String>> l_fetchedResult = CSVManager.fetchCSVToMapList(StdLogEntry.STD_DATA_KEY,
                     l_exportedFile);
 
             for (GenericEntry l_ge : l_logData.getEntries().values()) {
@@ -1431,7 +1421,51 @@ public class LogDataTest {
     public void exportLogData_negativeEmptyData() throws LogDataExportToFileException {
         LogData<GenericEntry> l_emptyLogData = new LogData<>();
         File l_shouldBeEmpty = l_emptyLogData.exportLogDataToCSV();
-        assertThat("The returned file should not exist", !l_shouldBeEmpty.exists());
+        assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
+    }
+
+    @Test
+    public void testFetchFirst() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
+
+        GenericEntry l_inputData3 = new GenericEntry(l_definition);
+        l_inputData3.getValuesMap().put("AAZ", "120");
+        l_inputData3.getValuesMap().put("ZZZ", "14");
+        l_inputData3.getValuesMap().put("BAU", "13");
+        l_inputData3.getValuesMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<GenericEntry>();
+        l_cubeData.addEntry(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        l_cubeData.addEntry(l_inputData3);
+
+        GenericEntry l_first = l_cubeData.fetchFirst();
+        assertThat("The first entry should be the first one we added", l_first, equalTo(l_inputData));
+
+        assertThat(l_cubeData.fetchFirst().getParseDefinition(), Matchers.equalTo(l_cubeData.fetchParseDefinition()));
+
+        assertThat((new LogData<>()).fetchParseDefinition(), Matchers.nullValue());
     }
 
 }

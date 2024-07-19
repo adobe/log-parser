@@ -1,13 +1,10 @@
 /*
- * MIT License
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  *
- * © Copyright 2020 Adobe. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
  */
 package com.adobe.campaign.tests.logparser.core;
 
@@ -223,7 +220,38 @@ public class ParseDefinitionTests {
                 .importParseDefinition(l_storedJSON.getAbsolutePath());
 
         assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
+    }
 
+    @Test
+    public void testImportExportToJSON_withFileExport() throws ParseDefinitionImportExportException {
+
+        //Create a parse definition
+        ParseDefinitionEntry l_verbDefinition = new ParseDefinitionEntry();
+
+        l_verbDefinition.setTitle("verb");
+        l_verbDefinition.setStart("\"");
+        l_verbDefinition.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+        l_parseDefinition.addEntry(l_apiDefinition);
+        l_parseDefinition.addEntry(l_verbDefinition);
+        l_parseDefinition.setStoreFilePath(true);
+        l_parseDefinition.setStoreFileName(true);
+
+        final String l_jsonPath = LogParser.OUTPUT_DIR + "/firstDefinitionWithFilePath.json";
+
+        File l_storedJSON = ParseDefinitionFactory.exportParseDefinitionToJSON(l_parseDefinition, l_jsonPath);
+
+        ParseDefinition fetchedJSON = ParseDefinitionFactory
+                .importParseDefinition(l_storedJSON.getAbsolutePath());
+
+        assertThat("Both `parseDefinitions should be the same", fetchedJSON, equalTo(l_parseDefinition));
     }
 
     @Test

@@ -1,13 +1,10 @@
 /*
- * MIT License
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  *
- * © Copyright 2020 Adobe. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
  */
 package com.adobe.campaign.tests.logparser.core;
 
@@ -36,11 +33,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ParseDefinition {
 
     protected static final String TITLE_PLACEHOLDER = "parseDefinitionResult";
+
     private String title;
-    private List<ParseDefinitionEntry> definitionEntries;
+    private boolean storeFileName = false;
+    private boolean storeFilePath = false;
+    private String storePathFrom = "";
     private String keyPadding = "#";
     private List<String> keyOrder;
     private String printOutPadding = ";";
+    private List<ParseDefinitionEntry> definitionEntries;
+
 
     public ParseDefinition() {
         super();
@@ -69,6 +71,9 @@ public class ParseDefinition {
         this.keyPadding = in_oldParseDefinition.keyPadding;
         this.keyOrder = in_oldParseDefinition.keyOrder;
         this.printOutPadding = in_oldParseDefinition.printOutPadding;
+        this.setStoreFileName(in_oldParseDefinition.isStoreFileName());
+        this.setStoreFilePath(in_oldParseDefinition.storeFilePath);
+        this.setStorePathFrom(in_oldParseDefinition.getStorePathFrom());
     }
 
     /**
@@ -157,7 +162,7 @@ public class ParseDefinition {
     public List<String> fetchKeyOrder() {
         if (keyOrder.isEmpty()) {
             return getDefinitionEntries().stream().filter(ParseDefinitionEntry::isToPreserve)
-                    .map(t -> t.getTitle()).collect(Collectors.toList());
+                    .map(ParseDefinitionEntry::getTitle).collect(Collectors.toList());
         }
         return keyOrder;
     }
@@ -227,10 +232,10 @@ public class ParseDefinition {
      *
      */
     public Set<String> fetchHeaders() {
-        final Collection<String> l_definedHeaders = getDefinitionEntries().stream()
+        final Set<String> l_definedHeaders = getDefinitionEntries().stream()
                 .filter(ParseDefinitionEntry::isToPreserve).map(ParseDefinitionEntry::getTitle)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        return (Set<String>) l_definedHeaders;
+        return l_definedHeaders;
     }
 
     /**
@@ -247,5 +252,29 @@ public class ParseDefinition {
     public String fetchEscapedTitle() {
         String l_trimmedTitle = this.getTitle().trim();
         return l_trimmedTitle.isEmpty() ? TITLE_PLACEHOLDER : l_trimmedTitle.replace(' ','-');
+    }
+
+    public boolean isStoreFileName() {
+        return storeFileName;
+    }
+
+    public void setStoreFileName(boolean storeFileName) {
+        this.storeFileName = storeFileName;
+    }
+
+    public boolean isStoreFilePath() {
+        return storeFilePath;
+    }
+
+    public void setStoreFilePath(boolean storeFilePath) {
+        this.storeFilePath = storeFilePath;
+    }
+
+    public String getStorePathFrom() {
+        return storePathFrom;
+    }
+
+    public void setStorePathFrom(String storePathFrom) {
+        this.storePathFrom = storePathFrom;
     }
 }

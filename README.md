@@ -8,26 +8,50 @@ This project was created to allow us to parse and analyze log files in order to 
 
 The basic method for using this library is, that you create a definition for your parsing. This definition allows you to parse a set of log files and extract all entries that match this pattern.
 
-![The Processes](diagrams/Log_Parser-Processes.png)
+![The Processes](diagrams/Log_Parser-Processes.drawio.png)
 
-# Table of contents
-
-- [Installation](#installation)
-  - [Maven](#maven)
-- [Parse Definitions](#parse-definitions)
-  - [Defining a Parsing](#defining-a-parsing)
-  - [Defining an entry](#defining-an-entry)
-  - [How parsing works](#how-parsing-works)
-  - [Code Example](#code-example)
-  - [Import and Export](#import-and-export)
-- [Using the Standard Method](#using-the-standard-method)
-- [Using the SDK](#using-the-sdk)
-- [Code Structure](#code-structure)
-- [Searching a organizing log data](#searching-a-organizing-log-data)
-  - [Search and Filter Mechanisms](#search-and-filter-mechanisms)
-  - [GroupBy Mechanisms](#groupby-mechanisms)
-- [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
-- [Release Notes](#release-notes)
+## Table of contents
+<!-- TOC -->
+  * [Installation](#installation)
+    * [Maven](#maven)
+  * [Parse Definitions](#parse-definitions)
+    * [Defining a Parsing](#defining-a-parsing)
+    * [Defining an entry](#defining-an-entry)
+    * [How parsing works](#how-parsing-works)
+      * [Anonymizing Data](#anonymizing-data)
+    * [Code Example](#code-example)
+    * [Import and Export](#import-and-export)
+    * [Importing a JSON File](#importing-a-json-file)
+  * [Extracting Data from Logs](#extracting-data-from-logs)
+    * [Using the Standard Method](#using-the-standard-method)
+    * [Using the SDK](#using-the-sdk)
+      * [Writing your own SDK](#writing-your-own-sdk)
+        * [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
+        * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
+        * [Declaring the Key](#declaring-the-key)
+        * [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
+  * [Code Structure](#code-structure)
+  * [Searching and organizing log data](#searching-and-organizing-log-data)
+    * [Search and Filter Mechanisms](#search-and-filter-mechanisms)
+    * [GroupBy Mechanisms](#groupby-mechanisms)
+      * [Passing a list](#passing-a-list)
+      * [Chaining GroupBy](#chaining-groupby)
+    * [Comparing Log Data](#comparing-log-data)
+      * [Creating a Differentiation Report](#creating-a-differentiation-report)
+  * [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
+  * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
+  * [Release Notes](#release-notes)
+    * [1.11.0 (next version)](#1110--next-version-)
+    * [1.0.10](#1010)
+    * [1.0.8.2](#1082)
+    * [1.0.8](#108)
+    * [1.0.7](#107)
+    * [1.0.6](#106)
+    * [1.0.5](#105)
+    * [1.0.4](#104)
+    * [1.0.3](#103)
+    * [1.0.1](#101)
+<!-- TOC -->
 
 ## Installation
 For now we are using this library with maven, in later iteration we will publish other build system examples:
@@ -39,7 +63,7 @@ The following dependency needs to be added to your pom file:
  <dependency>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>1.0.8.2</version>
+    <version>1.0.10</version>
 </dependency>
 ```
 ## Running the Log Parser
@@ -56,6 +80,7 @@ Each Parse Definition consists of :
 - A set of entries
 - A Padding allowing us to create a legible key
 - A key Order which is used for defining the Key
+- If you want the result to include the log file name and path
 
 ### Defining an entry
 Each entry for a Parse Definition allows us to define:
@@ -64,6 +89,7 @@ Each entry for a Parse Definition allows us to define:
 - The end pattern of the string that will contain the value (null if in the end of a line)
 - Case Sensitive search
 - Is to be kept. In some cases we just need to find a line with certain particularities, but we don't actually want to store the value.
+- Anonymizers, we can provide a set of anonymizers so that some values are skipped when parsing a line.
 
 ### How parsing works
 When you have defined your parsing you use the LogDataFactory by passing it:
@@ -72,7 +98,37 @@ When you have defined your parsing you use the LogDataFactory by passing it:
 
 By using the StringParseFactory we get a LogData object with allows us to manage the logs data you have found.
 
-![Parsing a log line](diagrams/Log_Parser-log-parsing.png)
+![Parsing a log line](diagrams/Log_Parser-log-parsing.drawio.png)
+
+#### Anonymizing Data
+We have discovered that it would be useful to anonymize data. This will aloow you to group some log data that contains variables. Anonymization has two features:
+* Replacing Data using `{}`,
+* Ignoring Data using `[]`.
+
+For example if you store an anonymizer with the value:
+```
+Storing key '{}' in the system
+
+```
+
+the log-parser will merge all lines that contain the same text, but with different values for the key. For example:
+* Storing key 'F' in the system
+* Storing key 'B' in the system
+* Storing key 'G' in the system
+
+will all be stored as `Storing key '{}' in the system`. 
+
+Sometimes we just want to anonymize part of a line. This is useful if you want to do post-treatment. For example in our previous example as explained `Storing key 'G' in the system`, would be merged, however `NEO-1234 : Storing key 'G' in the system` would not be merged. In this cas we can do a partial anonymization using the `[]` notation. For example if we enrich our original template:
+```
+[]Storing key '{}' in the system
+```
+
+In this case the lines:
+* `NEO-1234 : Storing key 'G' in the system` will be stored as `NEO-1234 : Storing key '{}' in the system`
+* `NEO-1234 : Storing key 'H' in the system` will be stored as `NEO-1234 : Storing key '{}' in the system`
+* `EXA-1234 : Storing key 'Z' in the system` will be stored as `EXA-1234 : Storing key '{}' in the system`
+* `EXA-1234 : Storing key 'X' in the system` will be stored as `EXA-1234 : Storing key '{}' in the system`
+
 
 ### Code Example
 Here is an example of how we can parse a string. The method is leveraged to perform the same parsing in one or many files.
@@ -116,21 +172,72 @@ At the end we can see that each data is stored in a map with the parse defnition
 ### Import and Export of Parse Definitions
 You can import or store a Parse Definition to or from a JSON file.
 
-## Using the Standard Method
+### Importing a JSON File
+You can define a Parse Definition in a JSON file. 
+
+This can then be imported and used for parsing using the method `ParseDefinitionFactory.importParseDefinition`. Here is small example of how the JSON would look like:
+
+```JSON
+{
+  "title": "Anonymization",
+  "storeFileName": false,
+  "storeFilePath": false,
+  "storePathFrom": "",
+  "keyPadding": "#",
+  "keyOrder": [],
+  "definitionEntries": [
+    {
+      "title": "path",
+      "start": "HTTP/1.1|",
+      "end": "|Content-Length",
+      "caseSensitive": false,
+      "trimQuotes": false,
+      "toPreserve": true,
+      "anonymizers": [
+        "X-Security-Token:{}|SOAPAction:[]"
+      ]
+    }
+  ]
+}
+```
+
+## Extracting Data from Logs
+
+### Using the Standard Method
 By default each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
 - Key
 - A set of values
 - The frequence of the key as found in the logs
 
-## Using the SDK
+### Using the SDK
 Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors.
 
-In order to use this feature you need to define a class that extends the class StdLogEntry
+#### Writing your own SDK
+In order to use this feature you need to define a class that extends the class StdLogEntry.
+
+You will often want to transform the parsed information into a more manageable object by defining your own fields in the SDK class.
+
+##### Declaring a Default and Copy Constructor
+You will need to declare a default constructor and a copy constructor. The copy constructor will allow you to copy the values from one object to another.
+
+##### Declaring the transformation Rules in setValuesFromMap
+You will need to declare how the parsed variables are transformed into your SDL. This is done in the method `setValuesFromMap()`.
+
+In there you can define a fine-grained extraction of the variables. This could be extracting hidden data in strings of the extracted data, or simple data transformations such as integer or dates.
+
+##### Declaring the Key
+You will need to define how a unique line will look like. Although this is already done in the Definition Rules, you may want to provide more precisions. This is doen in the method `makeKey()`.
+
+##### Declare the HeaderMap, and ValueMap
+Depending on the fields you have defined, you will want to define how the results are represented when they are stored in your system.
+
+You will need to give names to the headers, and provide a map that extracts the values.
+
 
 ## Code Structure
 Below is a diagram representing the class structure:
 
-![The Class relationship](diagrams/Log_Parser-Classes.png)
+![The Class relationship](diagrams/Log_Parser-Classes.drawio.png)
 
 ## Searching and organizing log data
 As of versions 1.0.4 & 1.0.5 we have a series of search and organizing the log data.
@@ -195,11 +302,11 @@ LogData<MyImplementationOfStdLogEntry> l_myGroupedData = logData.groupBy(Arrays.
 
 In this case we get :
 
-Definition 1 | Definition 4 | Frequence
------------- | ------------ | ------------ 
-12 | AA | 1
-112 | AAA | 1
-120 | AA | 1
+| Definition 1 | Definition 4 | Frequence |
+|--------------|--------------|-----------|
+| 12           | AA           | 1         |
+| 112          | AAA          | 1         |
+| 120          | AA           | 1         |
 
 
 #### Chaining GroupBy
@@ -211,10 +318,28 @@ LogData<GenericEntry> l_myGroupedData = logData.groupBy(Arrays.asList("Definitio
 
 In this case we get :
 
-Definition 4 | Frequence
------------- | ------------ 
-AA | 2
-AAA | 1
+| Definition 4 | Frequence |
+| ------------ |-----------|
+| AA          | 2         |
+| AAA         | 1         |
+
+### Comparing Log Data
+As of version 1.11.0 we have introduced the possibility to compare two LogData objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency. The method `compare` returns a `LogDataComparison` object that contains the results of the comparison. A comparison can be of three types:
+* NEW : The entry has been added
+* Removed : The entry has been removed
+* Changed : The entry has changed in frequency
+
+Apart from this we return the :
+* delta : The difference in frequency
+* deltaRatio : The difference in frequency as a ratio in %
+
+These values are negative if the values have decreased.
+
+Creating a differentiation report is done with the method `LogData.compare(LogData<T> in_logData)`. This method returns a `LogDataComparison` object that contains the results of the comparison.
+
+#### Creating a Differentiation Report
+We can generate an HTML Report where the differences are high-lighted. This is done with the method `LogDataFactory.generateComparisonReport(LogData reference, LogData target, String filename)`. This method will generate an HTML Report detailing the found differences.
+
 
 ## Assertions and LogDataAssertions
 As of version 1.0.5 we have introduced the notion of assertions. Assertions can either take a LogData object or a set of files as input.
@@ -238,13 +363,28 @@ We now have the possibility to export the log data results into a CSV file. The 
 We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
 
 ## Release Notes
-### 1.0.9 -  In progress
+
+### 1.11.0 (next version)
+- **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
+- **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
+- **(new feature)** [#138](https://github.com/adobe/log-parser/issues/138) We now have the possibility of anonymizing log data during parsing. For more information please read the section on [Anonymizing Data](#anonymizing-data).
+- **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
+- **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
+- **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
+- [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
+- [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
+- [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
+
+
+### 1.0.10
 - Moved main code and tests to the package "core"
 - [#67](https://github.com/adobe/log-parser/issues/67) We can now select the files using a wild card. Given a directory we can now look for files in the sub-directory given a wild-card. The wildcards are implemented using Adobe Commons IO. You can read more on this in the [WildcardFilter JavaDoc](https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/filefilter/WildcardFilter.html)
 - [#68](https://github.com/adobe/log-parser/issues/68) We now present a report of the findings at the end of the analysis.
 - [#55](https://github.com/adobe/log-parser/issues/55) We can now export the log parsing results into a CSV file.
-- [#102](https://github.com/adobe/log-parser/issues/102) Corrected bug where Log parser could silently stop with no error when confronted with CharSet incompatibilities. 
-
+- [#102](https://github.com/adobe/log-parser/issues/102) Corrected bug where Log parser could silently stop with no error when confronted with CharSet incompatibilities.
+- [#120](https://github.com/adobe/log-parser/issues/120) Corrected the export system as it did not work well with SDK defined entries.
+- [#148](https://github.com/adobe/log-parser/issues/148) The LogData#groupBy method did not work well when it is based on an SDK. We now look at the headers and values of the SDK. Also the target for a groupBy will have to be a GenricEntry as cannot guarantee that the target class can support a groupBy.
+- Removed ambiguities in the methods for StdLogEntry. For example "fetchValueMap" is no longer abstract, but it can be overriden.
 ### 1.0.8.2
 - Building with java8. 
 - Upgraded Jackson XML to remove critical version

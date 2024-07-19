@@ -42,6 +42,18 @@ process that must reach lazy consensus (silence is approval) before invitations
 are issued. If you feel you are qualified and want to get more deeply involved,
 feel free to reach out to existing committers to have a conversation about that.
 
+### Commit Rules
+All code pushed onto the repository must pass te following quality gates:
+* Passed Unit Tests
+* Code Coverage may not go down
+* The sonar quality gate should remain green
+* All new files need to ontain the license header. This can be acheived by running `mvn license:format`.
+
+These validations are done automatically through github actions.
+
+### Java Version
+We have now moved to java 11, therefor the code needs to be able to compile in that version.
+
 ## Security Issues
 
 Security issues shouldn't be reported on this issue tracker. Instead, [file an issue to our security experts](https://helpx.adobe.com/security/alertus.html).

@@ -1,13 +1,10 @@
 /*
- * MIT License
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  *
- * © Copyright 2020 Adobe. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
  */
 package com.adobe.campaign.tests.logparser.core;
 
@@ -31,10 +28,14 @@ public abstract class StdLogEntry {
     private Integer frequence = 1;
     private ParseDefinition parseDefinition;
     Map<String, Object> valuesMap = new HashMap<>();
+    private String fileName;
+    private String filePath;
 
-    protected static final String STD_DATA_KEY = "key";
 
-    protected static final String STD_DATA_FREQUENCE = "frequence";
+    public static final String STD_DATA_KEY = "key";
+    public static final String STD_DATA_FREQUENCE = "frequence";
+    public static final String STD_DATA_FILE_NAME = "fileName";
+    public static final String STD_DATA_FILE_PATH = "filePath";
 
     /**
      * A method that creates the key to identify each stored entry
@@ -85,22 +86,11 @@ public abstract class StdLogEntry {
      * @return a String for the print out
      */
     public String fetchPrintOut() {
-        List<String> l_printOutList = fetchValuesAsList();
-        return StringUtils.join(l_printOutList, this.getParseDefinition().getPrintOutPadding());
+        return StringUtils.join(fetchValuesAsList(), this.getParseDefinition().getPrintOutPadding());
     }
 
     protected List<String> fetchValuesAsList() {
-        List<String> l_printOutList = new ArrayList<>();
-
-        final Map<String, Object> l_valueMap = this.fetchValueMap();
-
-        l_printOutList.add(makeKey());
-        for (String lt_header : this.fetchHeaders()) {
-
-            l_printOutList.add(l_valueMap.get(lt_header).toString());
-        }
-        l_printOutList.add(getFrequence().toString());
-        return l_printOutList;
+        return this.fetchHeaders().stream().map(e -> fetchValueMap().get(e).toString()).collect(Collectors.toList());
     }
 
     /**
@@ -116,12 +106,27 @@ public abstract class StdLogEntry {
     /**
      * Returns a set of objects you have defined for your log class. When using Generic Object no changes are made to
      * it.
-     * <p>
+     * When defining an SDK you should override this method.
      * Author : gandomi
      *
-     * @return A Maps of extentions of StdLogEntry
+     * @return A Maps of values for the LogEntry
      */
-    public abstract Map<String, Object> fetchValueMap();
+    public Map<String, Object> fetchValueMap() {
+        final Map<String, Object> l_valueMap = this.getValuesMap();
+
+        l_valueMap.put(STD_DATA_KEY, makeKey());
+        if (getParseDefinition().isStoreFileName()) {
+            l_valueMap.put(STD_DATA_FILE_NAME, getFileName());
+        }
+
+        if (getParseDefinition().isStoreFilePath()) {
+            l_valueMap.put(STD_DATA_FILE_PATH, getFilePath());
+        }
+
+        l_valueMap.put(STD_DATA_FREQUENCE , getFrequence().toString());
+
+        return valuesMap;
+    };
 
     /**
      * Increments the frequence
@@ -196,7 +201,7 @@ public abstract class StdLogEntry {
     }
 
     public void put(String in_dataTitle, String in_value) {
-        this.fetchValueMap().put(in_dataTitle, in_value);
+        this.getValuesMap().put(in_dataTitle, in_value);
 
     }
 
@@ -220,7 +225,7 @@ public abstract class StdLogEntry {
                 log.warn("The filter key {} could not be found among the log entry headers.", lt_filterKey);
                 return false;
             }
-            if (!this.get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
+            if (!this.fetchValueMap().get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
                 return false;
             }
         }
@@ -269,6 +274,34 @@ public abstract class StdLogEntry {
         lr_storedHeaders.addAll(getParseDefinition().fetchHeaders());
         lr_storedHeaders.add(STD_DATA_FREQUENCE);
         return lr_storedHeaders;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setLogFileName(String in_logFile) {
+        this.fileName = in_logFile;
+    }
+
+    public void setFilePath(String in_logFile) {
+        this.filePath = in_logFile;
+    }
+
+    /**
+     * Updates the store path of the log entry. We also remove training "/" to have a clean path
+     * @param in_newPath The path we want to store
+     */
+    public void updatePath(String in_newPath) {
+        var l_pathDelta = StringUtils.difference(this.getParseDefinition().getStorePathFrom(),
+                in_newPath);
+        l_pathDelta = (l_pathDelta.startsWith("/")) ? l_pathDelta.substring(1) : l_pathDelta;
+        l_pathDelta = (l_pathDelta.endsWith("/")) ? l_pathDelta.substring(0, l_pathDelta.length() - 1) : l_pathDelta;
+        setFilePath(l_pathDelta);
     }
 }
 

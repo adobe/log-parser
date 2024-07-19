@@ -1,13 +1,10 @@
 /*
- * MIT License
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  *
- * © Copyright 2020 Adobe. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
  */
 package com.adobe.campaign.tests.logparser.core;
 
@@ -15,19 +12,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertThrows;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.adobe.campaign.tests.logparser.core.ParseDefinition;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-import com.adobe.campaign.tests.logparser.core.GenericEntry;
-import com.adobe.campaign.tests.logparser.core.ParseDefinitionEntry;
-import com.adobe.campaign.tests.logparser.core.StringParseFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 
 public class ParseTesting {
@@ -498,7 +487,193 @@ public class ParseTesting {
 
     @Test
     public void testCreateApacheProfileFile()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+
+        for (GenericEntry lt_entry : l_entries.values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+
+    }
+
+    @Test
+    public void testCreateApacheProfileFile_storeFile()
+            throws StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+        l_pDefinition.setStoreFileName(true);
+        l_pDefinition.setStoreFilePath(true);
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFileName(),
+                is(equalTo("ssl_accessSmall.log")));
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFilePath(),
+                is(equalTo("src/test/resources/logTests/apache")));
+
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchHeaders().stream().forEach(System.out::println);
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchValuesAsList().stream().forEach(System.out::println);
+
+
+        for (GenericEntry lt_entry : l_entries.values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+    }
+
+    @Test
+    public void testCreateApacheProfileFile_storePathStoreFrom()
+            throws StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+        l_pDefinition.setStoreFileName(true);
+        l_pDefinition.setStoreFilePath(true);
+        l_pDefinition.setStorePathFrom("src/test/resources");
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFileName(),
+                is(equalTo("ssl_accessSmall.log")));
+
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFilePath(),
+                is(equalTo("logTests/apache")));
+
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchHeaders().stream().forEach(System.out::println);
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchValuesAsList().stream().forEach(System.out::println);
+
+
+        for (GenericEntry lt_entry : l_entries.values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+    }
+
+    @Test
+    public void testCreateApacheProfileFile_storePathButNotFile()
+            throws StringParseException {
+
+        //Create a parse definition
+
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("SSL Log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+        l_pDefinition.setStoreFileName(false);
+        l_pDefinition.setStoreFilePath(true);
+
+        final String apacheLogFile = "src/test/resources/logTests/apache/ssl_accessSmall.log";
+
+        Map<String, GenericEntry> l_entries = StringParseFactory
+                .extractLogEntryMap(Arrays.asList(apacheLogFile), l_pDefinition, GenericEntry.class);
+
+        assertThat(l_entries, is(notNullValue()));
+        assertThat("We should have entries", l_entries.size(), is(greaterThan(0)));
+        assertThat("We should have entries", l_entries.size(), is(lessThan(19)));
+        assertThat("We should have the key for amcDataSource",
+                l_entries.containsKey("amcDataSource/AMCDS745177#GET"));
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFileName(),
+                nullValue());
+        assertThat(l_entries.get("amcDataSource/AMCDS745177#GET").getFilePath(),
+                is(equalTo("src/test/resources/logTests/apache")));
+
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchHeaders().stream().forEach(System.out::println);
+        l_entries.get("amcDataSource/AMCDS745177#GET").fetchValuesAsList().stream().forEach(System.out::println);
+
+
+        for (GenericEntry lt_entry : l_entries.values()) {
+            System.out.println(lt_entry.fetchPrintOut());
+        }
+    }
+
+
+    @Test
+    public void testIncludingTheFileAsAnEntry()
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -537,7 +712,7 @@ public class ParseTesting {
 
     @Test
     public void testCreateApacheProfileFile_Negative()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -560,7 +735,7 @@ public class ParseTesting {
 
     @Test
     public void testCreateApacheProfileFile_Negative2()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         //Create a parse definition
 
@@ -930,7 +1105,7 @@ public class ParseTesting {
     }
 
     @Test
-    public void testToPreserve() throws InstantiationException, IllegalAccessException, StringParseException {
+    public void testToPreserve() throws StringParseException {
 
         ParseDefinitionEntry l_lineFinder = new ParseDefinitionEntry();
 
@@ -971,7 +1146,7 @@ public class ParseTesting {
 
     @Test(description = "Related to issue #102, where the parsing stops or no reason")
     public void testFileInterruption()
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
         l_apiDefinition.setTitle("Finding a specific line");
@@ -988,6 +1163,287 @@ public class ParseTesting {
         assertThat(l_entries, is(notNullValue()));
         assertThat("We should have entries", l_entries.size(), is(greaterThan(19)));
 
+    }
+
+    @Test
+    public void testReplacementEquals() {
+        String l_candidateString = "string 1 and string 2";
+
+        assertThat("Both strings should be equal",
+                StringParseFactory.stringsCorrespond(l_candidateString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_candidateString,l_candidateString), Matchers.equalTo(l_candidateString));
+
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_candidateString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
+    public void testReplacementEquals_negative() {
+        String l_templateString  = "string 1 and string 2";
+        String l_candidateString = "something completely different";
+
+
+        assertThat("Both strings should be equal",
+                !StringParseFactory.stringsCorrespond(l_templateString, l_candidateString));
+
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_templateString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_1part() {
+        String l_storedString = "string {} and string 2";
+
+        String l_candidateString = "string 1 and string 2";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_storedString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_1part_issueWithDot() {
+        String l_storedString = "Null domain corresponding to KLIP {}.";
+
+        String l_candidateString = "DDD-123 Wrong configuration of remote redirection server. Please check the server configuration. (iRc=-55)";
+
+        assertThat("Both strings should correspond",
+                !StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString2), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_1part_withChars() {
+        String l_storedString = "string {} and string 2 and {value 8}";
+
+        String l_candidateString = "string 1 and string 2 and {value 8}";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_storedString));
+    }
+
+    @Test
+    public void testReplacementEquals_negative2() {
+        String l_templateString = "string {} and string 2 and {value 8}";
+
+        String l_candidateString = "something quite different";
+
+
+        assertThat("Both strings should be equal",
+                !StringParseFactory.stringsCorrespond(l_templateString, l_candidateString));
+
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_templateString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+
+    @Test
+    public void testReplacementCorresponds_1part_withChars2() {
+        String l_storedString = "{\"error\":\"interaction_required\",\"error_description\":\"AADSTS50076: Due to a configuration change made by your administrator, or because you moved to a new location, you must use multi-factor authentication to access '00000007-0000-0000-c000-000000000000'. Trace ID: {} Correlation ID: {} Timestamp: {},\"error_codes\":[50076],\"timestamp\":{},\"trace_id\":{},\"correlation_id\":{},\"error_uri\":\"https://login.microsoftonline.com/error?code=50076\",\"suberror\":\"basic_action\"}";
+
+        String l_candidateString = "{\"error\":\"interaction_required\",\"error_description\":\"AADSTS50076: Due to a configuration change made by your administrator, or because you moved to a new location, you must use multi-factor authentication to access '00000007-0000-0000-c000-000000000000'. Trace ID: 0f86bebe-f5cf-485d-a664-4768d945dd01 Correlation ID: 50c911f0-4c36-4988-b632-837e8c9afd0b Timestamp: 2024-06-26 08:32:18Z\",\"error_codes\":[50076],\"timestamp\":\"2024-06-26 08:32:18Z\",\"trace_id\":\"0f86bebe-f5cf-485d-a664-4768d945dd01\",\"correlation_id\":\"50c911f0-4c36-4988-b632-837e8c9afd0b\",\"error_uri\":\"https://login.microsoftonline.com/error?code=50076\",\"suberror\":\"basic_action\"}";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_storedString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_1part_withChars2_negative() {
+        String l_storedString = "{\"error\":\"interaction_required\",\"error_description\":\"AADSTS50076: Due to a configuration change made by your administrator, or because you moved to a new location, you must use multi-factor authentication to access '00000007-0000-0000-c000-000000000000'. Trace ID: {} Correlation ID: {} Timestamp: {},\"error_codes\":[50076],\"timestamp\":{},\"trace_id\":{},\"correlation_id\":{},\"error_uri\":\"https://login.microsoftonline.com/error?code=50076\",\"suberror\":\"basic_action\"}";
+
+        String l_candidateString = "ODB-240000 ODBC error: SQL compilation error: error line 1 at position 7#012invalid identifier '$4' SQLState: 42000 (iRc=-2006)";
+/*
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+
+ */
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the candidate value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_1part() {
+        String l_storedString = "string [] and string 2";
+
+        String l_candidateString = "string 1 and string 2";
+
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_candidateString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+    }
+
+    @Test
+    public void testReplacementCorresponds_2parts() {
+        String l_storedString = "string {} and string {}";
+
+        String l_candidateString = "string 1 and string 2";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+        //assertThat("we should get the same value", StringParseFactory.fetchCorresponding(l_storedString,l_candidateString), Matchers.equalTo(l_storedString));
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_storedString));
+
+        String l_storedString2 = "string {} and string {} and";
+
+        String l_candidateString2 = "string 1 and string 2 and many more";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString2, l_candidateString2));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_2partsSame() {
+        String l_storedString = "string [] and string []";
+
+        String l_candidateString = "string 1 and string 2 jkjkj";
+
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo(l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_2differentTypes_1() {
+        String l_storedString = "string [] and string {}";
+
+        String l_candidateString = "string 1 and string 2";
+
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo("string 1 and string {}"));
+
+        assertThat("The strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorrespondsDoNotReplace_2differentTypes_2() {
+        String l_storedString = "string [] and string {}";
+
+        String l_candidateString = "string 1 and string 2 and many more";
+
+        assertThat("we should get the same value",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString),
+                Matchers.equalTo("string 1 and string {}"));
+
+        assertThat("The strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_empty() {
+        String l_storedString = "string {} and string {}";
+
+        String l_candidateString = "";
+
+        assertThat("Both strings should NOT correspond",
+                !StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_universal() {
+        //This is quite useless
+        String l_storedString = "{}";
+
+        String l_candidateString = "lmvcxmkvcxmlkvcx";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        assertThat("Return string should be the template",
+                StringParseFactory.anonymizeString(l_storedString, l_candidateString), Matchers.equalTo(l_storedString));
+    }
+
+    @Test
+    public void testReplacementCorresponds_compareStartAndEnd() {
+        //This is quite useless
+        String l_storedString = "{} abs";
+
+        String l_candidateString = "lmvcxmkv abs";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
+
+        String l_storedStringEnd = "lmvcxmkv {}";
+
+        String l_candidateStringEnd = "lmvcxmkv abs";
+
+        assertThat("Both strings should correspond",
+                StringParseFactory.stringsCorrespond(l_storedStringEnd, l_candidateStringEnd));
+    }
+
+    @Test
+    public void testAnonymization() throws StringParseException {
+        String logString = "HTTP/1.1|X-Security-Token:@tTD6JQ5HcTfzCWt5OkJcJ_BfmC8mfw==|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|";
+
+        ParseDefinition pd = new ParseDefinition("Anonymization");
+        //Create a parse definition
+        ParseDefinitionEntry l_definitionCI = new ParseDefinitionEntry();
+
+        l_definitionCI.setTitle("path");
+        l_definitionCI.setStart("HTTP/1.1|");
+        l_definitionCI.setEnd("|Content-Length");
+        l_definitionCI.setCaseSensitive(false);
+        l_definitionCI.addAnonymizer("X-Security-Token:{}|SOAPAction:[]");
+        pd.addEntry(l_definitionCI);
+
+        assertThat("before parsing the anonization will not work in its current format",
+                StringParseFactory.anonymizeString("X-Security-Token:{}|SOAPAction:[]", logString),
+                Matchers.not(Matchers.equalTo(logString)));
+
+        Map<String, String> l_entries = StringParseFactory.parseString(logString, pd);
+
+        assertThat(l_entries.values().stream().findFirst().get(), is(notNullValue()));
+        assertThat(l_entries.values().stream().findFirst().get(),
+                Matchers.equalTo("X-Security-Token:{}|SOAPAction:xtk%3aqueryDef#ExecuteQuery"));
+        ParseDefinitionFactory.exportParseDefinitionToJSON(pd,
+                "src/test/resources/parseDefinitions/anonymization.json");
+    }
+
+    @Test
+    public void testAnonymizationImported() throws StringParseException {
+        String logString = "HTTP/1.1|X-Security-Token:@tTD6JQ5HcTfzCWt5OkJcJ_BfmC8mfw==|SOAPAction:xtk%3aqueryDef#ExecuteQuery|Content-Length:591|";
+
+        ParseDefinition pd = ParseDefinitionFactory.importParseDefinition(
+                "src/test/resources/parseDefinitions/anonymization.json");
+
+        Map<String, String> l_entries = StringParseFactory.parseString(logString, pd);
+
+        assertThat(l_entries.values().stream().findFirst().get(), is(notNullValue()));
+        assertThat(l_entries.values().stream().findFirst().get(),
+                Matchers.equalTo("X-Security-Token:{}|SOAPAction:xtk%3aqueryDef#ExecuteQuery"));
     }
 
 }

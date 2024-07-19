@@ -1,32 +1,31 @@
 /*
- * MIT License
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
  *
- * © Copyright 2020 Adobe. All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import java.io.*;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class StringParseFactory {
 
     protected static final Logger log = LogManager.getLogger();
+    public static final String STD_DEFAULT_ENTRY_FILENAME = "no_file";
 
     private StringParseFactory() {
         throw new IllegalStateException("Utility class");
@@ -47,20 +46,13 @@ public class StringParseFactory {
      * @param <T> The type of data (subclass of {@link StdLogEntry}) we want to create and store
      * @param <V> The collection type with which we receive the parameter in_logFiles
      * @return A map of String and a Sub-class of {@link StdLogEntry}
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
     public static <T extends StdLogEntry, V extends Collection<String>> Map<String, T> extractLogEntryMap(
             final V in_logFiles, ParseDefinition in_parseDefinition, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
 
         if (in_logFiles.isEmpty()) {
             log.warn(
@@ -71,20 +63,23 @@ public class StringParseFactory {
         Map<String, T> lr_entries = new HashMap<>();
 
         Map<String, Integer> l_foundEntries = new HashMap<>();
+        long totalBytesAnalyzed = 0;
         //Fetch File
         for (String l_currentLogFile : in_logFiles) {
             int lt_foundEntryCount = 0;
+
+
             int i = 0;
+            totalBytesAnalyzed+= new File(l_currentLogFile).length();
             log.info("Parsing file {}", l_currentLogFile);
 
             try (BufferedReader reader = new BufferedReader(new FileReader(l_currentLogFile))) {
                 String lt_nextLine;
                 while ((lt_nextLine = reader.readLine()) != null) {
 
-                    //Activate only if the log is not enough. Here we list each line we consider
-                    //log.debug("{}  -  {}", i, lt_nextLine);
+                    log.trace("{}  -  {}", i, lt_nextLine);
                     if (isStringCompliant(lt_nextLine, in_parseDefinition)) {
-                        updateEntryMapWithParsedData(lt_nextLine, in_parseDefinition, lr_entries,
+                        updateEntryMapWithParsedData(l_currentLogFile, lt_nextLine, in_parseDefinition, lr_entries,
                                 in_classTarget);
                         lt_foundEntryCount++;
                     } else {
@@ -93,15 +88,22 @@ public class StringParseFactory {
                     i++;
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
-                log.info("Finished scanning {} lines.",i);
+                log.info("Finished scanning {} lines.",i, new File(l_currentLogFile).length());
             } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
         }
 
         log.info("RESULT : Entry Report for Parse Definition '{}' per file:", in_parseDefinition.getTitle());
-        l_foundEntries.forEach((k,v) -> log.info("Found {} entries in file {}", v, k));
-        log.info("RESULT : Found {} unique keys", lr_entries.keySet().size());
+        AtomicInteger l_totalEntries = new AtomicInteger();
+        l_foundEntries.forEach((k,v) -> {log.info("Found {} entries in file {}", v, k); l_totalEntries.addAndGet(v);});
+
+        // Convert the bytes to Kilobytes (1 KB = 1024 Bytes)
+        long fileSizeInKB = totalBytesAnalyzed / 1024;
+        // Convert the KB to MegaBytes (1 MB = 1024 KBytes)
+        long fileSizeInMB = fileSizeInKB / 1024;
+        log.info("RESULT : Found {} entries, {} unique keys in {} files, and {}Mb of data.", l_totalEntries, lr_entries.keySet().size(), l_foundEntries.keySet().size(),fileSizeInMB);
+
         return lr_entries;
     }
 
@@ -110,6 +112,7 @@ public class StringParseFactory {
      *
      * Author : gandomi
      *
+     * @param in_logFile The log file from which the line was extracted
      * @param in_logLine
      *        A string representing a log line
      * @param in_parseDefinition
@@ -118,25 +121,38 @@ public class StringParseFactory {
      *        The map of String and StdLogEntries
      * @param in_classTarget
      *        The target class that will be storing the results
-     * @throws InstantiationException
-     *         if this {@code Class} represents an abstract class, an interface,
-     *         an array class, a primitive type, or void; or if the class has no
-     *         nullary constructor; or if the instantiation fails for some other
-     *         reason.
-     * @throws IllegalAccessException
-     *         if the class or its nullary constructor is not accessible.
      * @throws StringParseException
      *         When there are logical rules when parsing the given string
      *
      */
-    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logLine,
+    static <T extends StdLogEntry> void updateEntryMapWithParsedData(final String in_logFile, final String in_logLine,
             ParseDefinition in_parseDefinition, Map<String, T> in_entries, Class<T> in_classTarget)
-            throws InstantiationException, IllegalAccessException, StringParseException {
+            throws StringParseException {
         Map<String, String> lt_lineResult = StringParseFactory.parseString(in_logLine, in_parseDefinition);
 
-        T lt_entry = in_classTarget.newInstance();
+        T lt_entry = null;
+        try {
+            lt_entry = in_classTarget.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new LogParserSDKDefinitionException("Structural Problems whith calling the Default constructor in SDK Parser Class", e);
+        } catch (InvocationTargetException e) {
+            throw new LogParserSDKDefinitionException("Problems when calling the Default constructor in SDK Parser Class", e);
+        } catch (NoSuchMethodException e) {
+            throw new LogParserSDKDefinitionException("Missing Default constructor in SDK Parser Class", e);
+        }
 
         lt_entry.setParseDefinition(in_parseDefinition);
+
+
+        var lt_fileObject = new File(in_logFile != null ? in_logFile : STD_DEFAULT_ENTRY_FILENAME);
+        if (in_parseDefinition.isStoreFileName()) {
+            lt_entry.setLogFileName(lt_fileObject.getName());
+        }
+
+        if (in_parseDefinition.isStoreFilePath()) {
+            lt_entry.updatePath(lt_fileObject.exists() ? lt_fileObject.getParentFile().getPath() : STD_DEFAULT_ENTRY_FILENAME);
+        }
+
         lt_entry.setValuesFromMap(lt_lineResult);
 
         final String lt_currentKey = lt_entry.makeKey();
@@ -251,7 +267,16 @@ public class StringParseFactory {
                     + in_parseDefinition.getTitle() + " in string \n" + in_stringValue + ".");
         }
 
-        return in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        //Anonymize
+
+        String rawExtraction = in_stringValue.substring(l_startLocation, l_endLocation).trim();
+        String lr_extraction = rawExtraction;
+        for (String lt_anonymizer : in_parseDefinition.getAnonymizers().stream().filter(a -> stringsCorrespond(a,
+                rawExtraction)).collect(
+            Collectors.toList())) {
+            lr_extraction = anonymizeString(lt_anonymizer.trim(), rawExtraction);
+        }
+        return lr_extraction;
 
     }
 
@@ -317,4 +342,94 @@ public class StringParseFactory {
         return isStringCompliant(in_logString, in_parseDefinition.getDefinitionEntries());
     }
 
+    /**
+     * This method lets us know if the foundStrinf corresponds to the stored string. The stored string will have escape
+     * characters like the log4J FormatMessages I.e. '{}
+     *
+     * @param in_templateString A stored string reference containing the standard escape chracters '{}
+     * @param in_candidateString
+     * @return
+     */
+    public static boolean stringsCorrespond(String in_templateString, String in_candidateString) {
+        int currentSpot = -1;
+        for (String lt_anonymizerCurly : in_templateString.split("\\{\\}")) {
+            for (String lr_anonymizerSquare : lt_anonymizerCurly.split("\\[\\]")) {
+                int lt_currentLocation = in_candidateString.indexOf(lr_anonymizerSquare, currentSpot + 1);
+                if (lt_currentLocation <= currentSpot) {
+                    return false;
+                }
+                currentSpot = lt_currentLocation;
+            }
+
+        }
+
+        return true;
+    }
+
+    /**
+     * This method anonymizes a string based on a template string. If the template contains {} the corresponding value
+     * in the candidate string will be replaced. We also have the opportuning to ignore certain parts of the string by
+     * passing [].
+     * <p>
+     * Author : gandomi
+     *
+     * @param in_templateString  A string that is to be parsed
+     * @param in_candidateString A list of parse definitions that will be used to fetch the values in the given string
+     * @return A string that is anonymized based on the template string
+     */
+    public static String anonymizeString(String in_templateString, String in_candidateString) {
+
+        if (!stringsCorrespond(in_templateString, in_candidateString)) {
+            return in_candidateString;
+        }
+
+        StringBuilder lr_string = new StringBuilder();
+        int l_replace = in_templateString.indexOf("{}");
+        final int NOT_FOUND_COEF = 100000;
+        l_replace = (l_replace < 0) ? NOT_FOUND_COEF : l_replace;
+        int l_keep = in_templateString.indexOf("[]");
+        l_keep = (l_keep < 0) ? NOT_FOUND_COEF : l_keep;
+        int l_escapeIdx = Math.min(l_replace, l_keep);
+
+        //If replace is before keep recursively call the function up to the keep
+        if (l_replace < l_keep) {
+
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
+                    l_escapeIdx);
+
+            lr_string.append(in_templateString.substring(0, l_escapeIdx+2));
+
+            if (l_escapeIdx + 2 < in_templateString.length()) {
+                lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
+                        in_candidateString.substring(nextCandidateIdx)));
+            }
+
+        } else if (l_replace > l_keep) {
+            int nextCandidateIdx = fetchNextExtractionIdxOfCandidate(in_templateString, in_candidateString,
+                    l_escapeIdx);
+
+            lr_string.append(in_candidateString.substring(0, nextCandidateIdx));
+
+            //If keep is before replace recursively call the function up to the replace
+            lr_string.append(anonymizeString(in_templateString.substring(l_escapeIdx + 2),
+                    in_candidateString.substring(nextCandidateIdx)));
+        } else {
+            //If both are equal we can replace the values
+            lr_string.append(in_candidateString);
+        }
+
+        return lr_string.toString();
+
+    }
+
+    private static int fetchNextExtractionIdxOfCandidate(String in_templateString, String in_candidateString,
+            int in_fromIdx) {
+        //find the next point of interest
+        int candSearchString = Math.min(in_templateString.indexOf("{}", in_fromIdx + 1) * -1,
+                in_templateString.indexOf("[]", in_fromIdx + 1) * -1) * -1;
+
+        return in_candidateString.indexOf(
+                (candSearchString < 0) ? in_templateString.substring(in_fromIdx + 2) : in_templateString.substring(
+                        in_fromIdx + 2, candSearchString));
+    }
 }

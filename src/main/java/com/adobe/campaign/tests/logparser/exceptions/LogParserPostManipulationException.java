@@ -9,17 +9,14 @@
 package com.adobe.campaign.tests.logparser.exceptions;
 
 /**
- * Exceptions for managing problems with import and export
+ * Exceptions for managing problems with post manipulation of the log data
  */
-public class LogDataExportToFileException extends RuntimeException {
+public class LogParserPostManipulationException
+        extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public LogDataExportToFileException(String s, Exception ex) {
-        super(s, ex);
-    }
-
-    public LogDataExportToFileException(String s) {
-        super(s);
+    public LogParserPostManipulationException(String message, Exception e) {
+        super(message, e);
     }
 }
