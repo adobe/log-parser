@@ -42,23 +42,6 @@ public enum RunArguments {
         this.defaultValue = defaultValue;
     }
 
-    public static String printCommands() {
-        String lr_value = "";
-        for (RunArguments lt_command : values()) {
-            lr_value += "," + lt_command.toString();
-        }
-        return lr_value.substring(1);
-    }
-
-    public static boolean containsValue(String in_commandString) {
-
-        for (RunArguments lt_command : RunArguments.values()) {
-            if (lt_command.getLabel().equals(in_commandString))
-                return true;
-        }
-
-        return false;
-    }
 
     /**
      * This method returns all mandatory commands
@@ -149,6 +132,12 @@ public enum RunArguments {
             return this.getLabel();
     }
 
+    /**
+     * This method fetches the value of the argument
+     *
+     * @param in_argument the argument name
+     * @return the value of the argument.
+     */
     public String fetchValue(String in_argument) {
         if (!this.command_equals(in_argument)) {
             throw new IllegalArgumentException("The given argument "
@@ -160,51 +149,5 @@ public enum RunArguments {
         String lr_String = in_argument.substring(this.getLabel().length());
         return lr_String.isEmpty() ? this.getDefaultValue() : lr_String;
     }
-
-    public static boolean fillSystemWithArgs(List<String> in_args) {
-
-        // Check that print help has not been pressed
-        for (String lt_currentArg : in_args) {
-            if (RunArguments.HELP.command_equals(lt_currentArg)) {
-                RunArguments.printHelp();
-                return false;
-            }
-        }
-
-        // Check Mandatory
-        for (RunArguments lt_mandatoryCommand : RunArguments.getMandatoryCommands()) {
-
-            boolean lt_found = false;
-            for (String lt_currentArg : in_args) {
-                if (lt_mandatoryCommand.command_equals(lt_currentArg))
-                    lt_found = true;
-            }
-
-            if (!lt_found) {
-                System.out.println("Missing mandatory argument "
-                        + lt_mandatoryCommand
-                        + ". Please enter a value for that argument.\n"
-                        + lt_mandatoryCommand.getDescription() + "\n\n");
-                //RunAppHandler.printHelp();
-                return false;
-            }
-        }
-
-        // Fetch fields. for each missing field print warning and description
-        // Browse Commands
-        for (RunArguments lt_Command : RunArguments.values()) {
-            for (String lt_currentArg : in_args) {
-                if (lt_Command.command_equals(lt_currentArg)) {
-
-                }
-            }
-
-            if (!lt_Command.equals(RunArguments.HELP))
-                System.out.println("You did not give a value for the argument "+lt_Command.fetchArgument()+". The default value will be used. "+lt_Command.getDescription());
-        }
-
-        return true;
-    }
-
 
 }
