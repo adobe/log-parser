@@ -243,6 +243,37 @@ public class StdLogEntryTests {
     }
 
     @Test
+    public void testMatchesAll_negative() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        ////enrich logData
+        // Prepare inputs
+        Map<String, Matcher> l_queryMap = new HashMap<>();
+
+
+        assertThat("We should not have a match because not criteria were given", !l_inputData.matches(l_queryMap));
+
+        assertThat("We should not have a match because not criteria were given", !l_inputData.matches(null));
+
+
+    }
+
+    @Test
     public void testInsertingOfAPath() {
         ParseDefinition l_definition = new ParseDefinition("tmp");
 

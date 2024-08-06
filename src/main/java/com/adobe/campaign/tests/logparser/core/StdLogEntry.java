@@ -216,6 +216,9 @@ public abstract class StdLogEntry {
      * @return True if all of the values can be found in the valueMap
      */
     public boolean matches(Map<String, Matcher> in_filterMap) {
+        if (in_filterMap == null || in_filterMap.isEmpty()) {
+            return false;
+        }
 
         return in_filterMap.entrySet().stream().allMatch(e -> e.getValue().matches(this.get(e.getKey())));
     }
