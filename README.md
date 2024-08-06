@@ -240,7 +240,7 @@ Below is a diagram representing the class structure:
 ![The Class relationship](diagrams/Log_Parser-Classes.drawio.png)
 
 ## Searching and organizing log data
-We have a series of search and organizing the log data.
+We have a series of search and organizing the log data. These by general use Hamcrest Matchers to allow you to define different querires. 
 
 ### Search and Filter Mechanisms
 We have introduced the filter and search mechanisms. These allow you to search the LogData for values for a given ParseDefinitionEntry. For this we have introduced the following methods:
@@ -252,21 +252,44 @@ We currently have the following signatures:
 
 ```java
 public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue)
-public boolean isEntryPresent(Map<String, Object> in_searchKeyValues)
+public boolean isEntryPresent(Map<String, Matcher> in_searchKeyValues)
 public LogData<T> searchEntries(String in_parseDefinitionName, String in_searchValue)
-public LogData<T> searchEntries(Map<String, Object> in_searchKeyValues)
-public LogData<T> filterBy(Map<String, Object> in_filterKeyValues)
+public LogData<T> searchEntries(Map<String, Matcher> in_searchKeyValues)
+public LogData<T> filterBy(Map<String, Matcher> in_filterKeyValues)
 ```
 
-In the cases where the method accepts a map we allow the user to search by a series of search terms. Example:
+#### Defining a Search Term
+When we define a search term, we do this by defining it as a map of ParseDefining Entry Name and a Matcher. The Matcher we use is a Hamcrest matcher which provides great flexibility in defining the search terms.
 
 ```java
-Map<String, Object> l_filterProperties = new HashMap<>();
-        l_filterProperties.put("Definition 1", "14");
-        l_filterProperties.put("Definition 2", "13");
+Map<String, Matcher> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("Definition 1", Matchers.equalTo("14"));
+        l_filterProperties.put("Definition 2", Matchers.startsWith("13"));
 
 LogData<GenericEntry> l_foundEntries = l_logData.searchEntries(l_filterProperties)); 
 ```
+
+In versions prior to 1.11.0 we used a map of key and Objects for search terms. In these queries it was implicitly an equality check. Because of that these search terms can be replaced with `Matchers.equalTo` or `Matchers.is`.
+
+Example of a search term in version 1.10.0:
+```java
+Map<String, Object> l_filterProperties = new HashMap<>();
+l_filterProperties.put("Definition 1", "14");
+```
+
+In version 1.11.0 the same search term would look like this:
+```java
+Map<String, Matcher> l_filterProperties = new HashMap<>();
+l_filterProperties.put("Definition 1", Matchers.equalTo("14"));
+```
+
+### Enriching Log Data
+We have the capability to enrich log data with additional information. This is done by using the method `LogData#enrichData`. This method accepts:
+* A search term (as defined in the section [Defining a Search Term](#defining-a-search-term))
+* The title of the entry to be added
+* The value for the new entry in the search lines
+
+Enrichment can be done mutiple times in order to add multiple values for the enrichment.
 
 ### GroupBy Mechanisms
 We have introduced the groupBy mechanism. This functionality allows you to organize your results with more detail. Given a log data object, and an array of ParseDefinitionEntry names, we generate a new LogData Object containing groups made by the passed ParseDeinitionEnries and and number of entries for each group.
@@ -401,6 +424,7 @@ All reports are stored in the directory `./log-parser-reports/export/`.
 - **(new feature)** [#154](https://github.com/adobe/log-parser/issues/154) We have a data enrichment feature, where you can enrich the log data with additional information.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
+- [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead they are now a map of Parse Definition Entry names and Hamcrest Matchers. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 
 
