@@ -1392,7 +1392,7 @@ public class LogDataTest {
         String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
 
         //Create the file so it is deleted
-        File l_duplicateFile = new File(l_fileNameToExpect);
+        File l_duplicateFile = new File(LogParserFileUtils.LOG_PARSER_EXPORTS,l_fileNameToExpect);
         l_duplicateFile.createNewFile();
 
         assertThat("We should have the key for amcDataSource",
