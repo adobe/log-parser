@@ -95,6 +95,27 @@ public class ExecutionTests {
         }
     }
 
+    @Test
+    public void testSTDMain_printCSV_empty() throws IOException, StringParseException {
+        String l_rootPath = "src/test/resources/logTests/acc/";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        ParseDefinition l_parseDefinition = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
+
+        String[] l_args = { RunArguments.START_DIR.buildArgument(l_rootPath),
+                RunArguments.PARSE_DEFINITIONS_FILE.buildArgument(l_jsonPath),
+                RunArguments.REPORT_FORMAT.buildArgument("CSV") };
+
+        RunLogParser.main(l_args);
+
+        File l_exportedFile = new File(LogParserFileUtils.LOG_PARSER_EXPORTS,
+                l_parseDefinition.fetchEscapedTitle() + "-export.csv");
+
+        assertThat("We should not create a file", !l_exportedFile.exists());
+
+    }
+
     //An unexpected format
     @Test
     public void testSTDMain_printNonExistant() throws StringParseException {
