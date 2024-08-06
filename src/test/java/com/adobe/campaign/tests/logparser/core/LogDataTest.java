@@ -21,6 +21,7 @@ import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
 import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
+import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -1297,6 +1298,8 @@ public class LogDataTest {
         assertThat("We successfully created the file", l_exportedFile, notNullValue());
         assertThat("We successfully created the file", l_exportedFile.exists());
         assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        assertThat("The file should be stored in the correct place", l_exportedFile.getParentFile().getPath(),
+                Matchers.equalTo(LogParserFileUtils.LOG_PARSER_EXPORTS));
         try {
             String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-');
             assertThat("We successfully created the file correctly", l_exportedFile.getName(),
