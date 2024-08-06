@@ -8,12 +8,15 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
+import com.adobe.campaign.tests.logparser.data.SDKCase2;
 import com.adobe.campaign.tests.logparser.data.SDKCaseSTD;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,6 +83,35 @@ public class EnrichmentTests {
     }
 
     @Test
+    public void testDoubleEnrichment_updateUnset() {
+        LogData<GenericEntry> l_cubeData = fetchTestLogEntry();
+
+        //Checks before enrichment
+        assertThat(l_cubeData.getEntries().size(), Matchers.is(3));
+        assertThat(l_cubeData.get("12").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence"));
+
+        ////enrich logData
+        // Prepare inputs
+        Map<String, Matcher> l_queryMap = new HashMap<>();
+        l_queryMap.put("AAZ", Matchers.startsWith("12"));
+
+        l_cubeData.enrichData(l_queryMap, "TIT", "TAT");
+
+        Map<String, Matcher> l_queryMap2 = new HashMap<>();
+        l_queryMap2.put("TIT", Matchers.equalTo(""));
+
+        l_cubeData.enrichUnset("TIT", "TUT");
+
+        assertThat(l_cubeData.get("12").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
+        assertThat(l_cubeData.get("12").get("TIT"), Matchers.equalTo("TAT"));
+
+        assertThat(l_cubeData.get("112").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
+        assertThat(l_cubeData.get("112").get("TIT"), Matchers.equalTo("TUT"));
+
+        l_cubeData.exportLogDataToHTML("dsd", "enriched");
+    }
+
+    @Test
     public void testDoubleEnrichment_SDK() throws StringParseException {
 
         ParseDefinition l_pDefinition = SDKTests.getTestParseDefinition();
@@ -99,8 +131,32 @@ public class EnrichmentTests {
 
         assertThat("We should have the correct value", l_entries.get("INT-150612").get("category"), is(equalTo("GREAT")));
         assertThat("We should have the correct value", l_entries.get("SOP-338921").get("category"), is(equalTo("AVERAGE")));
-        //assertThat("We should have the correct value", l_entries.get("SOP-338921").get("category"), is(equalTo("AVERAGE")));
+    }
 
+    @Test
+    public void testDoubleEnrichment_SDK_timeBased() throws StringParseException {
+
+        ParseDefinition l_pDefinition = SDKTests.getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "src/test/resources/sdk/useCase1.log";
+
+        LogData<SDKCase2> l_entries = LogDataFactory.generateLogData(Arrays.asList(l_file), l_pDefinition,
+                SDKCase2.class);
+
+        l_entries.exportLogDataToHTML("", "time");
+
+        ZonedDateTime start = ZonedDateTime.parse("2024-06-13T03:00:10.727Z", DateTimeFormatter.ISO_ZONED_DATE_TIME);
+        ZonedDateTime end = ZonedDateTime.parse("2024-06-13T11:00:19.727Z", DateTimeFormatter.ISO_ZONED_DATE_TIME);
+
+
+        Map<String, Matcher> l_queryMap = Map.of("timeOfLog", Matchers.allOf(Matchers.greaterThanOrEqualTo(start), Matchers.lessThanOrEqualTo(end)));
+        l_entries.enrichData(l_queryMap, "test", "Test1");
+
+        assertThat("We should have the correct value", l_entries.get("INT-150612").get("test"), is(equalTo("Test1")));
+        assertThat("We should have the correct value", l_entries.get("SOP-338921").get("test"), is(equalTo("")));
+        assertThat("We should have the correct value", l_entries.get("INT-158912").get("test"), is(equalTo("")));
+        assertThat("We should have the correct value", l_entries.get("WEB-530007").get("test"), is(equalTo("Test1")));
     }
 
     private static LogData<GenericEntry> fetchTestLogEntry() {

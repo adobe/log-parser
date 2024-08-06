@@ -558,4 +558,16 @@ public class LogData<T extends StdLogEntry> {
             e.getValue().put(in_entryName, in_entryValue);
         });
     }
+
+    /**
+     * Enriches the log data which have not been set with the given values
+     * @param in_entryName The name of the entry to be added
+     * @param in_entryValue The value of the entry to be added
+     */
+    public void enrichUnset(String in_entryName, String in_entryValue) {
+        Map<String, Matcher> l_unsetSearchQuery = new HashMap<>();
+        l_unsetSearchQuery.put(in_entryName, Matchers.equalTo(""));
+
+        this.enrichData(l_unsetSearchQuery, in_entryName, in_entryValue);
+    }
 }
