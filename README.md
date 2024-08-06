@@ -411,7 +411,7 @@ You can provide additional information such as:
 
 You can get a print out of the command line options by running the command with the `--help` flag. 
 
-All reports are stored in the directory `./log-parser-reports/export/`.
+All reports are stored in the directory `log-parser-reports/export/`.
 
 ### 1.11.0 (next version)
 - **(new feature)** [#10](https://github.com/adobe/log-parser/issues/10) We now have an executable for the log-parser. You can perform a log parsing using the command line. For more information please read the section on [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).
