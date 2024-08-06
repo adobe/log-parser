@@ -8,14 +8,19 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
+import com.adobe.campaign.tests.logparser.data.SDKCaseSTD;
+import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertThrows;
 
 public class EnrichmentTests {
@@ -40,7 +45,7 @@ public class EnrichmentTests {
         assertThat(l_cubeData.get("12").get("TIT"), Matchers.equalTo("TAT"));
 
         assertThat(l_cubeData.get("112").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
-        assertThat(l_cubeData.get("112").get("TIT"), Matchers.nullValue());
+        assertThat(l_cubeData.get("112").get("TIT"), Matchers.equalTo(""));
 
         l_cubeData.exportLogDataToHTML("dsd", "enriched");
     }
@@ -61,7 +66,7 @@ public class EnrichmentTests {
         l_cubeData.enrichData(l_queryMap, "TIT", "TAT");
 
         Map<String, Matcher> l_queryMap2 = new HashMap<>();
-        l_queryMap2.put("TIT", Matchers.nullValue());
+        l_queryMap2.put("TIT", Matchers.equalTo(""));
 
         l_cubeData.enrichData(l_queryMap2, "TIT", "TUT");
 
@@ -74,7 +79,29 @@ public class EnrichmentTests {
         l_cubeData.exportLogDataToHTML("dsd", "enriched");
     }
 
+    @Test
+    public void testDoubleEnrichment_SDK() throws StringParseException {
 
+        ParseDefinition l_pDefinition = SDKTests.getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "src/test/resources/sdk/useCase1.log";
+
+        LogData<SDKCaseSTD> l_entries = LogDataFactory.generateLogData(Arrays.asList(l_file), l_pDefinition,
+                SDKCaseSTD.class);
+
+        Map<String, Matcher> l_queryMap = Map.of("code", Matchers.startsWith("INT"));
+        l_entries.enrichData(l_queryMap, "category", "GREAT");
+
+        Map<String, Matcher> l_queryMap2 = Map.of("code", Matchers.startsWith("SOP"));
+        l_entries.enrichData(l_queryMap2, "category", "AVERAGE");
+
+
+        assertThat("We should have the correct value", l_entries.get("INT-150612").get("category"), is(equalTo("GREAT")));
+        assertThat("We should have the correct value", l_entries.get("SOP-338921").get("category"), is(equalTo("AVERAGE")));
+        //assertThat("We should have the correct value", l_entries.get("SOP-338921").get("category"), is(equalTo("AVERAGE")));
+
+    }
 
     private static LogData<GenericEntry> fetchTestLogEntry() {
         ParseDefinition l_definition = new ParseDefinition("tmp");

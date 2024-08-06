@@ -555,8 +555,7 @@ public class LogData<T extends StdLogEntry> {
 
         //Iterate over the entries
         getEntries().entrySet().stream().filter(e -> e.getValue().matches(in_queryMap)).forEach(e -> {
-            e.getValue().getValuesMap().put(in_entryName, in_entryValue);
+            e.getValue().put(in_entryName, in_entryValue);
         });
-        //for each entry meeting the querymap enrich with the given value
     }
 }

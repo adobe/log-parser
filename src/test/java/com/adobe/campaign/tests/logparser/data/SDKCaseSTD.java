@@ -50,6 +50,8 @@ public class SDKCaseSTD extends StdLogEntry {
         lr_map.put("code", this.makeKey());
         lr_map.put("errorMessage", this.errorMessage);
         lr_map.put(StdLogEntry.STD_DATA_FREQUENCE, this.getFrequence());
+        //lr_map.addAll(this.valuesMap);
+        getValuesMap().forEach(lr_map::putIfAbsent);
 
         return lr_map;
     }
