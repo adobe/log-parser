@@ -284,12 +284,14 @@ l_filterProperties.put("Definition 1", Matchers.equalTo("14"));
 ```
 
 ### Enriching Log Data
-We have the capability to enrich log data with additional information. This is done by using the method `LogData#enrichData`. This method accepts:
+We have the capability to enrich log data with additional information. This is done by using the method `LogData#enrichData(Map<String, Matcher>, String, String)`. This method accepts:
 * A search term (as defined in the section [Defining a Search Term](#defining-a-search-term))
 * The title of the entry to be added
 * The value for the new entry in the search lines
 
-Enrichment can be done mutiple times in order to add multiple values for the enrichment.
+Enrichment can be done multiple times in order to add multiple values for the enrichment.
+
+We have also introduced a method called `LogData#enrichUnset(String, Strinf)`, which sets a value for the entries which have not yet have a value set for them.  
 
 ### GroupBy Mechanisms
 We have introduced the groupBy mechanism. This functionality allows you to organize your results with more detail. Given a log data object, and an array of ParseDefinitionEntry names, we generate a new LogData Object containing groups made by the passed ParseDeinitionEnries and and number of entries for each group.
