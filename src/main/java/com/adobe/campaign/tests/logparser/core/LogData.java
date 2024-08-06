@@ -387,6 +387,22 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
+     * Exports the current LogData to a standard CSV file with a name you give. By default the file will have an escaped version of the Parse
+     * @param in_fileName a filename to store the CSV export
+     * @return a CSV file containing the LogData
+     */
+    public File exportLogDataToCSV(String in_fileName) {
+        T l_firstEntry = this.fetchFirst();
+
+        if (l_firstEntry != null) {
+            return exportLogDataToCSV(l_firstEntry.fetchHeaders(), in_fileName);
+        } else {
+            log.warn("No Log data to export. Please load the log data before re-attempting");
+            return null;
+        }
+    }
+
+    /**
      * Exports the current LogData to a CSV file.
      *
      * @param in_headerSet   A set of headers to be used as keys for exporting
@@ -398,7 +414,7 @@ public class LogData<T extends StdLogEntry> {
             throws LogDataExportToFileException {
         File l_exportFile = LogParserFileUtils.createNewFile(in_csvFileName);
 
-        try (CSVPrinter printer = new CSVPrinter(new FileWriter(in_csvFileName), CSVFormat.DEFAULT)) {
+        try (CSVPrinter printer = new CSVPrinter(new FileWriter(l_exportFile), CSVFormat.DEFAULT)) {
             printer.printRecord(in_headerSet);
 
             for (StdLogEntry lt_entry : this.getEntries().values()) {
@@ -410,7 +426,7 @@ public class LogData<T extends StdLogEntry> {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a CSV file.", ex);
         }
 
-        return new File(in_csvFileName);
+        return l_exportFile;
     }
 
     /**

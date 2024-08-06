@@ -21,5 +21,9 @@
             <package
                     name="com.adobe.campaign.tests.logparser.utils" />
         </packages>
+        <classes>
+            <class
+                name="com.adobe.campaign.tests.logparser.ExecutionTests" />
+        </classes>
     </test>
 </suite> <!-- Default suite -->

@@ -66,6 +66,10 @@ The following dependency needs to be added to your pom file:
     <version>1.0.10</version>
 </dependency>
 ```
+## Running the Log Parser
+We have two ways of running the log parser:
+1. Programmatically, as a library and in your test you can simply use the log-parser to analyse your log files.
+2. Command-Line, as of version 1.11.0, we allow you to run your log-parsing from the command-line. Further details can be found in the section [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).
 
 ## Parse Definitions
 In order to parse logs you need to define a ParseDefinition. A ParseDefinition contains a set of ordered ParseDefinition Entries. While parsing a line of logs, the LogParser will see if all entries can be found in the line of logs. If that is the case, the line is stored according to the definitions.
@@ -165,8 +169,7 @@ In the code above we want to parse the log line below, and want to fin the REST 
 The code starts with the creation a parse definition with at least two parse definitions that tell us between which markers should each data be extracted. The parse difinition is then handed to the StringParseFactory so that the data can be extracted.
 At the end we can see that each data is stored in a map with the parse defnition entry title as a key.
 
-
-### Import and Export
+### Import and Export of Parse Definitions
 You can import or store a Parse Definition to or from a JSON file.
 
 ### Importing a JSON File
@@ -356,9 +359,39 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 ## Exporting Results to a CSV File
 We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
 
-## Release Notes
+## Exporting Results to a CSV File
+We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
+
+## Command-line Execution of the Log-Parser
+As of version 1.11.0 we have introduced the possibility of running the log-parser from the command line. This is done by using the executable jar file or executing the main method in maven. 
+
+The results will currently be stored as a CSV or HTML file.
+
+The command line requires you to at least provide the following information:
+* `--startDir` : The root path from which the logs should be searched.
+* `--parseDefinition` : The path to the parse definition file.
+
+The typical command line would look like this:
+```
+mvn exec:java -Dexec.args="--startDir=src/test/resources/nestedDirs/ --parseDefinition=src/test/resources/parseDefinition.json"
+```
+or
+```
+java -jar log-parser-1.11.0.jar --startDir=/path/to/logs --parseDefinition=/path/to/parseDefinition.json
+``` 
+
+You can provide additional information such as:
+* `--fileFilter` : The wildcard used for selecting the log files. The default value is *.log
+* `--reportType` : The format of the report. The allowed values are currently HTML & CSV. The default value is HTML
+* `--reportFileName` : The name of the report file. By default, this is the name of the Parse Definition name suffixed with '-export'
+* `--reportName` : The report title as show in an HTML report. By default the title includes the Parse Definition name
+
+You can get a print out of the command line options by running the command with the `--help` flag. 
+
+All reports are stored in the directory `./log-parser-reports/export/`.
 
 ### 1.11.0 (next version)
+- **(new feature)** [#10](https://github.com/adobe/log-parser/issues/10) We now have an executable for the log-parser. You can perform a log parsing using the command line. For more information please read the section on [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).
 - **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
 - **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 - **(new feature)** [#138](https://github.com/adobe/log-parser/issues/138) We now have the possibility of anonymizing log data during parsing. For more information please read the section on [Anonymizing Data](#anonymizing-data).
