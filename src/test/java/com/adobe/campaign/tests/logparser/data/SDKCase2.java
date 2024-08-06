@@ -10,17 +10,20 @@ package com.adobe.campaign.tests.logparser.data;
 
 import com.adobe.campaign.tests.logparser.core.StdLogEntry;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SDKCaseSTD extends StdLogEntry {
+public class SDKCase2 extends StdLogEntry {
     String code;
     String errorMessage;
+    ZonedDateTime timeOfLog;
 
-    public SDKCaseSTD() {
+    public SDKCase2() {
     }
 
-    public SDKCaseSTD(SDKCaseSTD accstdErrors) {
+    public SDKCase2(SDKCase2 accstdErrors) {
         this.code = accstdErrors.code;
         this.errorMessage = accstdErrors.errorMessage;
     }
@@ -31,14 +34,14 @@ public class SDKCaseSTD extends StdLogEntry {
     }
 
     @Override
-    public SDKCaseSTD copy() {
-        return new SDKCaseSTD(this);
+    public SDKCase2 copy() {
+        return new SDKCase2(this);
     }
 
     @Override
     public Set<String> fetchHeaders() {
         Set<String> lr_headerSet = new LinkedHashSet<>();
-        lr_headerSet.addAll(Arrays.asList(StdLogEntry.STD_DATA_FILE_PATH, StdLogEntry.STD_DATA_FILE_NAME,"code", "errorMessage", "frequence"));
+        lr_headerSet.addAll(Arrays.asList(StdLogEntry.STD_DATA_FILE_PATH, StdLogEntry.STD_DATA_FILE_NAME,"code", "errorMessage","timeOfLog", "frequence"));
         return lr_headerSet;
     }
 
@@ -50,7 +53,8 @@ public class SDKCaseSTD extends StdLogEntry {
         lr_map.put("code", this.makeKey());
         lr_map.put("errorMessage", this.errorMessage);
         lr_map.put(StdLogEntry.STD_DATA_FREQUENCE, this.getFrequence());
-        //lr_map.addAll(this.valuesMap);
+        lr_map.put("timeOfLog", this.timeOfLog);
+
         getValuesMap().forEach(lr_map::putIfAbsent);
 
         return lr_map;
@@ -64,6 +68,9 @@ public class SDKCaseSTD extends StdLogEntry {
         this.code = errorCode.contains("-") ? errorCode : in_valueMap.get("errorContent");
         this.errorMessage = errorCode.contains("-") ? in_valueMap.get("errorContent")
                 .substring(in_valueMap.get("errorContent").indexOf(" ") + 1) : in_valueMap.get("errorContent");
+
+        this.timeOfLog = ZonedDateTime.parse(in_valueMap.get("timeStamp"), DateTimeFormatter.ISO_ZONED_DATE_TIME);
+
     }
 
     protected List<String> fetchValuesAsList() {

@@ -17,11 +17,14 @@ import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionExc
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -29,7 +32,7 @@ import static org.hamcrest.Matchers.is;
 
 public class SDKTests {
 
-    private static ParseDefinition getTestParseDefinition() {
+    static ParseDefinition getTestParseDefinition() {
         ParseDefinitionEntry l_timeStamp = new ParseDefinitionEntry();
         l_timeStamp.setTitle("timeStamp");
         l_timeStamp.setStartStartOfLine();
@@ -191,7 +194,5 @@ public class SDKTests {
                         SDKCasePrivateDefConstructor.class));
 
     }
-
-
 
 }
