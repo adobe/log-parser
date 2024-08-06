@@ -240,7 +240,7 @@ Below is a diagram representing the class structure:
 ![The Class relationship](diagrams/Log_Parser-Classes.drawio.png)
 
 ## Searching and organizing log data
-As of versions 1.0.4 & 1.0.5 we have a series of search and organizing the log data.
+We have a series of search and organizing the log data.
 
 ### Search and Filter Mechanisms
 We have introduced the filter and search mechanisms. These allow you to search the LogData for values for a given ParseDefinitionEntry. For this we have introduced the following methods:
@@ -398,6 +398,7 @@ All reports are stored in the directory `./log-parser-reports/export/`.
 - **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
 - **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
+- **(new feature)** [#154](https://github.com/adobe/log-parser/issues/154) We have a data enrichment feature, where you can enrich the log data with additional information.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.

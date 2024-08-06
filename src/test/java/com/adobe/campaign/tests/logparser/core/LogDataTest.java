@@ -25,6 +25,7 @@ import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -746,8 +747,8 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        Map<String, Object> l_filterProperties = new HashMap<>();
-        l_filterProperties.put("ZZZ", "114");
+        Map<String, Matcher> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", Matchers.equalTo("114"));
         LogData<GenericEntry> l_myCube = l_cubeData.filterBy(l_filterProperties);
 
         assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(1)));
@@ -755,7 +756,7 @@ public class LogDataTest {
         assertThat("We should have found the correct entry", l_myCube.getEntries().containsKey("112"));
 
         //Adding another filter
-        l_filterProperties.put("DAT", "AAA");
+        l_filterProperties.put("DAT", Matchers.equalTo("AAA"));
 
         LogData<GenericEntry> l_myCube2 = l_cubeData.filterBy(l_filterProperties);
 
@@ -764,7 +765,7 @@ public class LogDataTest {
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("112"));
 
         //Negative test
-        l_filterProperties.put("DAT", "AA");
+        l_filterProperties.put("DAT", Matchers.equalTo("AA"));
 
         LogData<GenericEntry> l_myCube3 = l_cubeData.filterBy(l_filterProperties);
 
@@ -810,9 +811,9 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        Map<String, Object> l_filterProperties = new HashMap<>();
-        l_filterProperties.put("ZZZ", "14");
-        l_filterProperties.put("BAU", "13");
+        Map<String, Matcher> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", Matchers.equalTo("14"));
+        l_filterProperties.put("BAU", Matchers.equalTo("13"));
 
         LogData<GenericEntry> l_myCube = l_cubeData.filterBy(l_filterProperties);
 
@@ -827,7 +828,7 @@ public class LogDataTest {
 
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("120"));
 
-        l_filterProperties.put("DAT", "AAA");
+        l_filterProperties.put("DAT", Matchers.equalTo("AAA"));
         LogData<GenericEntry> l_myCube3 = l_cubeData.filterBy(l_filterProperties);
 
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(1)));
@@ -930,7 +931,7 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        LogData<GenericEntry> l_myCube = l_cubeData.searchEntries("ZZZ", "114");
+        LogData<GenericEntry> l_myCube = l_cubeData.searchEntries("ZZZ", Matchers.equalTo("114"));
 
         assertThat("We should have found one entry", l_myCube.getEntries().size(), is(equalTo(1)));
 
@@ -938,14 +939,14 @@ public class LogDataTest {
 
         //Adding another filter
 
-        LogData<GenericEntry> l_myCube2 = l_cubeData.searchEntries("DAT", "AAA");
+        LogData<GenericEntry> l_myCube2 = l_cubeData.searchEntries("DAT", Matchers.equalTo("AAA"));
 
         assertThat("We should have found one entry", l_myCube2.getEntries().size(), is(equalTo(1)));
 
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("112"));
 
         //Negative test
-        LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries("DAT", "AAL");
+        LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries("DAT", Matchers.equalTo("AAL"));
 
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(0)));
 
@@ -989,9 +990,9 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        Map<String, Object> l_filterProperties = new HashMap<>();
-        l_filterProperties.put("ZZZ", "14");
-        l_filterProperties.put("BAU", "13");
+        Map<String, Matcher> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", Matchers.equalTo("14"));
+        l_filterProperties.put("BAU", Matchers.equalTo("13"));
 
         LogData<GenericEntry> l_myCube = l_cubeData.searchEntries(l_filterProperties);
 
@@ -1006,7 +1007,7 @@ public class LogDataTest {
 
         assertThat("We should have found the correct entry", l_myCube2.getEntries().containsKey("120"));
 
-        l_filterProperties.put("DAT", "AAA");
+        l_filterProperties.put("DAT", Matchers.equalTo("AAA"));
         LogData<GenericEntry> l_myCube3 = l_cubeData.searchEntries(l_filterProperties);
 
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(1)));
@@ -1053,13 +1054,13 @@ public class LogDataTest {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
 
-        Map<String, Object> l_filterProperties = new HashMap<>();
-        l_filterProperties.put("ZZZ", "14");
-        l_filterProperties.put("BAU", "13");
+        Map<String, Matcher> l_filterProperties = new HashMap<>();
+        l_filterProperties.put("ZZZ", Matchers.equalTo("14"));
+        l_filterProperties.put("BAU", Matchers.equalTo("13"));
 
         assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent(l_filterProperties));
         
-        l_filterProperties.put("BAU", "1398");
+        l_filterProperties.put("BAU", Matchers.equalTo("1398"));
         
         assertThat("We should state that the given entry is present", !l_cubeData.isEntryPresent(l_filterProperties));
 

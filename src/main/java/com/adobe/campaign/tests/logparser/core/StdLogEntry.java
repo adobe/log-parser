@@ -8,41 +8,31 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hamcrest.Matcher;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class for multiple definitions
- *
- *
+ * <p>
+ * <p>
  * Author : gandomi
- *
  */
 public abstract class StdLogEntry {
-    protected static Logger log = LogManager.getLogger();
-
-    private Integer frequence = 1;
-    private ParseDefinition parseDefinition;
-    Map<String, Object> valuesMap = new HashMap<>();
-    private String fileName;
-    private String filePath;
-
-
     public static final String STD_DATA_KEY = "key";
     public static final String STD_DATA_FREQUENCE = "frequence";
     public static final String STD_DATA_FILE_NAME = "fileName";
     public static final String STD_DATA_FILE_PATH = "filePath";
-
-    /**
-     * A method that creates the key to identify each stored entry
-     *
-     * @return A constructed key
-     */
-    public abstract String makeKey();
+    protected static Logger log = LogManager.getLogger();
+    Map<String, Object> valuesMap = new HashMap<>();
+    private Integer frequence = 1;
+    private ParseDefinition parseDefinition;
+    private String fileName;
+    private String filePath;
 
     public StdLogEntry(ParseDefinition in_definition) {
         this.parseDefinition = in_definition;
@@ -60,6 +50,13 @@ public abstract class StdLogEntry {
     }
 
     /**
+     * A method that creates the key to identify each stored entry
+     *
+     * @return A constructed key
+     */
+    public abstract String makeKey();
+
+    /**
      * Creates a clone of the current LogEntry. This requires that each child defines a copy constructor
      * <p>
      * Author : gandomi
@@ -75,6 +72,13 @@ public abstract class StdLogEntry {
      */
     public Map<String, Object> getValuesMap() {
         return valuesMap;
+    }
+
+    /**
+     * @param valuesMap the valuesMap to set
+     */
+    protected void setValuesMap(Map<String, Object> valuesMap) {
+        this.valuesMap = valuesMap;
     }
 
     /**
@@ -103,11 +107,11 @@ public abstract class StdLogEntry {
      */
     public abstract Set<String> fetchHeaders();
 
+    ;
+
     /**
      * Returns a set of objects you have defined for your log class. When using Generic Object no changes are made to
-     * it.
-     * When defining an SDK you should override this method.
-     * Author : gandomi
+     * it. When defining an SDK you should override this method. Author : gandomi
      *
      * @return A Maps of values for the LogEntry
      */
@@ -123,10 +127,10 @@ public abstract class StdLogEntry {
             l_valueMap.put(STD_DATA_FILE_PATH, getFilePath());
         }
 
-        l_valueMap.put(STD_DATA_FREQUENCE , getFrequence().toString());
+        l_valueMap.put(STD_DATA_FREQUENCE, getFrequence().toString());
 
         return valuesMap;
-    };
+    }
 
     /**
      * Increments the frequence
@@ -159,13 +163,6 @@ public abstract class StdLogEntry {
      */
     protected void setFrequence(Integer frequence) {
         this.frequence = frequence;
-    }
-
-    /**
-     * @param valuesMap the valuesMap to set
-     */
-    protected void setValuesMap(Map<String, Object> valuesMap) {
-        this.valuesMap = valuesMap;
     }
 
     public ParseDefinition getParseDefinition() {
@@ -218,44 +215,45 @@ public abstract class StdLogEntry {
      * @param in_filterMap A map of filter values
      * @return True if all of the values can be found in the valueMap
      */
-    public boolean matches(Map<String, Object> in_filterMap) {
+    public boolean matches(Map<String, Matcher> in_filterMap) {
 
-        for (String lt_filterKey : in_filterMap.keySet()) {
-            if (!this.fetchHeaders().contains(lt_filterKey)) {
-                log.warn("The filter key {} could not be found among the log entry headers.", lt_filterKey);
-                return false;
-            }
-            if (!this.fetchValueMap().get(lt_filterKey).equals(in_filterMap.get(lt_filterKey))) {
-                return false;
-            }
-        }
-        return true;
+        return in_filterMap.entrySet().stream().allMatch(e -> e.getValue().matches(this.get(e.getKey())));
     }
+
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         StdLogEntry other = (StdLogEntry) obj;
         if (frequence == null) {
-            if (other.frequence != null)
+            if (other.frequence != null) {
                 return false;
-        } else if (!frequence.equals(other.frequence))
+            }
+        } else if (!frequence.equals(other.frequence)) {
             return false;
+        }
         if (parseDefinition == null) {
-            if (other.parseDefinition != null)
+            if (other.parseDefinition != null) {
                 return false;
-        } else if (!parseDefinition.equals(other.parseDefinition))
+            }
+        } else if (!parseDefinition.equals(other.parseDefinition)) {
             return false;
+        }
         if (valuesMap == null) {
-            if (other.valuesMap != null)
+            if (other.valuesMap != null) {
                 return false;
-        } else if (!valuesMap.equals(other.valuesMap))
+            }
+        } else if (!valuesMap.equals(other.valuesMap)) {
             return false;
+        }
         return true;
     }
 
@@ -266,6 +264,7 @@ public abstract class StdLogEntry {
 
     /**
      * Returns the headers as they are stored
+     *
      * @return An ordered set of the value names that are stored
      */
     public Set<String> fetchStoredHeaders() {
@@ -284,16 +283,17 @@ public abstract class StdLogEntry {
         return filePath;
     }
 
-    public void setLogFileName(String in_logFile) {
-        this.fileName = in_logFile;
-    }
-
     public void setFilePath(String in_logFile) {
         this.filePath = in_logFile;
     }
 
+    public void setLogFileName(String in_logFile) {
+        this.fileName = in_logFile;
+    }
+
     /**
      * Updates the store path of the log entry. We also remove training "/" to have a clean path
+     *
      * @param in_newPath The path we want to store
      */
     public void updatePath(String in_newPath) {
@@ -303,5 +303,6 @@ public abstract class StdLogEntry {
         l_pathDelta = (l_pathDelta.endsWith("/")) ? l_pathDelta.substring(0, l_pathDelta.length() - 1) : l_pathDelta;
         setFilePath(l_pathDelta);
     }
+
 }
 

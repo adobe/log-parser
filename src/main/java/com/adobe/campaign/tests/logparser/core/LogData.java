@@ -18,6 +18,8 @@ import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -293,10 +295,10 @@ public class LogData<T extends StdLogEntry> {
      * <p>
      * Author : gandomi
      *
-     * @param in_filterKeyValues A map of &lt;String,Object&gt; representation the values we want to find
+     * @param in_filterKeyValues A map of &lt;String,Matcher&gt; representation the values we want to find
      * @return a new LogDataObject containing only the filtered values
      */
-    public LogData<T> filterBy(Map<String, Object> in_filterKeyValues) {
+    public LogData<T> filterBy(Map<String, Matcher> in_filterKeyValues) {
         LogData<T> lr_filteredLogData = new LogData<>();
 
         for (String lt_logDataKey : this.getEntries().keySet()) {
@@ -314,11 +316,11 @@ public class LogData<T extends StdLogEntry> {
      * Author : gandomi
      *
      * @param in_parseDefinitionName The name of the parse definition entry under which we search for a value
-     * @param in_searchValue         The search value
+     * @param in_searchValue         The matcher
      * @return a new LogDataObject containing only the searched values
      */
-    public LogData<T> searchEntries(String in_parseDefinitionName, String in_searchValue) {
-        Map<String, Object> l_filterProperties = new HashMap<>();
+    public LogData<T> searchEntries(String in_parseDefinitionName, Matcher in_searchValue) {
+        Map<String, Matcher> l_filterProperties = new HashMap<>();
         l_filterProperties.put(in_parseDefinitionName, in_searchValue);
 
         return this.filterBy(l_filterProperties);
@@ -329,10 +331,10 @@ public class LogData<T extends StdLogEntry> {
      * <p>
      * Author : gandomi
      *
-     * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want to find
+     * @param in_searchKeyValues A map of &lt;String,Matcher&gt; representation the values we want to find
      * @return a new LogDataObject containing only the filtered values
      */
-    public LogData<T> searchEntries(Map<String, Object> in_searchKeyValues) {
+    public LogData<T> searchEntries(Map<String, Matcher> in_searchKeyValues) {
 
         return filterBy(in_searchKeyValues);
     }
@@ -347,8 +349,8 @@ public class LogData<T extends StdLogEntry> {
      * @return true if the search terms could be found. Otherwise false
      */
     public boolean isEntryPresent(String in_parseDefinitionName, String in_searchValue) {
-        Map<String, Object> l_searchProperties = new HashMap<>();
-        l_searchProperties.put(in_parseDefinitionName, in_searchValue);
+        Map<String, Matcher> l_searchProperties = new HashMap<>();
+        l_searchProperties.put(in_parseDefinitionName, Matchers.equalTo(in_searchValue));
 
         return isEntryPresent(l_searchProperties);
     }
@@ -361,7 +363,7 @@ public class LogData<T extends StdLogEntry> {
      * @param in_searchKeyValues A map of &lt;String,Object&gt; representation the values we want to find
      * @return true if the search terms could be found. Otherwise false
      */
-    public boolean isEntryPresent(Map<String, Object> in_searchKeyValues) {
+    public boolean isEntryPresent(Map<String, Matcher> in_searchKeyValues) {
         return searchEntries(in_searchKeyValues).getEntries().size() > 0;
     }
 
@@ -539,5 +541,22 @@ public class LogData<T extends StdLogEntry> {
         }
 
         return l_firstEntry.getParseDefinition();
+    }
+
+    /**
+     * Enriches the log data with the given values provided there are lines that match the query map
+     * @param in_queryMap A map definition entry and Matchers
+     * @param in_entryName The name of the entry to be added
+     * @param in_entryValue The value of the entry to be added
+     */
+    public void enrichData(Map<String, Matcher> in_queryMap, String in_entryName, String in_entryValue) {
+        //add the entry to the definition
+        fetchParseDefinition().addEntry(new ParseDefinitionEntry(in_entryName));
+
+        //Iterate over the entries
+        getEntries().entrySet().stream().filter(e -> e.getValue().matches(in_queryMap)).forEach(e -> {
+            e.getValue().getValuesMap().put(in_entryName, in_entryValue);
+        });
+        //for each entry meeting the querymap enrich with the given value
     }
 }

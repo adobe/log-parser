@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.adobe.campaign.tests.logparser.core.*;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
 public class StdLogEntryTests {
@@ -156,19 +158,87 @@ public class StdLogEntryTests {
         l_inputData.getValuesMap().put("BAU", "13");
         l_inputData.getValuesMap().put("DAT", "AA");
 
-        Map<String, Object> l_filterMap = new HashMap<>();
-        l_filterMap.put("BAU", "13");
+        Map<String, Matcher> l_filterMap = new HashMap<>();
+        l_filterMap.put("BAU", Matchers.equalTo("13"));
         assertThat("Matches should be true", l_inputData.matches(l_filterMap));
 
-        Map<String, Object> l_filterMap2 = new HashMap<>();
-        l_filterMap2.put("NOTBAU", "13");
+        Map<String, Matcher> l_filterMap2 = new HashMap<>();
+        l_filterMap2.put("NOTBAU", Matchers.equalTo("13"));
         assertThat("We should not have a match if the header does not exist",
                 !l_inputData.matches(l_filterMap2));
 
-        Map<String, Object> l_filterMap3 = new HashMap<>();
-        l_filterMap3.put("BAU", "16");
+        Map<String, Matcher> l_filterMap3 = new HashMap<>();
+        l_filterMap3.put("BAU", Matchers.equalTo("16"));
         assertThat("We should not have a match if the entry value is incorrect",
                 !l_inputData.matches(l_filterMap3));
+
+    }
+
+    @Test
+    public void testMatchesAll() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        ////enrich logData
+        // Prepare inputs
+        Map<String, Matcher> l_queryMap = new HashMap<>();
+        l_queryMap.put("AAZ", Matchers.startsWith("12"));
+
+        assertThat("We should have a match", l_inputData.matches(l_queryMap));
+
+        l_queryMap.put("AAZ", Matchers.startsWith("13"));
+        assertThat("We should Not have a match", !l_inputData.matches(l_queryMap));
+
+        Map<String, Matcher> l_queryMap2 = new HashMap<>();
+        l_queryMap2.put("FFF", Matchers.startsWith("12"));
+
+        assertThat("We should Not have a match", !l_inputData.matches(l_queryMap2));
+
+    }
+
+    @Test
+    public void testMatchesAll_multiple() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        ////enrich logData
+        // Prepare inputs
+        Map<String, Matcher> l_queryMap = new HashMap<>();
+        l_queryMap.put("AAZ", Matchers.startsWith("12"));
+        l_queryMap.put("BAU", Matchers.endsWith("3"));
+
+        assertThat("We should have a match", l_inputData.matches(l_queryMap));
+
+        l_queryMap.put("DAT", Matchers.containsString("E"));
+        assertThat("We should not have a match", !l_inputData.matches(l_queryMap));
 
     }
 
