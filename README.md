@@ -291,7 +291,7 @@ We have the capability to enrich log data with additional information. This is d
 
 Enrichment can be done multiple times in order to add multiple values for the enrichment.
 
-We have also introduced a method called `LogData#enrichUnset(String, Strinf)`, which sets a value for the entries which have not yet have a value set for them.  
+We have also introduced a method called `LogData#enrichEmpty(String, String)`, which sets a value for the entries which have not yet have a value set for them.  
 
 ### GroupBy Mechanisms
 We have introduced the groupBy mechanism. This functionality allows you to organize your results with more detail. Given a log data object, and an array of ParseDefinitionEntry names, we generate a new LogData Object containing groups made by the passed ParseDeinitionEnries and and number of entries for each group.

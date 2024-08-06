@@ -100,7 +100,7 @@ public class EnrichmentTests {
         Map<String, Matcher> l_queryMap2 = new HashMap<>();
         l_queryMap2.put("TIT", Matchers.equalTo(""));
 
-        l_cubeData.enrichUnset("TIT", "TUT");
+        l_cubeData.enrichEmpty("TIT", "TUT");
 
         assertThat(l_cubeData.get("12").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
         assertThat(l_cubeData.get("12").get("TIT"), Matchers.equalTo("TAT"));

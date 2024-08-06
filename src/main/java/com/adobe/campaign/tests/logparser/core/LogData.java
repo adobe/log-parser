@@ -564,7 +564,7 @@ public class LogData<T extends StdLogEntry> {
      * @param in_entryName The name of the entry to be added
      * @param in_entryValue The value of the entry to be added
      */
-    public void enrichUnset(String in_entryName, String in_entryValue) {
+    public void enrichEmpty(String in_entryName, String in_entryValue) {
         Map<String, Matcher> l_unsetSearchQuery = new HashMap<>();
         l_unsetSearchQuery.put(in_entryName, Matchers.equalTo(""));
 
