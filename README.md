@@ -208,20 +208,29 @@ This can then be imported and used for parsing using the method `ParseDefinition
 ```
 
 ## Extracting Data from Logs
+By default, the Log-Parser will generate a standardized key-value extraction of the log you generate. All values are then stored as Strings. For more advanced transformations we suggest you write your own Log SDK. We will describe each in detail in this chapter.
 
 ### Using the Standard Method
-By default each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
+By default, each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
 - Key
 - A set of values
-- The frequence of the key as found in the logs
+- The frequency of the key as found in the logs
 
-### Using the SDK
-Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors.
+### Using the Log-Parser as an SDK
+Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors. By fefault we can look at the SDK mode as a second parsing, where we first parse the logs using the generic ParseDefinitions, and then a second treatment is performed with the SDK you write.
+
+Typical use cases are:
+* Transformation of parts of the parsed log data into non-string types.
+* Additional parsing of the parsed data.
 
 #### Writing your own SDK
 In order to use this feature you need to define a class that extends the class StdLogEntry.
 
 You will often want to transform the parsed information into a more manageable object by defining your own fields in the SDK class.
+
+In the project we have two examples of SDKs (under `src/test/java``:
+* `com.adobe.campaign.tests.logparser.data.SDKCaseSTD` where we perform additional parsing of the log data.
+* `com.adobe.campaign.tests.logparser.data.SDKCase2` where we transform the time into a date object.
 
 ##### Declaring a Default and Copy Constructor
 You will need to declare a default constructor and a copy constructor. The copy constructor will allow you to copy the values from one object to another.
