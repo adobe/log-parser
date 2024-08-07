@@ -27,7 +27,7 @@ public class RunLogParser {
     public static void main(String[] in_args) throws StringParseException {
         //Print help if requested
         if (Arrays.stream(in_args).anyMatch(RunArguments.HELP::correspondsTo)) {
-            RunArguments.printHelp();
+            System.out.println(RunArguments.fetchHelpText());
             return;
         }
 
@@ -41,7 +41,7 @@ public class RunLogParser {
 
         if (l_mandatories.length() > 0) {
             System.err.println(l_mandatories.toString());
-            RunArguments.printHelp();
+            System.out.println(RunArguments.fetchHelpText());
             return;
         }
 

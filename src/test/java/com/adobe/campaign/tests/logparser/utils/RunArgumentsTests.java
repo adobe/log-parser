@@ -20,7 +20,7 @@ public class RunArgumentsTests {
 
     @Test(description="Testing the print help")
     public void testPrintHelp() {
-        RunArguments.printHelp();
+        System.out.println(RunArguments.fetchHelpText());
     }
 
     @Test

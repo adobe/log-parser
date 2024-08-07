@@ -88,34 +88,34 @@ public enum RunArguments {
     /**
      * This method prints the help message
      */
-    public static void printHelp() {
-        System.out.println("LogParser - Parse Log Files and generate reports");
-        System.out.println();
-        System.out.println("Execution line : ");
-        System.out.println(
+    public static String fetchHelpText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("LogParser - Parse Log Files and generate reports");
+        sb.append("\n");
+        sb.append("Execution line : ");
+        sb.append(
                 "java -jar LogParser.jar --parseDefinition=<The file path of the parse definitions> --startDir=<Root Path where the logs are stored> ");
-        System.out.println();
+        sb.append("\n\n");
 
         // First Print the Mandatory fields
-        System.out.println("Mandatory Arguments: ");
+        sb.append("Mandatory Arguments: ").append("\n");
         for (RunArguments lt_command : RunArguments.values()) {
             if (lt_command.isMandatory()) {
-                System.out.println(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
-                        + lt_command.getDescription());
+                sb.append(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
+                        + lt_command.getDescription()).append("\n");
             }
         }
 
-        System.out.println();
-        System.out
-                .println("Optional Arguments (A default value will be selected):");
+        sb.append("\n");
+        sb.append("Optional Arguments (A default value will be selected):");
         for (RunArguments lt_command : RunArguments.values()) {
             if (!lt_command.isMandatory()) {
-                System.out.println(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
-                        + lt_command.getDescription() + ((lt_command.getDefaultValue().length() > 0) ?
-                        " By default, the value is " + lt_command.getDefaultValue() : ""));
+                sb.append(RunArguments.getCommandPrefix()+lt_command.getLabel() ).append("\t\t: ").append(
+                        lt_command.getDescription()).append(((lt_command.getDefaultValue().length() > 0) ?
+                        " By default, the value is " + lt_command.getDefaultValue() : "")).append("\n");
             }
         }
-
+        return sb.toString();
     }
 
     private static String getCommandPrefix() {
