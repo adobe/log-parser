@@ -343,12 +343,12 @@ public class StringParseFactory {
     }
 
     /**
-     * This method lets us know if the foundStrinf corresponds to the stored string. The stored string will have escape
+     * This method lets us know if the found String corresponds to the stored String. The stored string will have escape
      * characters like the log4J FormatMessages I.e. '{}
      *
      * @param in_templateString A stored string reference containing the standard escape chracters '{}
-     * @param in_candidateString
-     * @return
+     * @param in_candidateString The string coming from the log file that we want to check correspondance with
+     * @return true of the Strings correspond to each other
      */
     public static boolean stringsCorrespond(String in_templateString, String in_candidateString) {
         int currentSpot = -1;

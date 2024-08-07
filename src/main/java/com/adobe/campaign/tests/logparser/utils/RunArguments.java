@@ -86,7 +86,8 @@ public enum RunArguments {
     }
 
     /**
-     * This method prints the help message
+     * This method returns the help message whenever needed
+     * @return the help message
      */
     public static String fetchHelpText() {
         StringBuilder sb = new StringBuilder();

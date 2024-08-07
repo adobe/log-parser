@@ -240,10 +240,12 @@ public class LogDataFactory {
     /**
      * A factory method that creates an html Report of the differences of two log data
      *
-     * @param in_logDataReference The Log data that is used as a referen‡ce base
+     * @param in_logDataReference The Log data that is used as a reference base
      * @param in_logDataTarget    The log data t be compared with the reference
      * @param in_headers          The headers that are to be used in the report
      * @param in_reportName       Name of the export file
+     * @param <T>                 The type of log data (subclass of {@link StdLogEntry}) we want to compare
+     *
      * @return The file that was created
      */
     public static <T extends StdLogEntry> File generateDiffReport(LogData<T> in_logDataReference, LogData<T> in_logDataTarget,
@@ -258,7 +260,8 @@ public class LogDataFactory {
      * @param in_comparisonReport The comparison object that contains the differences between the two log data sets
      * @param in_headers          The headers that are to be used in the report
      * @param in_reportName       Name of the export file
-     * @return The file created, containing the DidderenceReport in HTML format
+     * @param <T>                 The type of log data (subclass of {@link StdLogEntry}) we want to compare
+     * @return The file created, containing the DifferenceReport in HTML format
      */
     public static <T extends StdLogEntry> File generateDiffReport(Map<String, LogDataComparison<T>> in_comparisonReport,
             List<String> in_headers, String in_reportName) {

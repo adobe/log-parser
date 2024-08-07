@@ -86,6 +86,7 @@ public class HTMLReportUtils {
      * Creates the beginning of a standard HTML page
      * @return a string containing the beginning of a standard HTML page
      * @param in_path the path to the css file
+     * @throws IOException if the css file is not found
      */
     public static String fetchSTDPageStart(String in_path) throws IOException {
         StringBuilder sb = new StringBuilder();
