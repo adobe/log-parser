@@ -99,8 +99,8 @@
                         <exclude>**/*.log</exclude>
                         <exclude>**/*.properties</exclude>
                         <exclude>LICENSE_DATA/**</exclude>
-                        <exclude>ibs_output/**</exclude>
-                        <exclude>**/ibs_output/**</exclude>
+                        <exclude>log_parser_output/**</exclude>
+                        <exclude>**/log_parser_output/**</exclude>
                         <exclude>${license.dir}/**</exclude>
                         <exclude>**/*.drawio</exclude>
                     </excludes>
