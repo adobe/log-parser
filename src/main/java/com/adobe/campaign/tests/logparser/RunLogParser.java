@@ -20,13 +20,14 @@ import java.util.Arrays;
 
 public class RunLogParser {
     /**
-     * @param in_args
-     * @throws Exception
+     * The main method for running the log parser as a tools
+     * @param in_args an argument array
+     * @throws StringParseException When there are issues during parsing
      */
     public static void main(String[] in_args) throws StringParseException {
         //Print help if requested
-        if (Arrays.stream(in_args).anyMatch(arg -> RunArguments.HELP.correspondsTo(arg))) {
-            RunArguments.printHelp();
+        if (Arrays.stream(in_args).anyMatch(RunArguments.HELP::correspondsTo)) {
+            System.out.println(RunArguments.fetchHelpText());
             return;
         }
 
@@ -40,7 +41,7 @@ public class RunLogParser {
 
         if (l_mandatories.length() > 0) {
             System.err.println(l_mandatories.toString());
-            RunArguments.printHelp();
+            System.out.println(RunArguments.fetchHelpText());
             return;
         }
 
@@ -65,10 +66,10 @@ public class RunLogParser {
 
         //Generate Report
         if (RunArguments.REPORT_FORMAT.fetchValue(in_args).equalsIgnoreCase("CSV")) {
-            File x = l_logData.exportLogDataToCSV(RunArguments.REPORT_FILENAME.fetchValue(in_args,
+            l_logData.exportLogDataToCSV(RunArguments.REPORT_FILENAME.fetchValue(in_args,
                     l_parseDefinition.fetchEscapedTitle() + "-export.csv"));
         } else if (RunArguments.REPORT_FORMAT.fetchValue(in_args).equalsIgnoreCase("HTML")) {
-            File x = l_logData.exportLogDataToHTML(
+            l_logData.exportLogDataToHTML(
                     RunArguments.REPORT_NAME.fetchValue(in_args, l_parseDefinition.getTitle()),
                     RunArguments.REPORT_FILENAME.fetchValue(in_args,
                             l_parseDefinition.fetchEscapedTitle() + "-export"));

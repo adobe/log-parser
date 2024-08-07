@@ -50,7 +50,7 @@ public enum RunArguments {
     /**
      * This method returns all mandatory commands
      *
-     * @return
+     * @return a list of mandatory commands
      */
     public static List<RunArguments> getMandatoryCommands() {
         List<RunArguments> lr_manadatoryCommands = new ArrayList<>();
@@ -85,34 +85,37 @@ public enum RunArguments {
         return true;
     }
 
-    public static void printHelp() {
-        System.out.println("LogParser - Parse Log Files and generate reports");
-        System.out.println();
-        System.out.println("Execution line : ");
-        System.out.println(
+    /**
+     * This method prints the help message
+     */
+    public static String fetchHelpText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("LogParser - Parse Log Files and generate reports");
+        sb.append("\n");
+        sb.append("Execution line : ");
+        sb.append(
                 "java -jar LogParser.jar --parseDefinition=<The file path of the parse definitions> --startDir=<Root Path where the logs are stored> ");
-        System.out.println();
+        sb.append("\n\n");
 
         // First Print the Mandatory fields
-        System.out.println("Mandatory Arguments: ");
+        sb.append("Mandatory Arguments: ").append("\n");
         for (RunArguments lt_command : RunArguments.values()) {
             if (lt_command.isMandatory()) {
-                System.out.println(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
-                        + lt_command.getDescription());
+                sb.append(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
+                        + lt_command.getDescription()).append("\n");
             }
         }
 
-        System.out.println();
-        System.out
-                .println("Optional Arguments (A default value will be selected):");
+        sb.append("\n");
+        sb.append("Optional Arguments (A default value will be selected):");
         for (RunArguments lt_command : RunArguments.values()) {
             if (!lt_command.isMandatory()) {
-                System.out.println(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
-                        + lt_command.getDescription() + ((lt_command.getDefaultValue().length() > 0) ?
-                        " By default, the value is " + lt_command.getDefaultValue() : ""));
+                sb.append(RunArguments.getCommandPrefix()+lt_command.getLabel() ).append("\t\t: ").append(
+                        lt_command.getDescription()).append(((lt_command.getDefaultValue().length() > 0) ?
+                        " By default, the value is " + lt_command.getDefaultValue() : "")).append("\n");
             }
         }
-
+        return sb.toString();
     }
 
     private static String getCommandPrefix() {
@@ -154,7 +157,7 @@ public enum RunArguments {
     /**
      * Checks if the given string equals the value of the command
      *
-     * @param in_argumentEntry
+     * @param in_argumentEntry An argument entry to check
      * @return true if the command corresponds to the given string
      */
     public boolean correspondsTo(String in_argumentEntry) {
@@ -184,8 +187,8 @@ public enum RunArguments {
     /**
      * This method builds the argument as it is passed to the main method
      *
-     * @param argumentValue
-     * @return
+     * @param argumentValue creates an argument entry for the given value
+     * @return the argument entry that can be passed to main
      */
     public String buildArgument(String argumentValue) {
         return buildTag() + getKeyValueSeparator() + argumentValue;
@@ -212,6 +215,11 @@ public enum RunArguments {
         return Arrays.stream(in_args).map(a -> this.fetchValue(a)).filter(a -> a != null).findFirst().orElse(in_defaultValue);
     }
 
+    /**
+     * This method builds the tag for the argument
+     *
+     * @return the tag for the argument
+     */
     public String buildTag() {
         return getCommandPrefix() + this.getLabel();
     }
