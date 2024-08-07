@@ -50,7 +50,7 @@ public enum RunArguments {
     /**
      * This method returns all mandatory commands
      *
-     * @return
+     * @return a list of mandatory commands
      */
     public static List<RunArguments> getMandatoryCommands() {
         List<RunArguments> lr_manadatoryCommands = new ArrayList<>();
@@ -85,6 +85,9 @@ public enum RunArguments {
         return true;
     }
 
+    /**
+     * This method prints the help message
+     */
     public static void printHelp() {
         System.out.println("LogParser - Parse Log Files and generate reports");
         System.out.println();
@@ -154,7 +157,7 @@ public enum RunArguments {
     /**
      * Checks if the given string equals the value of the command
      *
-     * @param in_argumentEntry
+     * @param in_argumentEntry An argument entry to check
      * @return true if the command corresponds to the given string
      */
     public boolean correspondsTo(String in_argumentEntry) {
@@ -184,8 +187,8 @@ public enum RunArguments {
     /**
      * This method builds the argument as it is passed to the main method
      *
-     * @param argumentValue
-     * @return
+     * @param argumentValue creates an argument entry for the given value
+     * @return the argument entry that can be passed to main
      */
     public String buildArgument(String argumentValue) {
         return buildTag() + getKeyValueSeparator() + argumentValue;
@@ -212,6 +215,11 @@ public enum RunArguments {
         return Arrays.stream(in_args).map(a -> this.fetchValue(a)).filter(a -> a != null).findFirst().orElse(in_defaultValue);
     }
 
+    /**
+     * This method builds the tag for the argument
+     *
+     * @return the tag for the argument
+     */
     public String buildTag() {
         return getCommandPrefix() + this.getLabel();
     }
