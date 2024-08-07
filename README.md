@@ -4,7 +4,7 @@
 [![javadoc](https://javadoc.io/badge2/com.adobe.campaign.tests/log-parser/javadoc.svg)](https://javadoc.io/doc/com.adobe.campaign.tests/log-parser)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=adobe_log-parser&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=adobe_log-parser) 
 
-This project was created to allow us to parse and analyze log files in order to gather relevant data. It can be used as is or as an SDK. Where you can define your own parsing.
+The log parser is designed to help include log results in tests, reports and general applicative processes. It allows you to parse and analyze log files in order to extract relevant data. It can be used as is or as an SDK, where you can define your own parsing.
 
 The basic method for using this library is, that you create a definition for your parsing. This definition allows you to parse a set of log files and extract all entries that match this pattern.
 
@@ -27,7 +27,7 @@ The basic method for using this library is, that you create a definition for you
     * [Importing a JSON File](#importing-a-json-file)
   * [Extracting Data from Logs](#extracting-data-from-logs)
     * [Using the Standard Method](#using-the-standard-method)
-    * [Using the SDK](#using-the-sdk)
+    * [Using the Log-Parser as an SDK](#using-the-log-parser-as-an-sdk)
       * [Writing your own SDK](#writing-your-own-sdk)
         * [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
         * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
@@ -44,9 +44,11 @@ The basic method for using this library is, that you create a definition for you
     * [Comparing Log Data](#comparing-log-data)
       * [Creating a Differentiation Report](#creating-a-differentiation-report)
   * [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
-  * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
-  * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
+  * [Exporting Parse Results](#exporting-parse-results)
+    * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
+    * [Exporting Results to an HTML File](#exporting-results-to-an-html-file)
   * [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
+  * [Changelog](#changelog)
     * [1.11.0 (next version)](#1110--next-version-)
     * [1.0.10](#1010)
     * [1.0.8.2](#1082)
@@ -60,7 +62,7 @@ The basic method for using this library is, that you create a definition for you
 <!-- TOC -->
 
 ## Installation
-For now we are using this library with maven, in later iteration we will publish other build system examples:
+For now, we are using this library with maven, in later iteration we will publish other build system examples:
 
 ### Maven
 The following dependency needs to be added to your pom file:
@@ -208,20 +210,29 @@ This can then be imported and used for parsing using the method `ParseDefinition
 ```
 
 ## Extracting Data from Logs
+By default, the Log-Parser will generate a standardized key-value extraction of the log you generate. All values are then stored as Strings. For more advanced transformations we suggest you write your own Log SDK. We will describe each in detail in this chapter.
 
 ### Using the Standard Method
-By default each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
+By default, each entry for your lag parsing will be stored as a Generic entry. This means that all values will be stored as Strings. Each entry will have a :
 - Key
 - A set of values
-- The frequence of the key as found in the logs
+- The frequency of the key as found in the logs
 
-### Using the SDK
-Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors.
+### Using the Log-Parser as an SDK
+Using the log parser as an SDK allow you to define your own transformations and also to override many of the behaviors. By fefault we can look at the SDK mode as a second parsing, where we first parse the logs using the generic ParseDefinitions, and then a second treatment is performed with the SDK you write.
+
+Typical use cases are:
+* Transformation of parts of the parsed log data into non-string types.
+* Additional parsing of the parsed data.
 
 #### Writing your own SDK
 In order to use this feature you need to define a class that extends the class StdLogEntry.
 
 You will often want to transform the parsed information into a more manageable object by defining your own fields in the SDK class.
+
+In the project we have two examples of SDKs (under `src/test/java``:
+* `com.adobe.campaign.tests.logparser.data.SDKCaseSTD` where we perform additional parsing of the log data.
+* `com.adobe.campaign.tests.logparser.data.SDKCase2` where we transform the time into a date object.
 
 ##### Declaring a Default and Copy Constructor
 You will need to declare a default constructor and a copy constructor. The copy constructor will allow you to copy the values from one object to another.
@@ -387,11 +398,22 @@ AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in
 
 `AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
 
-## Exporting Results to a CSV File
-We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
+## Exporting Parse Results
+We have the possibility to export the log data results into files. Currently the following formats are supported:
+* CSV
+* HTML
 
-## Exporting Results to a CSV File
-We now have the possibility to export the log data results into a CSV file. The file will be a concatenation of the Parse Definition file, suffixed with "-export.csv".
+All reports are stored in the directory `log-parser-reports/export/`.
+
+### Exporting Results to a CSV File
+We have the possibility to export the log data results into a CSV file. This is done by calling the methods `LogData#exportLogDataToCSV`.
+
+You have the possibility to define the data to be exported as well as the file name.
+
+### Exporting Results to an HTML File
+We have the possibility to export the log data results into an HTML file. This is done by calling the methods `LogData#exportLogDataToHTML`.
+
+You have the possibility to define the data to be exported, the file name and the title of the report.
 
 ## Command-line Execution of the Log-Parser
 As of version 1.11.0 we have introduced the possibility of running the log-parser from the command line. This is done by using the executable jar file or executing the main method in maven. 
@@ -421,20 +443,20 @@ You can get a print out of the command line options by running the command with 
 
 All reports are stored in the directory `log-parser-reports/export/`.
 
+## Changelog
 ### 1.11.0 (next version)
 - **(new feature)** [#10](https://github.com/adobe/log-parser/issues/10) We now have an executable for the log-parser. You can perform a log parsing using the command line. For more information please read the section on [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).
 - **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
-- **(new feature)** [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
+- **(new feature)** [#154](https://github.com/adobe/log-parser/issues/154) We have a data enrichment feature, where you can enrich the log data with additional information. For further details please refer to the section on [Enriching Log Data](#enriching-log-data).
 - **(new feature)** [#138](https://github.com/adobe/log-parser/issues/138) We now have the possibility of anonymizing log data during parsing. For more information please read the section on [Anonymizing Data](#anonymizing-data).
 - **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
 - **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
-- **(new feature)** [#154](https://github.com/adobe/log-parser/issues/154) We have a data enrichment feature, where you can enrich the log data with additional information.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
-- [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead they are now a map of Parse Definition Entry names and Hamcrest Matchers. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
+- [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead, they are now a map of Parse Definition Entry names and Hamcrest Matchers. This may cause compilation errors for those using the search & filter functions. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
-
+- [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 
 ### 1.0.10
 - Moved main code and tests to the package "core"

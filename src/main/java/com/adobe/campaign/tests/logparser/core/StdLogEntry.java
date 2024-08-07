@@ -42,6 +42,8 @@ public abstract class StdLogEntry {
         this.frequence = in_oldLogEntry.frequence;
         this.parseDefinition = in_oldLogEntry.parseDefinition;
         this.valuesMap = in_oldLogEntry.valuesMap;
+        this.fileName = in_oldLogEntry.fileName;
+        this.filePath = in_oldLogEntry.filePath;
     }
 
     public StdLogEntry() {

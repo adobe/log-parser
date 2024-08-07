@@ -88,7 +88,7 @@ public class StringParseFactory {
                     i++;
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
-                log.info("Finished scanning {} lines.",i, new File(l_currentLogFile).length());
+                log.info("Finished scanning {} lines out of {}.",i, new File(l_currentLogFile).length());
             } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
@@ -202,7 +202,7 @@ public class StringParseFactory {
     protected static Map<String, String> parseString(String in_stringToParse,
             ParseDefinitionEntry in_parsRule) throws StringParseException {
 
-        return parseString(in_stringToParse, Arrays.asList(in_parsRule));
+        return parseString(in_stringToParse, Collections.singletonList(in_parsRule));
     }
 
     /**
@@ -343,12 +343,12 @@ public class StringParseFactory {
     }
 
     /**
-     * This method lets us know if the foundStrinf corresponds to the stored string. The stored string will have escape
+     * This method lets us know if the found String corresponds to the stored String. The stored string will have escape
      * characters like the log4J FormatMessages I.e. '{}
      *
      * @param in_templateString A stored string reference containing the standard escape chracters '{}
-     * @param in_candidateString
-     * @return
+     * @param in_candidateString The string coming from the log file that we want to check correspondance with
+     * @return true of the Strings correspond to each other
      */
     public static boolean stringsCorrespond(String in_templateString, String in_candidateString) {
         int currentSpot = -1;
