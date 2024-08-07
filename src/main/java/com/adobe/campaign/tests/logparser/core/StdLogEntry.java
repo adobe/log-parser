@@ -18,8 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract class for multiple definitions
- * <p>
- * <p>
+ * </p>
  * Author : gandomi
  */
 public abstract class StdLogEntry {
@@ -111,7 +110,9 @@ public abstract class StdLogEntry {
 
     /**
      * Returns a set of objects you have defined for your log class. When using Generic Object no changes are made to
-     * it. When defining an SDK you should override this method. Author : gandomi
+     * it. When defining an SDK you should override this method.
+     *
+     * Author : gandomi
      *
      * @return A Maps of values for the LogEntry
      */
@@ -144,7 +145,7 @@ public abstract class StdLogEntry {
 
     /**
      * Adds the usage of the current entry by the given value
-     * <p>
+     *
      * Author : gandomi
      *
      * @param in_addedFrequence The amount we should add to the frequence
@@ -177,7 +178,7 @@ public abstract class StdLogEntry {
      * This method updates the value maps. You need to have set the parse definition for this method to work. If you
      * want more specific implementations of the map, like using different types other than String we suggest that you
      * create an extension of this class and override this method.
-     * <p>
+     *
      * Author : gandomi
      *
      * @param in_valueMap A map of Strings pertaining to the values fetched from the log
@@ -210,7 +211,7 @@ public abstract class StdLogEntry {
     /**
      * Given a map of &lt;String,Object&gt; this method returns true if all of the map values can be found in the values
      * map of this StdLogEntry. If any of the keys cannot be found in the valueMap, we provide a warning
-     * <p>
+     *
      * Author : gandomi
      *
      * @param in_filterMap A map of filter values
@@ -223,7 +224,6 @@ public abstract class StdLogEntry {
 
         return in_filterMap.entrySet().stream().allMatch(e -> e.getValue().matches(this.get(e.getKey())));
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -301,8 +301,7 @@ public abstract class StdLogEntry {
      * @param in_newPath The path we want to store
      */
     public void updatePath(String in_newPath) {
-        var l_pathDelta = StringUtils.difference(this.getParseDefinition().getStorePathFrom(),
-                in_newPath);
+        var l_pathDelta = StringUtils.difference(this.getParseDefinition().getStorePathFrom(), in_newPath);
         l_pathDelta = (l_pathDelta.startsWith("/")) ? l_pathDelta.substring(1) : l_pathDelta;
         l_pathDelta = (l_pathDelta.endsWith("/")) ? l_pathDelta.substring(0, l_pathDelta.length() - 1) : l_pathDelta;
         setFilePath(l_pathDelta);
