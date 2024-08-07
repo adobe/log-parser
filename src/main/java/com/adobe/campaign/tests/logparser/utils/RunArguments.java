@@ -39,7 +39,7 @@ public enum RunArguments {
      * @param mandatory
      * @param description
      */
-    private RunArguments(String label, boolean mandatory,
+    RunArguments(String label, boolean mandatory,
             String description, String defaultValue) {
         this.label = label;
         this.mandatory = mandatory;
@@ -102,8 +102,8 @@ public enum RunArguments {
         sb.append("Mandatory Arguments: ").append("\n");
         for (RunArguments lt_command : RunArguments.values()) {
             if (lt_command.isMandatory()) {
-                sb.append(RunArguments.getCommandPrefix()+lt_command.getLabel() + "\t\t: "
-                        + lt_command.getDescription()).append("\n");
+                sb.append(RunArguments.getCommandPrefix()).append(lt_command.getLabel()).append("\t\t: ")
+                        .append(lt_command.getDescription()).append("\n");
             }
         }
 
@@ -112,8 +112,12 @@ public enum RunArguments {
         for (RunArguments lt_command : RunArguments.values()) {
             if (!lt_command.isMandatory()) {
                 sb.append(RunArguments.getCommandPrefix()+lt_command.getLabel() ).append("\t\t: ").append(
-                        lt_command.getDescription()).append(((lt_command.getDefaultValue().length() > 0) ?
-                        " By default, the value is " + lt_command.getDefaultValue() : "")).append("\n");
+                        lt_command.getDescription());
+                if (lt_command.getDefaultValue().length() > 0) {
+                    sb.append(
+                            " By default, the value is ").append(lt_command.getDefaultValue());
+                };
+                sb.append("\n");
             }
         }
         return sb.toString();

@@ -8,15 +8,10 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The main class for analyzing logs. It gathers a list of Pars Definiton
@@ -208,7 +203,7 @@ public class ParseDefinition {
      *
      */
     public void defineKeys(ParseDefinitionEntry in_parseDefinitionAsKey) {
-        defineKeys(Arrays.asList(in_parseDefinitionAsKey));
+        defineKeys(Collections.singletonList(in_parseDefinitionAsKey));
 
     }
 
@@ -232,10 +227,9 @@ public class ParseDefinition {
      *
      */
     public Set<String> fetchHeaders() {
-        final Set<String> l_definedHeaders = getDefinitionEntries().stream()
+        return getDefinitionEntries().stream()
                 .filter(ParseDefinitionEntry::isToPreserve).map(ParseDefinitionEntry::getTitle)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        return l_definedHeaders;
     }
 
     /**

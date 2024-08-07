@@ -88,7 +88,7 @@ public class StringParseFactory {
                     i++;
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
                 }
-                log.info("Finished scanning {} lines.",i, new File(l_currentLogFile).length());
+                log.info("Finished scanning {} lines out of {}.",i, new File(l_currentLogFile).length());
             } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
@@ -202,7 +202,7 @@ public class StringParseFactory {
     protected static Map<String, String> parseString(String in_stringToParse,
             ParseDefinitionEntry in_parsRule) throws StringParseException {
 
-        return parseString(in_stringToParse, Arrays.asList(in_parsRule));
+        return parseString(in_stringToParse, Collections.singletonList(in_parsRule));
     }
 
     /**

@@ -202,7 +202,7 @@ public class LogData<T extends StdLogEntry> {
             Class<U> in_transformationClass)
             throws IncorrectParseDefinitionException {
 
-        return groupBy(Arrays.asList(in_parseDefinitionEntryKey), in_transformationClass);
+        return groupBy(Collections.singletonList(in_parseDefinitionEntryKey), in_transformationClass);
     }
 
     /**

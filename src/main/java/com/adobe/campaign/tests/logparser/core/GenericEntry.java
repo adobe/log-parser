@@ -54,15 +54,6 @@ public class GenericEntry extends StdLogEntry {
 
     }
 
-    /**
-     * Returns the values map as it is without any manipulation
-     */
-    @Override
-    public Map<String, Object> fetchValueMap() {
-
-        return super.fetchValueMap();
-    }
-
     @Override
     public GenericEntry copy() {
         return new GenericEntry(this);

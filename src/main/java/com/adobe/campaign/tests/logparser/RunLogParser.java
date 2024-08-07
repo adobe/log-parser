@@ -15,7 +15,6 @@ import com.adobe.campaign.tests.logparser.core.ParseDefinitionFactory;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import com.adobe.campaign.tests.logparser.utils.RunArguments;
 
-import java.io.File;
 import java.util.Arrays;
 
 public class RunLogParser {
@@ -40,7 +39,7 @@ public class RunLogParser {
         });
 
         if (l_mandatories.length() > 0) {
-            System.err.println(l_mandatories.toString());
+            System.err.println(l_mandatories);
             System.out.println(RunArguments.fetchHelpText());
             return;
         }

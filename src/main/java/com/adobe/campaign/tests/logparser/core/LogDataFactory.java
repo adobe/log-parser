@@ -335,7 +335,7 @@ public class LogDataFactory {
     private static String attachSummaryReportLine(String in_header, Object in_number) {
         StringBuilder sb = new StringBuilder();
         sb.append("<tr>");
-        sb.append("<th>" + in_header + "</th>");
+        sb.append("<th>").append(in_header).append("</th>");
         sb.append("<td>");
         sb.append(in_number);
         sb.append("</td>");
