@@ -20,8 +20,9 @@ import java.util.Arrays;
 
 public class RunLogParser {
     /**
-     * @param in_args
-     * @throws Exception
+     * The main method for running the log parser as a tools
+     * @param in_args an argument array
+     * @throws StringParseException
      */
     public static void main(String[] in_args) throws StringParseException {
         //Print help if requested

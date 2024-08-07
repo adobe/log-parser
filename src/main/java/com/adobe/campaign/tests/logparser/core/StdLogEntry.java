@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract class for multiple definitions
- * </p>
+ *
  * Author : gandomi
  */
 public abstract class StdLogEntry {
@@ -57,7 +57,7 @@ public abstract class StdLogEntry {
 
     /**
      * Creates a clone of the current LogEntry. This requires that each child defines a copy constructor
-     * <p>
+     *
      * Author : gandomi
      *
      * @return A new constructed LogEntry Object
@@ -83,7 +83,7 @@ public abstract class StdLogEntry {
     /**
      * Fetches a print out for listing purposes. It uses the header list as an index to fetch the correct order of the
      * values
-     * <p>
+     *
      * Author : gandomi
      *
      * @return a String for the print out
@@ -99,14 +99,12 @@ public abstract class StdLogEntry {
     /**
      * Fetches the headers that you have defined for the log class. You need to be careful that the headers you have
      * defined have been used in storing the values.
-     * <p>
+     *
      * Author : gandomi
      *
      * @return a list of header names.
      */
     public abstract Set<String> fetchHeaders();
-
-    ;
 
     /**
      * Returns a set of objects you have defined for your log class. When using Generic Object no changes are made to
@@ -135,7 +133,7 @@ public abstract class StdLogEntry {
 
     /**
      * Increments the frequence
-     * <p>
+     *
      * Author : gandomi
      */
     protected void incrementUsage() {
@@ -252,13 +250,9 @@ public abstract class StdLogEntry {
             return false;
         }
         if (valuesMap == null) {
-            if (other.valuesMap != null) {
-                return false;
-            }
-        } else if (!valuesMap.equals(other.valuesMap)) {
-            return false;
-        }
-        return true;
+            return other.valuesMap == null;
+        } else
+            return valuesMap.equals(other.valuesMap);
     }
 
     @Override
