@@ -17,6 +17,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -56,6 +57,13 @@ public class AssertionTests {
         l_cubeData.addEntry(l_inputData2);
 
         AssertLogData.assertLogContains(l_cubeData, l_parseDefinitionEntryKey, "112");
+        AssertLogData.assertThat(l_cubeData, "AAZ", Matchers.equalTo("112"));
+        AssertLogData.assertThat("The log data should contain the expected value", l_cubeData, "AAZ", Matchers.equalTo("112"));
+
+        AssertLogData.assertThat(l_cubeData, Map.of("AAZ", Matchers.equalTo("112")));
+        AssertLogData.assertThat("The log data should contain the expected value", l_cubeData, Map.of("AAZ", Matchers.equalTo("112")));
+
+
         AssertLogData.assertLogContains("This should work", l_cubeData, l_parseDefinitionEntryKey, "112");
 
         AssertLogData.assertLogContains("This should also work", l_cubeData, "AAZ", "112");
