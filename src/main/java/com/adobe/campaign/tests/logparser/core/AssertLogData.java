@@ -30,6 +30,7 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
+     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
      * <p>
      * @param in_logData
      *        A Log data object
@@ -53,6 +54,7 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
+     * @deprecated Use {@link AssertLogData#assertThatLog(String, LogData, String, Matcher)} instead
      * <p>
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
@@ -67,6 +69,7 @@ public class AssertLogData {
      *        type should be a child of {@link StdLogEntry}
      *
      */
+    @Deprecated
     public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData,
             ParseDefinitionEntry in_parseDefinitionEntry, String in_expectedValue) {
 
@@ -78,6 +81,7 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
+     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
      * <p>
      * @param in_logData
      *        A Log data object
@@ -89,6 +93,7 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
+    @Deprecated
     public static <T extends StdLogEntry> void assertLogContains(LogData<T> in_logData,
             String in_parseDefinitionEntryTitle, String in_expectedValue) {
 
@@ -114,8 +119,8 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThat(LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
-        assertThat(ASSERTION_FAILURE_COMMENT, in_logData, in_parseDefinitionEntryTitle, in_condition);
+    public static <T extends StdLogEntry> void assertThatLog(LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
+        assertThatLog(ASSERTION_FAILURE_COMMENT, in_logData, in_parseDefinitionEntryTitle, in_condition);
     }
 
 
@@ -135,8 +140,8 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThat(String in_comment, LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
-        assertThat(in_comment, in_logData, Map.of(in_parseDefinitionEntryTitle, in_condition));
+    public static <T extends StdLogEntry> void assertThatLog(String in_comment, LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
+        assertThatLog(in_comment, in_logData, Map.of(in_parseDefinitionEntryTitle, in_condition));
     }
 
     /**
@@ -153,7 +158,7 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThat(String in_comment, LogData<T> in_logData, Map<String, Matcher> in_conditions) {
+    public static <T extends StdLogEntry> void assertThatLog(String in_comment, LogData<T> in_logData, Map<String, Matcher> in_conditions) {
         if (!in_logData.isEntryPresent(in_conditions)) {
             throw new AssertionError(in_comment);
         }
@@ -172,8 +177,8 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThat(LogData<T> in_logData, Map<String, Matcher> in_conditions) {
-        assertThat(ASSERTION_FAILURE_COMMENT, in_logData, in_conditions);
+    public static <T extends StdLogEntry> void assertThatLog(LogData<T> in_logData, Map<String, Matcher> in_conditions) {
+        assertThatLog(ASSERTION_FAILURE_COMMENT, in_logData, in_conditions);
 
     }
 
@@ -182,6 +187,8 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
+     *
+     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
      * <p>
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
@@ -195,6 +202,7 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
+    @Deprecated
     public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData,
             String in_parseDefinitionEntryTitle, String in_expectedValue) {
 
@@ -207,7 +215,8 @@ public class AssertLogData {
      * This is an assertion at a file level. Given a set of log files it will
      * let you know if a given entry can be found
      * <p>
-     * Author : gandomi
+     * Author :
+     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
      * <p>
      * @param in_filePathList
      *        A list of file paths containing log/generated data
@@ -219,6 +228,7 @@ public class AssertLogData {
      *        The expected value for the entry
      * 
      */
+    @Deprecated
     public static void assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition,
             String in_parseDefinitionEntryTitle, String in_expectedValue) {
         try {
@@ -236,6 +246,7 @@ public class AssertLogData {
      * let you know if a given entry can be found
      *
      * Author : gandomi
+     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
      *
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
@@ -249,6 +260,7 @@ public class AssertLogData {
      *        The expected value for the entry
      *        
      */
+    @Deprecated
     public static void assertLogContains(String in_comment, List<String> in_filePathList,
             ParseDefinition in_parseDefinition, String in_parseDefinitionEntryTitle, String in_expectedValue) {
 
