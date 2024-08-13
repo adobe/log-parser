@@ -102,6 +102,38 @@ public class ParseTesting {
     }
 
     @Test
+    public void testImmediatelyAfter() throws StringParseException {
+        String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
+
+        //Create a parse definition
+        ParseDefinition l_parseD = new ParseDefinition("testing immediatelyAfter");
+        ParseDefinitionEntry l_def1 = new ParseDefinitionEntry();
+
+        l_def1.setTitle("section");
+        l_def1.setStart("afthost32.");
+        l_def1.setEnd(".");
+
+        ParseDefinitionEntry l_def2 = new ParseDefinitionEntry();
+
+        l_def2.setTitle("product");
+        l_def2.setStart(".");
+        l_def2.setEnd(".");
+
+        l_parseD.addEntry(l_def1);
+        l_parseD.addEntry(l_def2);
+
+        Map<String, String> l_currentValues = StringParseFactory.parseString(l_apacheLogString, l_parseD);
+
+        assertThat("We should have two entries", l_currentValues.keySet(), Matchers.containsInAnyOrder("section", "product"));
+
+        assertThat("We should have the correct value for section", l_currentValues.get("section"),
+                is(equalTo("qa")));
+
+        assertThat("We should have the correct value for product", l_currentValues.get("product"),  is(equalTo("campaign")));
+
+    }
+
+    @Test
     public void testAPIDefinition() throws StringParseException {
         String l_apacheLogString = "afthost32.qa.campaign.adobe.com:443 10.10.247.85 - - [02/Apr/2020:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200 20951 \"-\" \"Apache-HttpClient/4.5.2 (Java/1.8.0_242)\"";
 
@@ -945,6 +977,23 @@ public class ParseTesting {
         assertThat("Testing that we can correctly fetch the following substring",
                 l_fileDefinition.fetchFollowingSubstring(l_apacheLogString),
                 is(equalTo(":209) - Before driver instantiation")));
+
+    }
+
+    @Test
+    public void testNextStringEOL() {
+        String l_apacheLogString = "(NextTests.java:209) - Before driver instantiation";
+
+        //Create a parse definition
+        ParseDefinitionEntry l_fileDefinition = new ParseDefinitionEntry();
+
+        l_fileDefinition.setTitle("sourceFile");
+        l_fileDefinition.setStart(" - ");
+        l_fileDefinition.setEnd(null);
+
+        assertThat("We shuld return the end of the string",
+                l_fileDefinition.fetchFollowingSubstring(l_apacheLogString),
+                is(equalTo("")));
 
     }
 
