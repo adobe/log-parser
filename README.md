@@ -19,7 +19,7 @@ The basic method for using this library is, that you create a definition for you
   * [Running the Log Parser](#running-the-log-parser)
   * [Parse Definitions](#parse-definitions)
     * [Defining a Parsing](#defining-a-parsing)
-    * [Defining an entry](#defining-an-entry)
+    * [Defining an Entry](#defining-an-entry)
     * [How parsing works](#how-parsing-works)
       * [Anonymizing Data](#anonymizing-data)
     * [Code Example](#code-example)
