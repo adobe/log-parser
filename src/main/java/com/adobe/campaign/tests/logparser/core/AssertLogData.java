@@ -30,7 +30,7 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
-     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
+     * @deprecated Use {@link AssertLogData#assertLogContains(LogData, String, Matcher)} instead
      * <p>
      * @param in_logData
      *        A Log data object
@@ -54,7 +54,7 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
-     * @deprecated Use {@link AssertLogData#assertThatLog(String, LogData, String, Matcher)} instead
+     * @deprecated Use {@link AssertLogData#assertLogContains(String, LogData, String, Matcher)} instead
      * <p>
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
@@ -81,7 +81,7 @@ public class AssertLogData {
      * value for a definition
      * <p>
      * Author : gandomi
-     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
+     * @deprecated Use {@link AssertLogData#assertLogContains(LogData, String, Matcher)} instead
      * <p>
      * @param in_logData
      *        A Log data object
@@ -119,8 +119,8 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThatLog(LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
-        assertThatLog(ASSERTION_FAILURE_COMMENT, in_logData, in_parseDefinitionEntryTitle, in_condition);
+    public static <T extends StdLogEntry> void assertLogContains(LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
+        assertLogContains(ASSERTION_FAILURE_COMMENT, in_logData, in_parseDefinitionEntryTitle, in_condition);
     }
 
 
@@ -140,8 +140,8 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThatLog(String in_comment, LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
-        assertThatLog(in_comment, in_logData, Map.of(in_parseDefinitionEntryTitle, in_condition));
+    public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData, String in_parseDefinitionEntryTitle, Matcher<String> in_condition) {
+        assertLogContains(in_comment, in_logData, Map.of(in_parseDefinitionEntryTitle, in_condition));
     }
 
     /**
@@ -158,7 +158,7 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThatLog(String in_comment, LogData<T> in_logData, Map<String, Matcher> in_conditions) {
+    public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData, Map<String, Matcher> in_conditions) {
         if (!in_logData.isEntryPresent(in_conditions)) {
             throw new AssertionError(in_comment);
         }
@@ -177,8 +177,8 @@ public class AssertLogData {
      *        The type of the LogData. The type should be a child of
      *        {@link StdLogEntry}
      */
-    public static <T extends StdLogEntry> void assertThatLog(LogData<T> in_logData, Map<String, Matcher> in_conditions) {
-        assertThatLog(ASSERTION_FAILURE_COMMENT, in_logData, in_conditions);
+    public static <T extends StdLogEntry> void assertLogContains(LogData<T> in_logData, Map<String, Matcher> in_conditions) {
+        assertLogContains(ASSERTION_FAILURE_COMMENT, in_logData, in_conditions);
 
     }
 
@@ -188,7 +188,7 @@ public class AssertLogData {
      * <p>
      * Author : gandomi
      *
-     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
+     * @deprecated Use {@link AssertLogData#assertLogContains(LogData, String, Matcher)} instead
      * <p>
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
@@ -216,7 +216,7 @@ public class AssertLogData {
      * let you know if a given entry can be found
      * <p>
      * Author :
-     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
+     * @deprecated Use {@link AssertLogData#assertLogContains(LogData, String, Matcher)} instead
      * <p>
      * @param in_filePathList
      *        A list of file paths containing log/generated data
@@ -246,7 +246,7 @@ public class AssertLogData {
      * let you know if a given entry can be found
      *
      * Author : gandomi
-     * @deprecated Use {@link AssertLogData#assertThatLog(LogData, String, Matcher)} instead
+     * @deprecated Use {@link AssertLogData#assertLogContains(LogData, String, Matcher)} instead
      *
      * @param in_comment
      *        A comment that is presented whenever the assertion fails
