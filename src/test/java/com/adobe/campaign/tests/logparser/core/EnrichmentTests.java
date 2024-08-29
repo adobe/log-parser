@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,13 +37,17 @@ public class EnrichmentTests {
         assertThat(l_cubeData.getEntries().size(), Matchers.is(3));
         assertThat(l_cubeData.get("12").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence"));
 
-
         ////enrich logData
         // Prepare inputs
         Map<String, Matcher> l_queryMap = new HashMap<>();
         l_queryMap.put("AAZ", Matchers.startsWith("12"));
 
         l_cubeData.enrichData(l_queryMap, "TIT", "TAT");
+
+        LogData l_filteredLogs = l_cubeData.filterBy(Map.of("TIT", Matchers.equalTo("TAT")));
+        assertThat("We should have enriched two entries", l_filteredLogs.getEntries().size(), Matchers.equalTo(2));
+        List<ParseDefinitionEntry> l_definitionEntries = l_filteredLogs.get("12").getParseDefinition().getDefinitionEntries();
+        assertThat("We should have one additional Parse definition entry", l_definitionEntries.size(), Matchers.equalTo(generateTestParseDefinition().getDefinitionEntries().size()+1));
 
         assertThat(l_cubeData.get("12").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
         assertThat(l_cubeData.get("12").get("TIT"), Matchers.equalTo("TAT"));
@@ -72,6 +77,11 @@ public class EnrichmentTests {
         l_queryMap2.put("TIT", Matchers.equalTo(""));
 
         l_cubeData.enrichData(l_queryMap2, "TIT", "TUT");
+
+        LogData l_filteredLogs = l_cubeData.filterBy(Map.of("TIT", Matchers.equalTo("TAT")));
+        assertThat("We should have enriched two entries", l_filteredLogs.getEntries().size(), Matchers.equalTo(2));
+        List<ParseDefinitionEntry> l_definitionEntries = l_filteredLogs.get("12").getParseDefinition().getDefinitionEntries();
+        assertThat("We should have one additional Parse definition entry", l_definitionEntries.size(), Matchers.equalTo(generateTestParseDefinition().getDefinitionEntries().size()+1));
 
         assertThat(l_cubeData.get("12").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
         assertThat(l_cubeData.get("12").get("TIT"), Matchers.equalTo("TAT"));
@@ -160,16 +170,7 @@ public class EnrichmentTests {
     }
 
     private static LogData<GenericEntry> fetchTestLogEntry() {
-        ParseDefinition l_definition = new ParseDefinition("tmp");
-
-        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
-        l_definition.addEntry(l_parseDefinitionEntryKey);
-        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
-        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
-        l_definition.addEntry(l_testParseDefinitionEntryBAU);
-        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
-        l_definition.addEntry(l_testParseDefinitionEntryDAT);
-        l_definition.defineKeys(l_parseDefinitionEntryKey);
+        ParseDefinition l_definition = generateTestParseDefinition();
 
         GenericEntry l_inputData = new GenericEntry(l_definition);
         l_inputData.getValuesMap().put("AAZ", "12");
@@ -194,5 +195,19 @@ public class EnrichmentTests {
         l_cubeData.addEntry(l_inputData2);
         l_cubeData.addEntry(l_inputData3);
         return l_cubeData;
+    }
+
+    private static ParseDefinition generateTestParseDefinition() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        final ParseDefinitionEntry l_testParseDefinitionEntryBAU = new ParseDefinitionEntry("BAU");
+        l_definition.addEntry(l_testParseDefinitionEntryBAU);
+        final ParseDefinitionEntry l_testParseDefinitionEntryDAT = new ParseDefinitionEntry("DAT");
+        l_definition.addEntry(l_testParseDefinitionEntryDAT);
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+        return l_definition;
     }
 }
