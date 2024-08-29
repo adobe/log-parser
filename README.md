@@ -463,6 +463,7 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead, they are now a map of Parse Definition Entry names and Hamcrest Matchers. This may cause compilation errors for those using the search & filter functions. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
+- [#169](https://github.com/adobe/log-parser/issues/169) Bug in enrichment when enriching more than once for the same field. We would create duplicate parse definition entries.
 
 ### 1.0.10
 - Moved main code and tests to the package "core"
