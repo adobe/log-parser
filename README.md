@@ -19,7 +19,7 @@ The basic method for using this library is, that you create a definition for you
   * [Running the Log Parser](#running-the-log-parser)
   * [Parse Definitions](#parse-definitions)
     * [Defining a Parsing](#defining-a-parsing)
-    * [Defining an entry](#defining-an-entry)
+    * [Defining an Entry](#defining-an-entry)
     * [How parsing works](#how-parsing-works)
       * [Anonymizing Data](#anonymizing-data)
     * [Code Example](#code-example)
@@ -90,7 +90,7 @@ Each Parse Definition consists of :
 - A key Order which is used for defining the Key
 - If you want the result to include the log file name and path
 
-### Defining an entry
+### Defining an Entry
 Each entry for a Parse Definition allows us to define:
 - A title for the value which will be found.
 - The start pattern of the string that will contain the value (null if in the start of a line)
@@ -107,6 +107,12 @@ When you have defined your parsing you use the LogDataFactory by passing it:
 By using the StringParseFactory we get a LogData object with allows us to manage the logs data you have found.
 
 ![Parsing a log line](diagrams/Log_Parser-log-parsing.drawio.png)
+
+As mentioned in the chapter [Defining an Entry](#defining-an-entry), each Parse Defnition Entry contains a start and end pattern. We extract and store the values between these two points, and continue with the rest of the line until there is no more data to parse. 
+
+A line is only considered if all the Parse Definition Entries can be matched in the order they have been defined.
+
+**Note:** Once we have extracted the data corresponding to an entry, the following string will include the end pattern of that entry. This is because sometimes the end pattern may be part of a different data to store. 
 
 #### Anonymizing Data
 We have discovered that it would be useful to anonymize data. This will aloow you to group some log data that contains variables. Anonymization has two features:
@@ -171,11 +177,11 @@ public void parseAStringDemo() throws StringParseException {
             is(equalTo("rest/head/workflow/WKF193")));
 }
 ```
-In the code above we want to parse the log line below, and want to fin the REST call "GET /rest/head/workflow/WKF193", and to extract the verb "GET", and the api "/rest/head/workflow/WKF193". 
-`afthostXX.qa.campaign.adobe.com:443 - - [02/Apr/2022:08:08:28 +0200] \"GET /rest/head/workflow/WKF193 HTTP/1.1\" 200`
+In the code above we want to parse the log line below, and want to find the REST call "GET /rest/head/workflow/WKF193", and to extract the verb "GET", and the api "/rest/head/workflow/WKF193". 
+`afthostXX.qa.campaign.adobe.com:443 - - [02/Apr/2022:08:08:28 +0200] "GET /rest/head/workflow/WKF193 HTTP/1.1" 200`
 
 The code starts with the creation a parse definition with at least two parse definitions that tell us between which markers should each data be extracted. The parse difinition is then handed to the StringParseFactory so that the data can be extracted.
-At the end we can see that each data is stored in a map with the parse defnition entry title as a key.
+At the end we can see that each data is stored in a map with the parse definition entry title as a key.
 
 ### Import and Export of Parse Definitions
 You can import or store a Parse Definition to or from a JSON file.
@@ -453,7 +459,7 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
-- [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
+- [#169](https://github.com/adobe/log-parser/issues/169) We only keep one Parse Definition entry with the same title in a Parse Definition.
 - [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead, they are now a map of Parse Definition Entry names and Hamcrest Matchers. This may cause compilation errors for those using the search & filter functions. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.

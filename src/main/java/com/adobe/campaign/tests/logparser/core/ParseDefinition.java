@@ -73,7 +73,7 @@ public class ParseDefinition {
 
     /**
      * This method adds a definition entry to the definition entries of this
-     * parse definition
+     * parse definition. This is provided there are no existing entries with the same title
      *
      * Author : gandomi
      *
@@ -83,8 +83,9 @@ public class ParseDefinition {
      *
      */
     public void addEntry(ParseDefinitionEntry in_parseDefinitionEntry) {
-        getDefinitionEntries().add(in_parseDefinitionEntry);
-
+        if (this.getDefinitionEntries().stream().noneMatch(e -> e.getTitle().equals(in_parseDefinitionEntry.getTitle()))) {
+            this.getDefinitionEntries().add(in_parseDefinitionEntry);
+        }
     }
 
     @Override
