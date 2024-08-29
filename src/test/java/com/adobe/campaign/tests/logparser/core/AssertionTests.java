@@ -9,6 +9,7 @@
 package com.adobe.campaign.tests.logparser.core;
 
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
 import org.mockito.MockedStatic;
@@ -17,6 +18,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -56,6 +58,12 @@ public class AssertionTests {
         l_cubeData.addEntry(l_inputData2);
 
         AssertLogData.assertLogContains(l_cubeData, l_parseDefinitionEntryKey, "112");
+        AssertLogData.assertLogContains(l_cubeData, "AAZ", Matchers.equalTo("112"));
+        AssertLogData.assertLogContains("The log data should contain the expected value", l_cubeData, "AAZ", Matchers.equalTo("112"));
+
+        AssertLogData.assertLogContains(l_cubeData, Map.of("AAZ", Matchers.equalTo("112")));
+        AssertLogData.assertLogContains("The log data should contain the expected value", l_cubeData, Map.of("AAZ", Matchers.equalTo("112")));
+
         AssertLogData.assertLogContains("This should work", l_cubeData, l_parseDefinitionEntryKey, "112");
 
         AssertLogData.assertLogContains("This should also work", l_cubeData, "AAZ", "112");
@@ -166,6 +174,166 @@ public class AssertionTests {
     @Test
     public void testLogDataFactory_NegativeInstatiation() {
         assertThrows(IllegalStateException.class, () -> new AssertLogData());
+    }
+
+    /**
+     * Testing that we correctly create a cube
+     *
+     * Author : gandomi
+     */
+    @Test
+    public void testSimpleAssertionNegativeAssertionFail_gettingCorrectMessage() {
+
+        LogData<GenericEntry> l_cubeData = generateTestData();
+
+        String l_comment = "Failed Comment";
+        try {
+
+            AssertLogData.assertLogContains(l_comment, l_cubeData, "AAZ", Matchers.equalTo("124"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString(l_comment));
+        }
+
+        try {
+
+            AssertLogData.assertLogContains(l_cubeData, "AAZ", Matchers.equalTo("124"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString(AssertLogData.ASSERTION_FAILURE_COMMENT));
+        }
+    }
+
+    /**
+     * Testing that we correctly create a cube
+     *
+     * Author : gandomi
+     */
+    @Test
+    public void testSimpleAssertionEmptyLogData() {
+
+        LogData<GenericEntry> l_cubeData = new LogData<>();
+
+        var l_titleFornonExistingPDE = "AAZ";
+        try {
+            AssertLogData.assertLogContains(l_cubeData, l_titleFornonExistingPDE, Matchers.equalTo("112"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString(AssertLogData.ASSERTION_FAILURE_EMPTY_LOGDATA));
+        }
+
+    }
+
+    /**
+     * Testing that we correctly create a cube
+     *
+     * Author : gandomi
+     */
+    @Test
+    public void testSimpleAssertionNegativeWrongEntryTitle() {
+
+        LogData<GenericEntry> l_cubeData = generateTestData();
+
+        var l_titleFornonExistingPDE = "NonExistingTitle";
+        try {
+            AssertLogData.assertLogContains(l_cubeData, l_titleFornonExistingPDE, Matchers.equalTo("112"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString("No Parse Definition Entry found for the given key "+ l_titleFornonExistingPDE +"."));
+        }
+
+        var l_titleFornonExistingPDE2 = "NonExistingTitle";
+        try {
+            AssertLogData.assertLogContains("Random comment", l_cubeData, l_titleFornonExistingPDE2, Matchers.equalTo("112"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString("No Parse Definition Entry found for the given key "+ l_titleFornonExistingPDE2 +"."));
+        }
+
+    }
+
+    @Test
+    public void testSimpleAssertionNegativeWrongEntryTitle2() {
+
+        LogData<GenericEntry> l_cubeData = generateTestData();
+
+        var l_titleFornonExistingPDE = "NonExistingTitle";
+        Map<String, Matcher> l_conditions = Map.of("AAZ", Matchers.equalTo("112"), l_titleFornonExistingPDE,
+                Matchers.emptyString());
+        try {
+            AssertLogData.assertLogContains(l_cubeData, l_conditions);
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString(
+                            "No Parse Definition Entry found for the given key " + l_titleFornonExistingPDE + "."));
+        }
+
+        // With comment
+        Map<String, Matcher> l_conditions2 = Map.of("AAZ", Matchers.equalTo("112"), l_titleFornonExistingPDE,
+                Matchers.emptyString());
+        try {
+            AssertLogData.assertLogContains("Random Comment", l_cubeData, l_conditions2);
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString(
+                            "No Parse Definition Entry found for the given key " + l_titleFornonExistingPDE + "."));
+        }
+
+    }
+
+    /**
+     * Testing that we correctly create a cube
+     *
+     * Author : gandomi
+     */
+    @Test
+    public void testSimpleAssertionFail() {
+
+        LogData<GenericEntry> l_cubeData = generateTestData();
+
+        String l_comment = "Passed Comment";
+        try {
+
+            AssertLogData.assertLogContains(l_comment, l_cubeData, "AAZ", Matchers.equalTo("124"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.containsString(l_comment));
+        }
+
+        try {
+            AssertLogData.assertLogContains(l_cubeData, "AAZ", Matchers.equalTo("124"));
+        } catch (AssertionError ae) {
+            assertThat("The comment should contain the passed string", ae.getMessage(),
+                    Matchers.startsWith(AssertLogData.ASSERTION_FAILURE_COMMENT));
+        }
+    }
+
+
+
+    private static LogData<GenericEntry> generateTestData() {
+        ParseDefinition l_definition = new ParseDefinition("tmp");
+        final ParseDefinitionEntry l_parseDefinitionEntryKey = new ParseDefinitionEntry("AAZ");
+        l_definition.addEntry(l_parseDefinitionEntryKey);
+        l_definition.addEntry(new ParseDefinitionEntry("ZZZ"));
+        l_definition.addEntry(new ParseDefinitionEntry("BAU"));
+        l_definition.addEntry(new ParseDefinitionEntry("DAT"));
+        l_definition.defineKeys(l_parseDefinitionEntryKey);
+
+        GenericEntry l_inputData = new GenericEntry(l_definition);
+        l_inputData.getValuesMap().put("AAZ", "12");
+        l_inputData.getValuesMap().put("ZZZ", "14");
+        l_inputData.getValuesMap().put("BAU", "13");
+        l_inputData.getValuesMap().put("DAT", "AA");
+
+        GenericEntry l_inputData2 = new GenericEntry(l_definition);
+        l_inputData2.getValuesMap().put("AAZ", "112");
+        l_inputData2.getValuesMap().put("ZZZ", "114");
+        l_inputData2.getValuesMap().put("BAU", "113");
+        l_inputData2.getValuesMap().put("DAT", "AAA");
+
+        LogData<GenericEntry> l_cubeData = new LogData<>(l_inputData);
+        l_cubeData.addEntry(l_inputData2);
+        return l_cubeData;
     }
 
 }

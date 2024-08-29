@@ -1355,7 +1355,7 @@ public class LogDataTest {
         int l_nrOfEntries = l_logData.getEntries().keySet().size();
         assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
 
-        File l_exportedFile = l_logData.exportLogDataToHTML("Log Results",
+        File l_exportedFile = l_logData.exportLogDataToHTML(Arrays.asList("verb", "path", "frequence"),"Log Results",
                 "logDataExport");
 
         try {

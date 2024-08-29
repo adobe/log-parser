@@ -395,14 +395,20 @@ As of version 1.0.5 we have introduced the notion of assertions. Assertions can 
 We currently have the following assertions:
 
 ```java
-AssertLogData.assertLogContains(LogData<T> in_logData, String in_entryTitle, String in_expectedValue)
+        AssertLogData.assertLogContains(LogData<T> in_logData, String in_entryTitle, Matcher in_expectedCondition)
+        AssertLogData.assertLogContains(String description, LogData<T> in_logData, String in_entryTitle, Matcher in_expectedCondition)
 
-AssertLogData.assertLogContains(List<String> in_filePathList, ParseDefinition in_parseDefinition, String in_entryTitle, String in_expectedValue)
+        AssertLogData.assertLogContains(LogData<T> in_logData, Map<String, Matcher> in_expectedConditions)
+        AssertLogData.assertLogContains(String description, LogData<T> in_logData, Map<String, Matcher> in_expectedConditions)
 ```
-`AssertLogData.assertLogContains(LogData<T>, String, String )` allows you to perform an assertion on an existing LogData Object. 
 
+You have two types of assertions. A simple one where you give an entry key and a matcher, and a more complex one where you give a map of parse Definition Entry keys entries and corresponding matchers.
 
-`AssertLogData.assertLogContains(List<String>, ParseDefinition, String, String)` allows you to perform an assertion directly on a file. 
+An assertion will only work if:
+* The log data is not empty
+* There is a Parse Definition entry with the given title.
+
+Otherwise, you will get a failed assertion for these causes.
 
 ## Exporting Parse Results
 We have the possibility to export the log data results into files. Currently the following formats are supported:
@@ -461,6 +467,7 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#169](https://github.com/adobe/log-parser/issues/169) We only keep one Parse Definition entry with the same title in a Parse Definition.
 - [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead, they are now a map of Parse Definition Entry names and Hamcrest Matchers. This may cause compilation errors for those using the search & filter functions. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
+- [#57](https://github.com/adobe/log-parser/issues/57) Assertions are no longer an implicite assert equal method. We now allow Hamcrest Matchers for asserting. This can be one or more matchers.
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 
