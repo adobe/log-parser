@@ -10,6 +10,7 @@ package com.adobe.campaign.tests.logparser.core;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import org.hamcrest.Matcher;
@@ -20,6 +21,7 @@ import org.hamcrest.Matcher;
 public class AssertLogData {
 
     public static final String ASSERTION_FAILURE_COMMENT = "Assertion Failure";
+    public static final String ASSERTION_FAILURE_EMPTY_LOGDATA = "No LogData to assert.";
 
     protected AssertLogData() {
         throw new IllegalStateException("Utility class");
@@ -159,6 +161,16 @@ public class AssertLogData {
      *        {@link StdLogEntry}
      */
     public static <T extends StdLogEntry> void assertLogContains(String in_comment, LogData<T> in_logData, Map<String, Matcher> in_conditions) {
+        if (in_logData.getEntries().isEmpty()) {
+            throw new AssertionError(ASSERTION_FAILURE_EMPTY_LOGDATA);
+        }
+
+        in_conditions.keySet().stream().forEach(k -> {
+            if (in_logData.fetchParseDefinition().getDefinitionEntries().stream().noneMatch(pde -> k.equals(pde.getTitle()))) {
+                throw new AssertionError("No Parse Definition Entry found for the given key "+ k +".");
+            }
+        });
+
         if (!in_logData.isEntryPresent(in_conditions)) {
             throw new AssertionError(in_comment);
         }

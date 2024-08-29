@@ -398,9 +398,17 @@ We currently have the following assertions:
         AssertLogData.assertLogContains(LogData<T> in_logData, String in_entryTitle, Matcher in_expectedCondition)
         AssertLogData.assertLogContains(String description, LogData<T> in_logData, String in_entryTitle, Matcher in_expectedCondition)
 
-        AssertLogData.assertLogContains(LogData<T> in_logData, String in_entryTitle, Map<Matcher> in_expectedConditions)
-        AssertLogData.assertLogContains(String description, LogData<T> in_logData, String in_entryTitle, Map<Matcher> in_expectedConditions)
+        AssertLogData.assertLogContains(LogData<T> in_logData, Map<String, Matcher> in_expectedConditions)
+        AssertLogData.assertLogContains(String description, LogData<T> in_logData, Map<String, Matcher> in_expectedConditions)
 ```
+
+You have two types of assertions. A simple one where you give an entry key and a matcher, and a more complex one where you give a map of parse Definition Entry keys entries and corresponding matchers.
+
+An assertion will only work if:
+* The log data is not empty
+* There is a Parse Definition entry with the given title.
+
+Otherwise, you will get a failed assertion for these causes.
 
 ## Exporting Parse Results
 We have the possibility to export the log data results into files. Currently the following formats are supported:
