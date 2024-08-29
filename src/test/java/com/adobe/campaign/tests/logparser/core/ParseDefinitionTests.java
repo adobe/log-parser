@@ -71,6 +71,27 @@ public class ParseDefinitionTests {
 
     }
 
+    @Test(description = "Related to the issue #169")
+    public void testAddingDuplicateEntries() {
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+
+        l_parseDefinition.addEntry(new ParseDefinitionEntry("One"));
+        l_parseDefinition.addEntry(new ParseDefinitionEntry("One"));
+
+        assertThat("The size of the definition should be 1", l_parseDefinition.getDefinitionEntries().size(), is(1));
+    }
+
+    @Test(description = "Related to the issue #169")
+    public void testAddingDifferentEntries() {
+        ParseDefinition l_parseDefinition = new ParseDefinition("rest calls");
+
+        l_parseDefinition.addEntry(new ParseDefinitionEntry("One"));
+        l_parseDefinition.addEntry(new ParseDefinitionEntry("Two"));
+
+        assertThat("The size of the definition should be 1", l_parseDefinition.getDefinitionEntries().size(), is(2));
+    }
+
+
     @Test
     public void testcopyConstructorParseDefinition() {
 
