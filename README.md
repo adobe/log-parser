@@ -459,11 +459,10 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
-- [#112](https://github.com/adobe/log-parser/issues/112) Updating License Headers
+- [#169](https://github.com/adobe/log-parser/issues/169) We only keep one Parse Definition entry with the same title in a Parse Definition.
 - [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead, they are now a map of Parse Definition Entry names and Hamcrest Matchers. This may cause compilation errors for those using the search & filter functions. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
-- [#169](https://github.com/adobe/log-parser/issues/169) Bug in enrichment when enriching more than once for the same field. We would create duplicate parse definition entries.
 
 ### 1.0.10
 - Moved main code and tests to the package "core"
