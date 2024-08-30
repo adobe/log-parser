@@ -412,7 +412,7 @@ public class LogData<T extends StdLogEntry> {
      * @return a CSV file containing the LogData
      * @throws LogDataExportToFileException If the file could not be exported
      */
-    public File exportLogDataToCSV(Set<String> in_headerSet, String in_csvFileName)
+    public File exportLogDataToCSV(Collection<String> in_headerSet, String in_csvFileName)
             throws LogDataExportToFileException {
         File l_exportFile = LogParserFileUtils.createNewFile(in_csvFileName);
 
