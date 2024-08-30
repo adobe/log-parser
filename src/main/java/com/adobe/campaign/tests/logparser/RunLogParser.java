@@ -71,7 +71,7 @@ public class RunLogParser {
             l_logData.exportLogDataToHTML(
                     RunArguments.REPORT_NAME.fetchValue(in_args, l_parseDefinition.getTitle()),
                     RunArguments.REPORT_FILENAME.fetchValue(in_args,
-                            l_parseDefinition.fetchEscapedTitle() + "-export"));
+                            l_parseDefinition.fetchEscapedTitle() + "-export.html"));
         } else {
             System.err.println("The report format " + RunArguments.REPORT_FORMAT.fetchValue(in_args)
                     + " is not supported.");

@@ -55,7 +55,7 @@ public class EnrichmentTests {
         assertThat(l_cubeData.get("112").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
         assertThat(l_cubeData.get("112").get("TIT"), Matchers.equalTo(""));
 
-        l_cubeData.exportLogDataToHTML("dsd", "enriched");
+        l_cubeData.exportLogDataToHTML("dsd", "enriched.html");
     }
 
     @Test
@@ -89,7 +89,7 @@ public class EnrichmentTests {
         assertThat(l_cubeData.get("112").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
         assertThat(l_cubeData.get("112").get("TIT"), Matchers.equalTo("TUT"));
 
-        l_cubeData.exportLogDataToHTML("dsd", "enriched");
+        l_cubeData.exportLogDataToHTML("dsd", "enriched.html");
     }
 
     @Test
@@ -118,7 +118,7 @@ public class EnrichmentTests {
         assertThat(l_cubeData.get("112").fetchStoredHeaders(), Matchers.containsInAnyOrder("key","AAZ", "ZZZ", "BAU", "DAT", "frequence", "TIT"));
         assertThat(l_cubeData.get("112").get("TIT"), Matchers.equalTo("TUT"));
 
-        l_cubeData.exportLogDataToHTML("dsd", "enriched");
+        l_cubeData.exportLogDataToHTML("dsd", "enriched.html");
     }
 
     @Test

@@ -8,14 +8,6 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.testng.Assert.assertThrows;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
 import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
@@ -30,13 +22,20 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.testng.Assert.assertThrows;
+
 public class LogDataTest {
 
     /**
      * Testing that we correctly create a cube
-     *
+     * <p>
      * Author : gandomi
-     *
      */
     @Test
     public void testHelloWorld() {
@@ -271,17 +270,15 @@ public class LogDataTest {
 
         l_logData.getEntries().values().stream().forEach(e -> System.out.println(e.fetchPrintOut()));
     }
-    
-    
+
     @Test
     public void testLogDataFactoryWithJSONFileForParseDefinition()
             throws StringParseException,
             ParseDefinitionImportExportException {
 
-        
         final String apacheLogFile = "src/test/resources/logTests/acc/acc_integro_jenkins_log_exerpt.txt";
         final String l_jsonPath = "src/test/resources/parseDefinitions/parseDefinitionLogDataFactory.json";
-        
+
         LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
                 l_jsonPath);
 
@@ -299,9 +296,8 @@ public class LogDataTest {
 
     /**
      * Testing that we correctly add an entry to the log data
-     *
+     * <p>
      * Author : gandomi
-     *
      */
     @Test
     public void testAddEntry() {
@@ -381,7 +377,6 @@ public class LogDataTest {
                 l_cubeData.get(l_inputData.get("AAZ").toString()).getFrequence(), is(equalTo(2)));
 
     }
-
 
     @Test(description = "Testing that we can do a group by")
     public void testgroupBy()
@@ -493,7 +488,6 @@ public class LogDataTest {
         assertThat("The entry BAU for 113 should be 1", l_myCube.get("113").getFrequence(), is(equalTo(1)));
 
     }
-
 
     @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy()
@@ -617,7 +611,6 @@ public class LogDataTest {
 
     }
 
-
     @Test(description = "Testing that we can do a group by with two values")
     public void testMultipleGroupBy_Default()
             throws IncorrectParseDefinitionException {
@@ -709,7 +702,6 @@ public class LogDataTest {
                 () -> l_cubeData.groupBy("BAU", SDKCasePrivateDefConstructor.class));
     }
 
-
     @Test(description = "Testing that we can do a filter")
     public void testFilter_Default() {
 
@@ -772,7 +764,6 @@ public class LogDataTest {
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(0)));
 
     }
-
 
     @Test(description = "Testing that we can do a filter using multiple fields")
     public void testFilter_Multi() {
@@ -892,7 +883,6 @@ public class LogDataTest {
         assertThat("Both objects should be equal", l_cubeData3, not(equalTo(l_cubeData2)));
 
     }
-    
 
     @Test(description = "Testing that we can do a search")
     public void testSearch_Default() {
@@ -951,7 +941,6 @@ public class LogDataTest {
         assertThat("We should have found one entry", l_myCube3.getEntries().size(), is(equalTo(0)));
 
     }
-    
 
     @Test(description = "Testing that we can do a search using multiple fields")
     public void testsearch_Multi() {
@@ -1015,7 +1004,6 @@ public class LogDataTest {
         assertThat("We should have found the correct entry", l_myCube3.getEntries().containsKey("120"));
 
     }
-    
 
     @Test(description = "Testing that we can detect if an element is present")
     public void testIsPresent() {
@@ -1059,16 +1047,15 @@ public class LogDataTest {
         l_filterProperties.put("BAU", Matchers.equalTo("13"));
 
         assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent(l_filterProperties));
-        
+
         l_filterProperties.put("BAU", Matchers.equalTo("1398"));
-        
+
         assertThat("We should state that the given entry is present", !l_cubeData.isEntryPresent(l_filterProperties));
 
-        assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent("BAU","13"));
+        assertThat("We should state that the given entry is present", l_cubeData.isEntryPresent("BAU", "13"));
 
-        assertThat("We should state that an entry is NOT  present", !l_cubeData.isEntryPresent("BAU","999"));
+        assertThat("We should state that an entry is NOT  present", !l_cubeData.isEntryPresent("BAU", "999"));
     }
-
 
     @Test
     public void testNestedFileAccess()
@@ -1105,7 +1092,7 @@ public class LogDataTest {
                 l_entries.containsKey(l_searchItem1));
 
         GenericEntry l_ge = l_entries.get(l_searchItem1);
-        assertThat("We should only have one entry for the "+l_searchItem1, l_ge.getFrequence(), Matchers.equalTo(1));
+        assertThat("We should only have one entry for the " + l_searchItem1, l_ge.getFrequence(), Matchers.equalTo(1));
 
         LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
                 l_pDefinition);
@@ -1114,7 +1101,8 @@ public class LogDataTest {
                 l_logData.getEntries().containsKey(l_searchItem1));
 
         GenericEntry l_logDataItem = l_logData.get(l_searchItem1);
-        assertThat("We should only have one entry for the "+l_searchItem1, l_logDataItem.getFrequence(), Matchers.equalTo(1));
+        assertThat("We should only have one entry for the " + l_searchItem1, l_logDataItem.getFrequence(),
+                Matchers.equalTo(1));
 
         String l_searchItem2 = "extAccount/importSharedAudience#GET";
 
@@ -1122,34 +1110,38 @@ public class LogDataTest {
                 l_logData.getEntries().containsKey(l_searchItem2));
 
         GenericEntry l_logDataItem2 = l_logData.get(l_searchItem2);
-        assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2.getFrequence(), Matchers.equalTo(1));
+        assertThat("We should only have one entry for the " + l_searchItem2, l_logDataItem2.getFrequence(),
+                Matchers.equalTo(1));
 
         File l_rootDir = new File("src/test/resources/nestedDirs/");
 
         assertThat("The directory should exist", l_rootDir.exists());
         assertThat("The directory should be a directory", l_rootDir.isDirectory());
         String l_fileFilter = "simple*.log";
-        Iterator<File> l_foundFilesIterator = FileUtils.iterateFiles(l_rootDir, new WildcardFileFilter(l_fileFilter), TrueFileFilter.INSTANCE);
+        Iterator<File> l_foundFilesIterator = FileUtils.iterateFiles(l_rootDir, new WildcardFileFilter(l_fileFilter),
+                TrueFileFilter.INSTANCE);
 
         l_foundFilesIterator.forEachRemaining(f -> System.out.println(f.getAbsolutePath()));
 
         //Nested search
 
-        LogData<GenericEntry> l_logData2 = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+        LogData<GenericEntry> l_logData2 = LogDataFactory.generateLogData("src/test/resources/nestedDirs/",
+                l_fileFilter,
                 l_pDefinition);
-
 
         assertThat("We should have the key for amcDataSource",
                 l_logData2.getEntries().containsKey(l_searchItem1));
 
         GenericEntry l_logDataItem2_1 = l_logData2.get(l_searchItem1);
-        assertThat("We should only have one entry for the "+l_searchItem1, l_logDataItem2_1.getFrequence(), Matchers.equalTo(1));
+        assertThat("We should only have one entry for the " + l_searchItem1, l_logDataItem2_1.getFrequence(),
+                Matchers.equalTo(1));
 
         assertThat("We should have the key for amcDataSource",
                 l_logData2.getEntries().containsKey(l_searchItem2));
 
         GenericEntry l_logDataItem2_2 = l_logData2.get(l_searchItem2);
-        assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2_2.getFrequence(), Matchers.equalTo(2));
+        assertThat("We should only have one entry for the " + l_searchItem2, l_logDataItem2_2.getFrequence(),
+                Matchers.equalTo(2));
     }
 
     @Test
@@ -1168,20 +1160,20 @@ public class LogDataTest {
         String l_searchItem1 = "extAccount/destroySharedAudience#GET";
         String l_searchItem2 = "extAccount/importSharedAudience#GET";
 
-
         assertThat("We should have the key for amcDataSource",
                 l_logData.getEntries().containsKey(l_searchItem1));
 
         GenericEntry l_logDataItem2_1 = l_logData.get(l_searchItem1);
-        assertThat("We should only have one entry for the "+l_searchItem1, l_logDataItem2_1.getFrequence(), equalTo(1));
+        assertThat("We should only have one entry for the " + l_searchItem1, l_logDataItem2_1.getFrequence(),
+                equalTo(1));
 
         assertThat("We should have the key for amcDataSource",
                 l_logData.getEntries().containsKey(l_searchItem2));
 
         GenericEntry l_logDataItem2_2 = l_logData.get(l_searchItem2);
-        assertThat("We should only have one entry for the "+l_searchItem2, l_logDataItem2_2.getFrequence(), equalTo(2));
+        assertThat("We should only have one entry for the " + l_searchItem2, l_logDataItem2_2.getFrequence(),
+                equalTo(2));
     }
-
 
     /******************** Search file tests ***********************/
 
@@ -1202,7 +1194,8 @@ public class LogDataTest {
         String l_fileFilter = "simple*.log";
         String l_rootPath = "src/test/resources/nonexistantDir/";
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+        Assert.assertThrows(IllegalArgumentException.class,
+                () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
     }
 
     @Test
@@ -1210,7 +1203,8 @@ public class LogDataTest {
         String l_fileFilter = "simple*.log";
         String l_rootPath = "src/test/resources/testng.xml";
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+        Assert.assertThrows(IllegalArgumentException.class,
+                () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
     }
 
     @Test
@@ -1231,7 +1225,7 @@ public class LogDataTest {
 
     @Test
     public void testFileSearch_negative4() {
-        String l_fileFilter="nonExistantFile.notLog";
+        String l_fileFilter = "nonExistantFile.notLog";
         String l_rootPath = "src/test/resources/nestedDirs";
         List<String> l_foundFilePaths = LogDataFactory.findFilePaths(l_rootPath, l_fileFilter);
 
@@ -1244,7 +1238,8 @@ public class LogDataTest {
         String l_fileFilter = "simple*.log";
         String l_rootPath = "null";
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
+        Assert.assertThrows(IllegalArgumentException.class,
+                () -> LogDataFactory.findFilePaths(l_rootPath, l_fileFilter));
     }
 
     @Test
@@ -1317,7 +1312,12 @@ public class LogDataTest {
         } finally {
             l_exportedFile.delete();
         }
+    }
 
+    @Test
+    public void testExportDataToCSV_negative() {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        assertThat(l_emptyLogData.exportLogDataToCSV("logDataExport"), Matchers.nullValue());
     }
 
     @Test
@@ -1355,7 +1355,7 @@ public class LogDataTest {
         int l_nrOfEntries = l_logData.getEntries().keySet().size();
         assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
 
-        File l_exportedFile = l_logData.exportLogDataToHTML(Arrays.asList("verb", "path", "frequence"),"Log Results",
+        File l_exportedFile = l_logData.exportLogDataToHTML(Arrays.asList("verb", "path", "frequence"), "Log Results",
                 "logDataExport");
 
         try {
@@ -1390,10 +1390,10 @@ public class LogDataTest {
         String l_searchItem2 = "extAccount/importSharedAudience#GET";
 
         ParseDefinition l_pDefinition = l_logData.fetchParseDefinition();
-        String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-')+"-export.csv";
+        String l_fileNameToExpect = l_pDefinition.getTitle().replace(' ', '-') + "-export.csv";
 
         //Create the file so it is deleted
-        File l_duplicateFile = new File(LogParserFileUtils.LOG_PARSER_EXPORTS,l_fileNameToExpect);
+        File l_duplicateFile = new File(LogParserFileUtils.LOG_PARSER_EXPORTS, l_fileNameToExpect);
         l_duplicateFile.createNewFile();
 
         assertThat("We should have the key for amcDataSource",

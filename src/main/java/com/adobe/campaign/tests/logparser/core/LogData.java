@@ -458,7 +458,7 @@ public class LogData<T extends StdLogEntry> {
      * @return an HTML file containing the LogData as a table
      */
     public File exportLogDataToHTML(Collection<String> in_headerSet, String in_reportTitle, String in_htmlFileName) {
-        File l_exportFile = LogParserFileUtils.createNewFile(in_htmlFileName + ".html");
+        File l_exportFile = LogParserFileUtils.createNewFile(in_htmlFileName);
 
         try {
             StringBuilder sb = new StringBuilder();

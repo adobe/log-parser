@@ -449,7 +449,7 @@ You can provide additional information such as:
 * `--fileFilter` : The wildcard used for selecting the log files. The default value is *.log
 * `--reportType` : The format of the report. The allowed values are currently HTML & CSV. The default value is HTML
 * `--reportFileName` : The name of the report file. By default, this is the name of the Parse Definition name suffixed with '-export'
-* `--reportName` : The report title as show in an HTML report. By default the title includes the Parse Definition name
+* `--reportName` : The report title as show in an HTML report. By default, the title includes the Parse Definition name
 
 You can get a print out of the command line options by running the command with the `--help` flag. 
 
