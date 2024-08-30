@@ -202,7 +202,7 @@ public class ExecutionTests {
         String[] l_args = { RunArguments.START_DIR.buildArgument(l_rootPath),
                 RunArguments.PARSE_DEFINITIONS_FILE.buildArgument(l_jsonPath),
                 RunArguments.TARGET_SDK_CLASS.buildArgument("com.adobe.campaign.tests.logparser.data.SDKCaseSTD"),
-                RunArguments.REPORT_FILENAME.buildArgument("SDKCaseSTD-export") };
+                RunArguments.REPORT_FILENAME.buildArgument("SDKCaseSTD-export.html") };
 
         RunLogParser.main(l_args);
 

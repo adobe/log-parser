@@ -420,12 +420,12 @@ All reports are stored in the directory `log-parser-reports/export/`.
 ### Exporting Results to a CSV File
 We have the possibility to export the log data results into a CSV file. This is done by calling the methods `LogData#exportLogDataToCSV`.
 
-You have the possibility to define the data to be exported as well as the file name.
+You have the possibility to define the data, and order to be exported as well as the file name.
 
 ### Exporting Results to an HTML File
 We have the possibility to export the log data results into an HTML file. This is done by calling the methods `LogData#exportLogDataToHTML`.
 
-You have the possibility to define the data to be exported, the file name and the title of the report.
+You have the possibility to define the data, and order to be exported, the file name and the title of the report.
 
 ## Command-line Execution of the Log-Parser
 As of version 1.11.0 we have introduced the possibility of running the log-parser from the command line. This is done by using the executable jar file or executing the main method in maven. 
@@ -449,7 +449,7 @@ You can provide additional information such as:
 * `--fileFilter` : The wildcard used for selecting the log files. The default value is *.log
 * `--reportType` : The format of the report. The allowed values are currently HTML & CSV. The default value is HTML
 * `--reportFileName` : The name of the report file. By default, this is the name of the Parse Definition name suffixed with '-export'
-* `--reportName` : The report title as show in an HTML report. By default the title includes the Parse Definition name
+* `--reportName` : The report title as show in an HTML report. By default, the title includes the Parse Definition name
 
 You can get a print out of the command line options by running the command with the `--help` flag. 
 
