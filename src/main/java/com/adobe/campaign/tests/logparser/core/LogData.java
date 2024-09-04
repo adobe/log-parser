@@ -560,6 +560,25 @@ public class LogData<T extends StdLogEntry> {
     }
 
     /**
+     * Enriches the log data with the given values provided there are lines that match the query map
+     * @param in_queryMap A map definition entry and Matchers
+     * @param keyValueToEnrich A map of key value pairs to be added to the log data
+     */
+    public void enrichData(Map<String, Matcher> in_queryMap, Map<String, String> keyValueToEnrich) {
+
+        //Iterate over the entries
+        getEntries().entrySet().stream()
+                .filter(e -> e.getValue().matches(in_queryMap)).forEach(e -> {
+                    keyValueToEnrich.forEach((in_entryName, in_entryValue) -> {
+                        fetchParseDefinition().addEntry(
+                                new ParseDefinitionEntry(in_entryName));
+                        e.getValue().put(in_entryName, in_entryValue);
+                    });
+                });
+    }
+
+
+    /**
      * Enriches the log data which have not been set with the given values
      * @param in_entryName The name of the entry to be added
      * @param in_entryValue The value of the entry to be added
