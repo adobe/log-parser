@@ -312,7 +312,10 @@ We have the capability to enrich log data with additional information. This is d
 * The title of the entry to be added
 * The value for the new entry in the search lines
 
-Enrichment can be done multiple times in order to add multiple values for the enrichment.
+If you want to add multiple values for the enrichment, you can run this method several times, or using an other method which is more
+suitable which is the method `LogData#enrichData(Map<String, Matcher>, Map<String, String> keyValueToEnrich)`.This method accepts:
+* A search term (as defined in the section [Defining a Search Term](#defining-a-search-term))
+* a key value map with The title of the entry as the key and the value for the new entry as the value
 
 We have also introduced a method called `LogData#enrichEmpty(String, String)`, which sets a value for the entries which have not yet have a value set for them.  
 
