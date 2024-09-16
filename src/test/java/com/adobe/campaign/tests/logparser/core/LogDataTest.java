@@ -13,7 +13,6 @@ import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
 import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
-import com.adobe.campaign.tests.logparser.utils.JSONManager;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
