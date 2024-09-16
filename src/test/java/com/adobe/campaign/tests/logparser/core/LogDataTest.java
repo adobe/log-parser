@@ -13,6 +13,7 @@ import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
 import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
 import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
+import com.adobe.campaign.tests.logparser.utils.JSONManager;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -1472,4 +1473,40 @@ public class LogDataTest {
         assertThat((new LogData<>()).fetchParseDefinition(), Matchers.nullValue());
     }
 
+    @Test
+    public void testExportDataToJSON() throws StringParseException, IOException {
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        String l_fileFilter = "simple*.log";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+        int l_nrOfEntries = l_logData.getEntries().keySet().size();
+        assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
+
+        File l_exportedFile = l_logData.exportLogDataToJSON();
+
+        try {
+            assertThat("We successfully created the file", l_exportedFile, notNullValue());
+            assertThat("We successfully created the file", l_exportedFile.exists());
+            assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        } finally {
+            l_exportedFile.delete();
+        }
+    }
 }

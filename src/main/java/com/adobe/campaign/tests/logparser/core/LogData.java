@@ -13,6 +13,7 @@ import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileExceptio
 import com.adobe.campaign.tests.logparser.exceptions.LogParserPostManipulationException;
 import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
@@ -487,6 +488,74 @@ public class LogData<T extends StdLogEntry> {
             throw new LogDataExportToFileException("We were unable to write to the file " + l_exportFile.getPath());
         }
 
+        return l_exportFile;
+    }
+
+    /**
+     * Exports the current LogData to a standard JSON file. By default, the file will have an escape version of the Parse
+     * Definition as the name
+     *
+     * @return a JSON file containing the LogData
+     */
+    public File exportLogDataToJSON() throws LogDataExportToFileException {
+        T l_firstEntry = this.fetchFirst();
+
+        if (l_firstEntry != null) {
+            return exportLogDataToJSON(l_firstEntry.fetchHeaders(), l_firstEntry.getParseDefinition().fetchEscapedTitle() + "-export.json");
+        } else {
+            log.warn("No Log data to export. Please load the log data before re-attempting");
+            return null;
+        }
+    }
+
+    /**
+     * Exports the current LogData to a standard JSON file.
+     *
+     * @param in_jsonFileName a filename to store the CSV export
+     * @return a JSON file containing the LogData
+     */
+    public File exportLogDataToJSON(String in_jsonFileName) throws LogDataExportToFileException {
+        T l_firstEntry = this.fetchFirst();
+
+        if (l_firstEntry != null) {
+            return exportLogDataToJSON(l_firstEntry.fetchHeaders(), in_jsonFileName + "-export.json");
+        } else {
+            log.warn("No Log data to export. Please load the log data before re-attempting");
+            return null;
+        }
+    }
+
+    /**
+     * Exports the current LogData to an JSON file
+     *
+     * @param in_headerSet   A set of headers to be used as keys for exporting
+     * @param in_jsonFileName The file name to export
+     * @return a JSON file containing the LogData
+     * @throws LogDataExportToFileException If the file could not be exported
+     */
+    public File exportLogDataToJSON(Collection<String> in_headerSet, String in_jsonFileName) throws LogDataExportToFileException {
+        File l_exportFile = LogParserFileUtils.createNewFile(in_jsonFileName);
+        List<Map<String, String>> JSONlist = new ArrayList<>();
+
+        try {
+            for (StdLogEntry lt_entry : this.getEntries().values()) {
+                Map lt_values = lt_entry.fetchValueMap();
+                JSONlist.add(lt_values);
+            }
+        }
+        catch (Exception e) {
+            throw new LogDataExportToFileException("Encountered error while extracting the log data.", e);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            objectMapper.writeValue(l_exportFile, objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(JSONlist));
+        }
+        catch (IOException e) {
+            throw new LogDataExportToFileException("Encountered error while exporting the log data to a JSON file.", e);
+
+        }
         return l_exportFile;
     }
 
