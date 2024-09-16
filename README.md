@@ -430,6 +430,12 @@ We have the possibility to export the log data results into an HTML file. This i
 
 You have the possibility to define the data, and order to be exported, the file name and the title of the report.
 
+### Exporting Results to an JSON File
+We have the possibility to export the log data results into an JSON file. This is done by calling the methods `LogData#exportLogDataToJSON`.
+
+You have the possibility to define the data, and order to be exported, the file name and the title of the report.
+
+
 ## Command-line Execution of the Log-Parser
 As of version 1.11.0 we have introduced the possibility of running the log-parser from the command line. This is done by using the executable jar file or executing the main method in maven. 
 
