@@ -14,6 +14,7 @@ import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
 import com.adobe.campaign.tests.logparser.exceptions.*;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
@@ -22,7 +23,9 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
@@ -1500,10 +1503,18 @@ public class LogDataTest {
 
         File l_exportedFile = l_logData.exportLogDataToJSON();
 
+        assertThat("We successfully created the file", l_exportedFile, notNullValue());
+        assertThat("We successfully created the file", l_exportedFile.exists());
+        assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        assertThat("Created JSON file is no Empty", l_exportedFile.length() > 0);
+
         try {
-            assertThat("We successfully created the file", l_exportedFile, notNullValue());
-            assertThat("We successfully created the file", l_exportedFile.exists());
-            assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+            ObjectMapper objectMapper = new ObjectMapper();
+            String values = objectMapper.readValue(l_exportedFile, String.class);
+
+            assertThat("JSON file contains correct verb definition", values.contains(l_verbDefinition2.getTitle()));
+            assertThat("JSON file contains correct api definition", values.contains(l_apiDefinition.getTitle()));
+
         } finally {
             l_exportedFile.delete();
         }

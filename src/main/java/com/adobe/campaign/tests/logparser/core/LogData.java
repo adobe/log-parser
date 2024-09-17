@@ -535,26 +535,15 @@ public class LogData<T extends StdLogEntry> {
      */
     public File exportLogDataToJSON(Collection<String> in_headerSet, String in_jsonFileName) throws LogDataExportToFileException {
         File l_exportFile = LogParserFileUtils.createNewFile(in_jsonFileName);
-        List<Map<String, String>> JSONlist = new ArrayList<>();
+        List<Map<String, Object>> jsonList = new ArrayList<>();
+        jsonList.addAll(this.getEntries().values().stream().map(StdLogEntry::fetchValueMap).collect(Collectors.toList()));
 
         try {
-            for (StdLogEntry lt_entry : this.getEntries().values()) {
-                Map lt_values = lt_entry.fetchValueMap();
-                JSONlist.add(lt_values);
-            }
-        }
-        catch (Exception e) {
-            throw new LogDataExportToFileException("Encountered error while extracting the log data.", e);
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            objectMapper.writeValue(l_exportFile, objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(JSONlist));
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(l_exportFile, objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonList));
         }
         catch (IOException e) {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a JSON file.", e);
-
         }
         return l_exportFile;
     }
