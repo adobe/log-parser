@@ -511,7 +511,7 @@ public class LogData<T extends StdLogEntry> {
     /**
      * Exports the current LogData to a standard JSON file.
      *
-     * @param in_jsonFileName a filename to store the CSV export
+     * @param in_jsonFileName a filename to store the JSON export
      * @return a JSON file containing the LogData
      */
     public File exportLogDataToJSON(String in_jsonFileName) throws LogDataExportToFileException {

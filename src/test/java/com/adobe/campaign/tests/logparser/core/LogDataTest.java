@@ -1573,4 +1573,12 @@ public class LogDataTest {
         File l_shouldBeEmpty = l_emptyLogData.exportLogDataToJSON();
         assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
     }
+
+    @Test
+    public void exportDataToJSON_negativeEmptyDataWithFileName() throws LogDataExportToFileException {
+        String givenFileName = "JSONreport";
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        File l_shouldBeEmpty = l_emptyLogData.exportLogDataToJSON(givenFileName);
+        assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
+    }
 }
