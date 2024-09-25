@@ -1519,4 +1519,58 @@ public class LogDataTest {
             l_exportedFile.delete();
         }
     }
+
+    @Test
+    public void testExportDataToJSON_givenFileName() throws StringParseException, IOException {
+        ParseDefinitionEntry l_verbDefinition2 = new ParseDefinitionEntry();
+
+        l_verbDefinition2.setTitle("verb");
+        l_verbDefinition2.setStart("\"");
+        l_verbDefinition2.setEnd(" /");
+
+        ParseDefinitionEntry l_apiDefinition = new ParseDefinitionEntry();
+
+        l_apiDefinition.setTitle("path");
+        l_apiDefinition.setStart(" /rest/head/");
+        l_apiDefinition.setEnd(" ");
+
+        ParseDefinition l_pDefinition = new ParseDefinition("Simple log");
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_verbDefinition2, l_apiDefinition));
+        l_pDefinition.defineKeys(Arrays.asList(l_apiDefinition, l_verbDefinition2));
+
+        String l_fileFilter = "simple*.log";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData("src/test/resources/nestedDirs/", l_fileFilter,
+                l_pDefinition);
+
+        int l_nrOfEntries = l_logData.getEntries().keySet().size();
+        assertThat("The LogData needs to have been generated", l_nrOfEntries, Matchers.greaterThan(0));
+
+        String givenFileName = "JSONreport";
+
+        File l_exportedFile = l_logData.exportLogDataToJSON(givenFileName);
+
+        assertThat("We successfully created the file", l_exportedFile, notNullValue());
+        assertThat("We successfully created the file", l_exportedFile.exists());
+        assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        assertThat("Created JSON file is no Empty", l_exportedFile.length() > 0);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String values = objectMapper.readValue(l_exportedFile, String.class);
+
+            assertThat("JSON file contains correct verb definition", values.contains(l_verbDefinition2.getTitle()));
+            assertThat("JSON file contains correct api definition", values.contains(l_apiDefinition.getTitle()));
+
+        } finally {
+            l_exportedFile.delete();
+        }
+    }
+
+    @Test
+    public void exportDataToJSON_negativeEmptyData() throws LogDataExportToFileException {
+        LogData<GenericEntry> l_emptyLogData = new LogData<>();
+        File l_shouldBeEmpty = l_emptyLogData.exportLogDataToJSON();
+        assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
+    }
 }
