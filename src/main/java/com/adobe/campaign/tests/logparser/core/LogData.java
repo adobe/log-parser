@@ -518,7 +518,7 @@ public class LogData<T extends StdLogEntry> {
         T l_firstEntry = this.fetchFirst();
 
         if (l_firstEntry != null) {
-            return exportLogDataToJSON(l_firstEntry.fetchHeaders(), in_jsonFileName + "-export.json");
+            return exportLogDataToJSON(l_firstEntry.fetchHeaders(), in_jsonFileName);
         } else {
             log.warn("No Log data to export. Please load the log data before re-attempting");
             return null;
