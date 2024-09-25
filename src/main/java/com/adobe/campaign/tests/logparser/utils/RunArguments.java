@@ -21,7 +21,7 @@ public enum RunArguments {
             "The SDK class to be used for transforming the log data to objects. It is just the class name.",
             "com.adobe.campaign.tests.logparser.core.GenericEntry"),
     REPORT_FORMAT("reportType", false,
-            "The format of the report. The allowed values are currently HTML & CSV.", "HTML"),
+            "The format of the report. The allowed values are currently HTML, JSON & CSV.", "HTML"),
     REPORT_FILENAME("reportFileName", false, "The name of the report file. By default, this is the name of the Parse Definition name suffixed with '-export'", ""),
     REPORT_NAME("reportName", false, "The report title as show in an HTML report. By default the title includes the Parse Definition name", ""),
 

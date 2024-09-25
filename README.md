@@ -456,7 +456,7 @@ java -jar log-parser-1.11.0.jar --startDir=/path/to/logs --parseDefinition=/path
 
 You can provide additional information such as:
 * `--fileFilter` : The wildcard used for selecting the log files. The default value is *.log
-* `--reportType` : The format of the report. The allowed values are currently HTML & CSV. The default value is HTML
+* `--reportType` : The format of the report. The allowed values are currently HTML, JSON & CSV. The default value is HTML
 * `--reportFileName` : The name of the report file. By default, this is the name of the Parse Definition name suffixed with '-export'
 * `--reportName` : The report title as show in an HTML report. By default, the title includes the Parse Definition name
 
@@ -472,6 +472,7 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - **(new feature)** [#138](https://github.com/adobe/log-parser/issues/138) We now have the possibility of anonymizing log data during parsing. For more information please read the section on [Anonymizing Data](#anonymizing-data).
 - **(new feature)** [#117](https://github.com/adobe/log-parser/issues/117) You can now include the file name in the result of the analysis.
 - **(new feature)** [#141](https://github.com/adobe/log-parser/issues/141) You can now export a LogData as a table in a HTML file.
+- **(new feature)** [#173](https://github.com/adobe/log-parser/issues/173) You can now export a LogData as a JSON file.
 - **(new feature)** [#123](https://github.com/adobe/log-parser/issues/123) We now log the total number and size of the parsed files.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#169](https://github.com/adobe/log-parser/issues/169) We only keep one Parse Definition entry with the same title in a Parse Definition.

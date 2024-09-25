@@ -15,6 +15,7 @@ import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import com.adobe.campaign.tests.logparser.utils.CSVManager;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
 import com.adobe.campaign.tests.logparser.utils.RunArguments;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
@@ -90,6 +91,44 @@ public class ExecutionTests {
 
             assertThat("We should have fetched the data", l_fetchedResult, notNullValue());
             assertThat("We should have fetched the data", l_fetchedResult.size(), Matchers.greaterThan(0));
+        } finally {
+            l_exportedFile.delete();
+        }
+    }
+
+
+    @Test
+    public void testSTDMain_printJSON() throws IOException, StringParseException {
+        String l_rootPath = "src/test/resources/nestedDirs/";
+        String l_fileFilter = "simple*.log";
+
+        final String l_jsonPath = "src/test/resources/parseDefinitions/simpleParseDefinitionLogDataFactory.json";
+
+        ParseDefinition l_parseDefinition = ParseDefinitionFactory.importParseDefinition(l_jsonPath);
+
+        String[] l_args = { RunArguments.START_DIR.buildArgument(l_rootPath),
+                RunArguments.FILTER_LOG_FILES.buildArgument(l_fileFilter),
+                RunArguments.PARSE_DEFINITIONS_FILE.buildArgument(l_jsonPath),
+                RunArguments.REPORT_FORMAT.buildArgument("JSON") };
+
+        RunLogParser.main(l_args);
+
+        File l_exportedFile = new File(LogParserFileUtils.LOG_PARSER_EXPORTS,
+                l_parseDefinition.fetchEscapedTitle() + "-export.json");
+
+        assertThat("We should successfully create the file", l_exportedFile, notNullValue());
+        assertThat("We should successfully create the file", l_exportedFile.exists());
+        assertThat("We should successfully create the file correctly", l_exportedFile.isFile());
+        try {
+            assertThat("We successfully created the file correctly", l_exportedFile.getName(),
+                    Matchers.endsWith(l_parseDefinition.fetchEscapedTitle() + "-export.json"));
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String values = objectMapper.readValue(l_exportedFile, String.class);
+
+            assertThat("JSON file contains correct verb definition", values.contains(l_parseDefinition.getDefinitionEntries().get(0).getTitle()));
+            assertThat("JSON file contains correct api definition", values.contains(l_parseDefinition.getDefinitionEntries().get(1).getTitle()));
+
         } finally {
             l_exportedFile.delete();
         }

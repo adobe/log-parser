@@ -64,18 +64,26 @@ public class RunLogParser {
                 l_targetSDKClass);
 
         //Generate Report
-        if (RunArguments.REPORT_FORMAT.fetchValue(in_args).equalsIgnoreCase("CSV")) {
-            l_logData.exportLogDataToCSV(RunArguments.REPORT_FILENAME.fetchValue(in_args,
-                    l_parseDefinition.fetchEscapedTitle() + "-export.csv"));
-        } else if (RunArguments.REPORT_FORMAT.fetchValue(in_args).equalsIgnoreCase("HTML")) {
-            l_logData.exportLogDataToHTML(
-                    RunArguments.REPORT_NAME.fetchValue(in_args, l_parseDefinition.getTitle()),
-                    RunArguments.REPORT_FILENAME.fetchValue(in_args,
-                            l_parseDefinition.fetchEscapedTitle() + "-export.html"));
-        } else {
-            System.err.println("The report format " + RunArguments.REPORT_FORMAT.fetchValue(in_args)
-                    + " is not supported.");
+        switch (RunArguments.REPORT_FORMAT.fetchValue(in_args).toUpperCase()) {
+            case "CSV":
+                l_logData.exportLogDataToCSV(RunArguments.REPORT_FILENAME.fetchValue(in_args,
+                        l_parseDefinition.fetchEscapedTitle() + "-export.csv"));
+                break;
+            case "HTML":
+                l_logData.exportLogDataToHTML(
+                        RunArguments.REPORT_NAME.fetchValue(in_args, l_parseDefinition.getTitle()),
+                        RunArguments.REPORT_FILENAME.fetchValue(in_args,
+                                l_parseDefinition.fetchEscapedTitle() + "-export.html"));
+                break;
+            case "JSON":
+                l_logData.exportLogDataToJSON(RunArguments.REPORT_FILENAME.fetchValue(in_args,
+                        l_parseDefinition.fetchEscapedTitle() + "-export.json"));
+                break;
+            default:
+                System.err.println("The report format " + RunArguments.REPORT_FORMAT.fetchValue(in_args)
+                        + " is not supported.");
         }
+
 
     }
 }
