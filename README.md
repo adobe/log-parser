@@ -12,8 +12,7 @@ The basic method for using this library is, that you create a definition for you
 
 ## Table of contents
 <!-- TOC -->
-* [log-parser](#log-parser)
-  * [Table of contents](#table-of-contents)
+
   * [Installation](#installation)
     * [Maven](#maven)
   * [Running the Log Parser](#running-the-log-parser)
@@ -33,6 +32,7 @@ The basic method for using this library is, that you create a definition for you
         * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
         * [Declaring the Key](#declaring-the-key)
         * [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
+        * [Assisting Exports](#assisting-exports)
   * [Code Structure](#code-structure)
   * [Searching and organizing log data](#searching-and-organizing-log-data)
     * [Search and Filter Mechanisms](#search-and-filter-mechanisms)
@@ -47,6 +47,7 @@ The basic method for using this library is, that you create a definition for you
   * [Exporting Parse Results](#exporting-parse-results)
     * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
     * [Exporting Results to an HTML File](#exporting-results-to-an-html-file)
+    * [Exporting Results to an JSON File](#exporting-results-to-an-json-file)
   * [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
   * [Changelog](#changelog)
     * [1.11.0 (next version)](#1110--next-version-)
@@ -256,6 +257,10 @@ Depending on the fields you have defined, you will want to define how the result
 
 You will need to give names to the headers, and provide a map that extracts the values.
 
+##### Assisting Exports
+One of the added values of writing your own log data is the possibility of using non-String objects, and perform additional operations on the data. This has the drawback that we can have odd behaviors when exporting the logs data. For this we, y default, transforml all data in an entry to a map of Strings.
+
+In some cases the default String transformation may not be to your liking. In this case you will have to override the method `Map<String, String> fetchValueMapPrintable()`. To do this the method needs to call perform your own transformation to the results of the `fetchValueMap()` method. 
 
 ## Code Structure
 Below is a diagram representing the class structure:
@@ -420,6 +425,8 @@ We have the possibility to export the log data results into files. Currently the
 
 All reports are stored in the directory `log-parser-reports/export/`.
 
+If you are using an SDK to control the log parsing, you may want to override the method `fetchValueMapPrintable` to provide a more suitable export of the data. For mor information on this please refer to the chapter describing this topic.
+
 ### Exporting Results to a CSV File
 We have the possibility to export the log data results into a CSV file. This is done by calling the methods `LogData#exportLogDataToCSV`.
 
@@ -434,7 +441,6 @@ You have the possibility to define the data, and order to be exported, the file 
 We have the possibility to export the log data results into an JSON file. This is done by calling the methods `LogData#exportLogDataToJSON`.
 
 You have the possibility to define the data, and order to be exported, the file name and the title of the report.
-
 
 ## Command-line Execution of the Log-Parser
 As of version 1.11.0 we have introduced the possibility of running the log-parser from the command line. This is done by using the executable jar file or executing the main method in maven. 
@@ -480,6 +486,8 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - [#57](https://github.com/adobe/log-parser/issues/57) Assertions are no longer an implicite assert equal method. We now allow Hamcrest Matchers for asserting. This can be one or more matchers.
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
+- [#185](https://github.com/adobe/log-parser/issues/185) Resolved issue with deserializing unexpected objects in SDK Log entries..
+
 
 ### 1.0.10
 - Moved main code and tests to the package "core"

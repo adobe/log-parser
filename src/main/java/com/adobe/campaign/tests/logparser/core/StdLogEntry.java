@@ -134,6 +134,18 @@ public abstract class StdLogEntry {
     }
 
     /**
+     * For deserialization purposes, when people define their own classes we will need to have a map of Strings. This
+     * avoids problems when exporting data. In cases where this cannot be done automatically, please overload this
+     * method.
+     *
+     * @return a map of Strings representing the values of the log entry
+     */
+     protected Map<String, String> fetchValueMapPrintable() {
+        return fetchValueMap().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> Optional.ofNullable(e.getValue()).orElse("").toString()));
+    }
+
+    /**
      * Increments the frequence
      *
      * Author : gandomi

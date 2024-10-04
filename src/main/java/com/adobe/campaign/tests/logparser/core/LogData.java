@@ -13,7 +13,12 @@ import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileExceptio
 import com.adobe.campaign.tests.logparser.exceptions.LogParserPostManipulationException;
 import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
@@ -421,7 +426,7 @@ public class LogData<T extends StdLogEntry> {
             printer.printRecord(in_headerSet);
 
             for (StdLogEntry lt_entry : this.getEntries().values()) {
-                Map lt_values = lt_entry.fetchValueMap();
+                Map lt_values = lt_entry.fetchValueMapPrintable();
                 printer.printRecord(in_headerSet.stream().map(h -> lt_values.get(h)).collect(Collectors.toList()));
             }
 
@@ -472,7 +477,7 @@ public class LogData<T extends StdLogEntry> {
             sb.append("<tbody>");
 
             for (StdLogEntry lt_entry : this.getEntries().values()) {
-                Map lt_values = lt_entry.fetchValueMap();
+                Map lt_values = lt_entry.fetchValueMapPrintable();
                 sb.append(HTMLReportUtils.ROW_START);
                 in_headerSet.stream().map(h -> lt_values.get(h)).forEach(j -> sb.append(HTMLReportUtils.fetchCell_TD(j)));
                 sb.append(HTMLReportUtils.ROW_END);
@@ -533,16 +538,18 @@ public class LogData<T extends StdLogEntry> {
      * @return a JSON file containing the LogData
      * @throws LogDataExportToFileException If the file could not be exported
      */
-    public File exportLogDataToJSON(Collection<String> in_headerSet, String in_jsonFileName) throws LogDataExportToFileException {
+    public File exportLogDataToJSON(Collection<String> in_headerSet, String in_jsonFileName)
+            throws LogDataExportToFileException {
         File l_exportFile = LogParserFileUtils.createNewFile(in_jsonFileName);
-        List<Map<String, Object>> jsonList = new ArrayList<>();
-        jsonList.addAll(this.getEntries().values().stream().map(StdLogEntry::fetchValueMap).collect(Collectors.toList()));
+        List<Map<String, String>> jsonList = new ArrayList<>();
+        jsonList.addAll(this.getEntries().values().stream().map(StdLogEntry::fetchValueMapPrintable)
+                .collect(Collectors.toList()));
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(l_exportFile, objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonList));
-        }
-        catch (IOException e) {
+            objectMapper.writeValue(l_exportFile,
+                    objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonList));
+        } catch (IOException e) {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a JSON file.", e);
         }
         return l_exportFile;
