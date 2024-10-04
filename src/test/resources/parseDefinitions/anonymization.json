@@ -1,0 +1,1 @@
+{"title":"Anonymization","storeFileName":false,"storeFilePath":false,"storePathFrom":"","keyPadding":"#","keyOrder":[],"definitionEntries":[{"title":"path","start":"HTTP/1.1|","end":"|Content-Length","caseSensitive":false,"trimQuotes":false,"toPreserve":true,"anonymizers":["X-Security-Token:{}|SOAPAction:[]"]}]}

@@ -1,0 +1,69 @@
+/**
+ * Copyright 2022 Adobe
+ * All Rights Reserved.
+ *
+ * NOTICE: Adobe permits you to use, modify, and distribute this file in
+ * accordance with the terms of the Adobe license agreement accompanying
+ * it.
+ */
+h1, h2, h3 {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.diffOverView table {
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+.diffOverView th, td {
+    text-align: left;
+}
+
+table {
+    border-collapse:separate;
+    border:solid #7d8d40 1px;
+    border-radius:25px;
+    border-spacing: 0;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+thead tr {
+    background-color: #7d8d40;
+    border-left:solid #7d8d40 0px;
+    border-top:solid #7d8d40 1px;
+    border-radius: 25px;
+    color: White;
+    text-align: left;
+}
+th, td {
+    padding: 12px 15px;
+}
+
+tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}

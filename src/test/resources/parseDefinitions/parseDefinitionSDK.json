@@ -1,0 +1,37 @@
+{
+  "title": "My Logs",
+  "storeFileName": true,
+  "storeFilePath": false,
+  "storePathFrom": "",
+  "keyPadding": "#",
+  "keyOrder": [],
+  "definitionEntries": [
+    {
+      "title": "timeStamp",
+      "start": null,
+      "end": "\t",
+      "caseSensitive": true,
+      "trimQuotes": false,
+      "toPreserve": true,
+      "anonymizers": []
+    },
+    {
+      "title": "throwableMarker",
+      "start": "\terror",
+      "end": "\t",
+      "caseSensitive": true,
+      "trimQuotes": false,
+      "toPreserve": false,
+      "anonymizers": []
+    },
+    {
+      "title": "errorContent",
+      "start": "log\t",
+      "end": null,
+      "caseSensitive": true,
+      "trimQuotes": false,
+      "toPreserve": true,
+      "anonymizers": []
+    }
+  ]
+}
