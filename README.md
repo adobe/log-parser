@@ -12,7 +12,6 @@ The basic method for using this library is, that you create a definition for you
 
 ## Table of contents
 <!-- TOC -->
-
   * [Installation](#installation)
     * [Maven](#maven)
   * [Running the Log Parser](#running-the-log-parser)
@@ -50,7 +49,7 @@ The basic method for using this library is, that you create a definition for you
     * [Exporting Results to an JSON File](#exporting-results-to-an-json-file)
   * [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
   * [Changelog](#changelog)
-    * [1.11.0 (next version)](#1110--next-version-)
+    * [1.11.0](#1110)
     * [1.0.10](#1010)
     * [1.0.8.2](#1082)
     * [1.0.8](#108)
@@ -483,7 +482,7 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - [#110](https://github.com/adobe/log-parser/issues/110) Moved to Java 11
 - [#169](https://github.com/adobe/log-parser/issues/169) We only keep one Parse Definition entry with the same title in a Parse Definition.
 - [#157](https://github.com/adobe/log-parser/issues/157) Search terms ar no longer a Map of key and Objects. Instead, they are now a map of Parse Definition Entry names and Hamcrest Matchers. This may cause compilation errors for those using the search & filter functions. For migration purposes please refer to the section on [Defining a Search Term](#defining-a-search-term).
-- [#57](https://github.com/adobe/log-parser/issues/57) Assertions are no longer an implicite assert equal method. We now allow Hamcrest Matchers for asserting. This can be one or more matchers.
+- [#57](https://github.com/adobe/log-parser/issues/57) Assertions are no longer an implicit assert equal method. We now allow Hamcrest Matchers for asserting. This can be one or more matchers.
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 - [#185](https://github.com/adobe/log-parser/issues/185) Resolved issue with deserializing unexpected objects in SDK Log entries..
