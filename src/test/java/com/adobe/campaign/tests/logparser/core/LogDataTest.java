@@ -21,11 +21,11 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
@@ -34,6 +34,18 @@ import static org.hamcrest.Matchers.*;
 import static org.testng.Assert.assertThrows;
 
 public class LogDataTest {
+
+    @BeforeMethod(alwaysRun = true)
+    @AfterClass
+    public void CleanUp() throws IOException {
+        File l_stdOutPutFile = new File(LogParser.OUTPUT_ROOT);
+
+        if (l_stdOutPutFile.exists()) {
+            FileUtils.deleteDirectory(l_stdOutPutFile);
+        }
+
+    }
+
 
     /**
      * Testing that we correctly create a cube
@@ -1397,7 +1409,9 @@ public class LogDataTest {
 
         //Create the file so it is deleted
         File l_duplicateFile = new File(LogParserFileUtils.LOG_PARSER_EXPORTS, l_fileNameToExpect);
-        l_duplicateFile.createNewFile();
+        //Files.
+        //l_duplicateFile.createNewFile();
+        LogParserFileUtils.createNewFile(LogParserFileUtils.LOG_PARSER_EXPORTS+"/"+l_fileNameToExpect);
 
         assertThat("We should have the key for amcDataSource",
                 l_logData.getEntries().containsKey(l_searchItem1));

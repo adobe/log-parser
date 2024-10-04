@@ -266,9 +266,10 @@ public class LogDataFactory {
     public static <T extends StdLogEntry> File generateDiffReport(Map<String, LogDataComparison<T>> in_comparisonReport,
             List<String> in_headers, String in_reportName) {
         StringBuilder sb = new StringBuilder();
-        File l_exportFile = LogParserFileUtils.createNewFile(in_reportName + ".html");
+        File l_exportFile = null;
 
         try {
+            l_exportFile = LogParserFileUtils.createNewFile(in_reportName + ".html");
             sb.append(HTMLReportUtils.fetchSTDPageStart("diffTable.css"));
 
             //Creating the overview report
