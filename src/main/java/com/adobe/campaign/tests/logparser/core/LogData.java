@@ -415,19 +415,24 @@ public class LogData<T extends StdLogEntry> {
      */
     public File exportLogDataToCSV(Collection<String> in_headerSet, String in_csvFileName)
             throws LogDataExportToFileException {
-        File l_exportFile = LogParserFileUtils.createNewFile(in_csvFileName);
+        File l_exportFile = null;
+        try {
+            l_exportFile = LogParserFileUtils.createNewFile(in_csvFileName);
 
-        try (CSVPrinter printer = new CSVPrinter(new FileWriter(l_exportFile), CSVFormat.DEFAULT)) {
-            printer.printRecord(in_headerSet);
+            try (CSVPrinter printer = new CSVPrinter(new FileWriter(l_exportFile), CSVFormat.DEFAULT)) {
+                printer.printRecord(in_headerSet);
 
-            for (StdLogEntry lt_entry : this.getEntries().values()) {
-                Map lt_values = lt_entry.fetchValueMapPrintable();
-                printer.printRecord(in_headerSet.stream().map(h -> lt_values.get(h)).collect(Collectors.toList()));
+                for (StdLogEntry lt_entry : this.getEntries().values()) {
+                    Map lt_values = lt_entry.fetchValueMapPrintable();
+                    printer.printRecord(in_headerSet.stream().map(h -> lt_values.get(h)).collect(Collectors.toList()));
+                }
             }
 
         } catch (IOException ex) {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a CSV file.", ex);
         }
+
+
 
         return l_exportFile;
     }
@@ -459,9 +464,10 @@ public class LogData<T extends StdLogEntry> {
      * @return an HTML file containing the LogData as a table
      */
     public File exportLogDataToHTML(Collection<String> in_headerSet, String in_reportTitle, String in_htmlFileName) {
-        File l_exportFile = LogParserFileUtils.createNewFile(in_htmlFileName);
+        File l_exportFile;
 
         try {
+            l_exportFile = LogParserFileUtils.createNewFile(in_htmlFileName);
             StringBuilder sb = new StringBuilder();
             sb.append(HTMLReportUtils.fetchSTDPageStart("diffTable.css"));
             //Creating the overview report
@@ -485,7 +491,7 @@ public class LogData<T extends StdLogEntry> {
 
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
         } catch (IOException e) {
-            throw new LogDataExportToFileException("We were unable to write to the file " + l_exportFile.getPath());
+            throw new LogDataExportToFileException("We were unable to write to the file " + in_htmlFileName, e);
         }
 
         return l_exportFile;
@@ -535,15 +541,18 @@ public class LogData<T extends StdLogEntry> {
      */
     public File exportLogDataToJSON(Collection<String> in_headerSet, String in_jsonFileName)
             throws LogDataExportToFileException {
-        File l_exportFile = LogParserFileUtils.createNewFile(in_jsonFileName);
-        List<Map<String, String>> jsonList = new ArrayList<>();
-        jsonList.addAll(this.getEntries().values().stream().map(StdLogEntry::fetchValueMapPrintable)
-                .collect(Collectors.toList()));
+        File l_exportFile;
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(l_exportFile,
-                    objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonList));
+            l_exportFile= LogParserFileUtils.createNewFile(in_jsonFileName);
+            List<Map<String, String>> jsonList = new ArrayList<>();
+            jsonList.addAll(this.getEntries().values().stream().map(StdLogEntry::fetchValueMapPrintable)
+                    .collect(Collectors.toList()));
+
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.writeValue(l_exportFile,
+                        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonList));
         } catch (IOException e) {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a JSON file.", e);
         }

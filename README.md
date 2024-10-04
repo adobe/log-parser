@@ -71,7 +71,7 @@ The following dependency needs to be added to your pom file:
  <dependency>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>1.0.10</version>
+    <version>1.11.1</version>
 </dependency>
 ```
 ## Running the Log Parser
@@ -470,6 +470,9 @@ You can get a print out of the command line options by running the command with 
 All reports are stored in the directory `log-parser-reports/export/`.
 
 ## Changelog
+### 1.11.1
+- [#188](https://github.com/adobe/log-parser/issues/188) We solved problems with exporting when the directory hierarchy is not present.
+
 ### 1.11.0
 - **(new feature)** [#10](https://github.com/adobe/log-parser/issues/10) We now have an executable for the log-parser. You can perform a log parsing using the command line. For more information please read the section on [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).
 - **(new feature)** [#127](https://github.com/adobe/log-parser/issues/127) You can now compare two LogData Objects. This is a light compare that checks that for a given key, if it is absent, added or changes in frequency.
