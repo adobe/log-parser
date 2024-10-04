@@ -8,27 +8,22 @@
  */
 package com.adobe.campaign.tests.logparser.core;
 
-
-import com.adobe.campaign.tests.logparser.data.SDKCaseBadDefConstructor;
-import com.adobe.campaign.tests.logparser.data.SDKCasePrivateDefConstructor;
-import com.adobe.campaign.tests.logparser.data.SDKCaseNoDefConstructor;
-import com.adobe.campaign.tests.logparser.data.SDKCaseSTD;
+import com.adobe.campaign.tests.logparser.data.*;
 import com.adobe.campaign.tests.logparser.exceptions.IncorrectParseDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileException;
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class SDKTests {
 
@@ -192,6 +187,57 @@ public class SDKTests {
         Assert.assertThrows(LogParserSDKDefinitionException.class,
                 () -> LogDataFactory.generateLogData(Arrays.asList(l_file), l_pDefinition,
                         SDKCasePrivateDefConstructor.class));
+
+    }
+
+
+    @Test
+    public void testFetchValueMapToString() throws StringParseException {
+        ParseDefinition l_pDefinition = SDKTests.getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "src/test/resources/sdk/useCase1.log";
+
+        LogData<SDKCase2> l_entries = LogDataFactory.generateLogData(Arrays.asList(l_file), l_pDefinition,
+                SDKCase2.class);
+
+        SDKCase2 l_entry = l_entries.getEntries().values().iterator().next();
+
+        assertThat("Checking the original assumptions",l_entry.fetchValueMap().get("timeOfLog"), instanceOf(
+                ZonedDateTime.class));
+
+        assertThat("Checking the original assumptions",l_entry.fetchValueMapPrintable().get("timeOfLog"), instanceOf(
+                String.class));
+
+
+    }
+
+    @Test
+    public void testSimpleLogACC_SDK_exportDateTimeJSON() throws StringParseException, IOException {
+        ParseDefinition l_pDefinition = SDKTests.getTestParseDefinition();
+        l_pDefinition.setStoreFileName(true);
+
+        String l_file = "src/test/resources/sdk/useCase1.log";
+
+        LogData<SDKCase2> l_entries = LogDataFactory.generateLogData(Arrays.asList(l_file), l_pDefinition,
+                SDKCase2.class);
+
+        File l_exportedFile = l_entries.exportLogDataToJSON("jsonTest.json");
+
+        assertThat("We successfully created the file", l_exportedFile, notNullValue());
+        assertThat("We successfully created the file", l_exportedFile.exists());
+        assertThat("We successfully created the file correctly", l_exportedFile.isFile());
+        assertThat("Created JSON file is no Empty", l_exportedFile.length() > 0);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String values = objectMapper.readValue(l_exportedFile, String.class);
+
+            assertThat("JSON file contains correct verb definition", values.contains("\"timeStamp\" : \"2024-06-13T03:00:19.727Z\""));
+
+        } finally {
+            l_exportedFile.delete();
+        }
 
     }
 
