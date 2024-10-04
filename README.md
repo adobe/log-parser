@@ -71,7 +71,7 @@ The following dependency needs to be added to your pom file:
  <dependency>
     <groupId>com.adobe.campaign.tests</groupId>
     <artifactId>log-parser</artifactId>
-    <version>1.0.10</version>
+    <version>1.11.0</version>
 </dependency>
 ```
 ## Running the Log Parser
