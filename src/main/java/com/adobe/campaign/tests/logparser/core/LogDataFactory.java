@@ -267,9 +267,10 @@ public class LogDataFactory {
             List<String> in_headers, String in_reportName) {
         StringBuilder sb = new StringBuilder();
         File l_exportFile = null;
-
+        String l_exportFilePath = in_reportName + ".html";
         try {
-            l_exportFile = LogParserFileUtils.createNewFile(in_reportName + ".html");
+            l_exportFile = LogParserFileUtils.createNewFile(l_exportFilePath);
+            l_exportFilePath = l_exportFile.getPath();
             sb.append(HTMLReportUtils.fetchSTDPageStart("diffTable.css"));
 
             //Creating the overview report
@@ -320,8 +321,9 @@ public class LogDataFactory {
             sb.append("</html>");
 
             FileUtils.writeStringToFile(l_exportFile, sb.toString(), "UTF-8");
+
         } catch (IOException e) {
-            throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFile.getPath());
+            throw new LogDataExportToFileException("We were unable to write to the file "+ l_exportFilePath);
         }
         return l_exportFile;
     }
