@@ -336,18 +336,6 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.17.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-parameter-names</artifactId>
-            <version>2.17.2</version>
-        </dependency>
-
-        <!--	Java 8 Date/time	-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.17.2</version>
-        </dependency>
         <!-- Using 4.11.0 because we want to keep Java8 compatibility -->
         <dependency>
             <groupId>org.mockito</groupId>
