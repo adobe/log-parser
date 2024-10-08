@@ -470,8 +470,9 @@ You can get a print out of the command line options by running the command with 
 All reports are stored in the directory `log-parser-reports/export/`.
 
 ## Changelog
-### 1.11.1
+### 1.11.2
 - [#188](https://github.com/adobe/log-parser/issues/188) We solved problems with exporting when the directory hierarchy is not present.
+- [#189](https://github.com/adobe/log-parser/issues/189) The generated JSON when exporting results included unnecessary elements.
 
 ### 1.11.0
 - **(new feature)** [#10](https://github.com/adobe/log-parser/issues/10) We now have an executable for the log-parser. You can perform a log parsing using the command line. For more information please read the section on [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).

@@ -552,7 +552,7 @@ public class LogData<T extends StdLogEntry> {
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.writeValue(l_exportFile,
-                        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonList));
+                        objectMapper.writeValueAsString(jsonList));
         } catch (IOException e) {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a JSON file.", e);
         }
