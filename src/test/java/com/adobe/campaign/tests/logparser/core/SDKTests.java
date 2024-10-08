@@ -14,6 +14,7 @@ import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileExceptio
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -233,7 +234,11 @@ public class SDKTests {
             ObjectMapper objectMapper = new ObjectMapper();
             String values = objectMapper.readValue(l_exportedFile, String.class);
 
-            assertThat("JSON file contains correct verb definition", values.contains("\"timeStamp\" : \"2024-06-13T03:00:19.727Z\""));
+            assertThat("JSON file contains correct verb definition and is not prettified", values.contains("\"timeStamp\":\"2024-06-13T03:00:19.727Z\""));
+            assertThat("JSON file does not contain prettified elements", !values.contains("\n"));
+            assertThat("JSON file does not contain prettified elements", !values.contains("\t"));
+            boolean containsNewline = values.contains("\n");
+            System.out.println("Contains newline: " + containsNewline);
 
         } finally {
             l_exportedFile.delete();
