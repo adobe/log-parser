@@ -549,10 +549,9 @@ public class LogData<T extends StdLogEntry> {
             jsonList.addAll(this.getEntries().values().stream().map(StdLogEntry::fetchValueMapPrintable)
                     .collect(Collectors.toList()));
 
-
                 ObjectMapper objectMapper = new ObjectMapper();
-                objectMapper.writeValue(l_exportFile,
-                        objectMapper.writeValueAsString(jsonList));
+                objectMapper.writeValue(l_exportFile, jsonList);
+
         } catch (IOException e) {
             throw new LogDataExportToFileException("Encountered error while exporting the log data to a JSON file.", e);
         }

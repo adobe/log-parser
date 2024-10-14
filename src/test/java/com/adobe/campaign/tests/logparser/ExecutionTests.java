@@ -124,10 +124,10 @@ public class ExecutionTests {
                     Matchers.endsWith(l_parseDefinition.fetchEscapedTitle() + "-export.json"));
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String values = objectMapper.readValue(l_exportedFile, String.class);
+            List<Map<String, String>> values = objectMapper.readValue(l_exportedFile, List.class);
 
-            assertThat("JSON file contains correct verb definition", values.contains(l_parseDefinition.getDefinitionEntries().get(0).getTitle()));
-            assertThat("JSON file contains correct api definition", values.contains(l_parseDefinition.getDefinitionEntries().get(1).getTitle()));
+            assertThat("JSON file contains correct verb definition", values.get(0).keySet().contains(l_parseDefinition.getDefinitionEntries().get(0).getTitle()));
+            assertThat("JSON file contains correct api definition", values.get(0).keySet().contains(l_parseDefinition.getDefinitionEntries().get(1).getTitle()));
 
         } finally {
             l_exportedFile.delete();

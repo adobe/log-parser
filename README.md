@@ -472,7 +472,7 @@ All reports are stored in the directory `log-parser-reports/export/`.
 ## Changelog
 ### 1.11.2
 - [#188](https://github.com/adobe/log-parser/issues/188) We solved problems with exporting when the directory hierarchy is not present.
-- [#189](https://github.com/adobe/log-parser/issues/189) The generated JSON when exporting results included unnecessary elements.
+- [#189](https://github.com/adobe/log-parser/issues/189) The generated JSON when exporting results included unnecessary escape characters.
 
 ### 1.11.0
 - **(new feature)** [#10](https://github.com/adobe/log-parser/issues/10) We now have an executable for the log-parser. You can perform a log parsing using the command line. For more information please read the section on [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser).
@@ -490,7 +490,6 @@ All reports are stored in the directory `log-parser-reports/export/`.
 - [#119](https://github.com/adobe/log-parser/issues/119) Cleanup of deprecated methods, and the consequences thereof.
 - [#137](https://github.com/adobe/log-parser/issues/137) We can now generate an HTML report for the differences in log data.
 - [#185](https://github.com/adobe/log-parser/issues/185) Resolved issue with deserializing unexpected objects in SDK Log entries..
-
 
 ### 1.0.10
 - Moved main code and tests to the package "core"
