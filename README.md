@@ -49,6 +49,7 @@ The basic method for using this library is, that you create a definition for you
     * [Exporting Results to an JSON File](#exporting-results-to-an-json-file)
   * [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
   * [Changelog](#changelog)
+    * [1.11.2](#1112)
     * [1.11.0](#1110)
     * [1.0.10](#1010)
     * [1.0.8.2](#1082)
