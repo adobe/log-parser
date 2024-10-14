@@ -20,6 +20,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -233,15 +234,16 @@ public class SDKTests {
         assertThat("Created JSON file is no Empty", l_exportedFile.length() > 0);
 
         try {
+            String content = Files.readString(l_exportedFile.toPath());
+
             ObjectMapper objectMapper = new ObjectMapper();
             List<Map<String, String>> values = objectMapper.readValue(l_exportedFile, List.class);
 
             assertThat("JSON file contains correct verb definition", values.get(0).keySet().contains("timeStamp"));
-            assertThat("JSON file contains correct verb definition and is not prettified", values.contains("\"timeStamp\":\"2024-06-13T03:00:19.727Z\""));
-            assertThat("JSON file does not contain prettified elements", !values.contains("\n"));
-            assertThat("JSON file does not contain prettified elements", !values.contains("\t"));
-            boolean containsNewline = values.contains("\n");
-            System.out.println("Contains newline: " + containsNewline);
+            assertThat("JSON file contains correct verb definition and is not prettified", content.contains("\"timeStamp\":\"2024-06-13T03:00:19.727Z\""));
+            assertThat("JSON file does not contain prettified elements", !content.contains("\n"));
+            assertThat("JSON file does not contain prettified elements", !content.contains("\t"));
+            assertThat("JSON file does not contain prettified elements", !content.contains("\\"));
 
         } finally {
             l_exportedFile.delete();
