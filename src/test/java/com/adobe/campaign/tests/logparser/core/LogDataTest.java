@@ -1524,10 +1524,10 @@ public class LogDataTest {
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            String values = objectMapper.readValue(l_exportedFile, String.class);
+            List<Map<String, String>> values = objectMapper.readValue(l_exportedFile, List.class);
 
-            assertThat("JSON file contains correct verb definition", values.contains(l_verbDefinition2.getTitle()));
-            assertThat("JSON file contains correct api definition", values.contains(l_apiDefinition.getTitle()));
+            assertThat("JSON file contains correct verb definition", values.get(0).keySet().contains(l_verbDefinition2.getTitle()));
+            assertThat("JSON file contains correct api definition", values.get(0).keySet().contains(l_apiDefinition.getTitle()));
 
         } finally {
             l_exportedFile.delete();
@@ -1570,11 +1570,12 @@ public class LogDataTest {
         assertThat("Created JSON file is no Empty", l_exportedFile.length() > 0);
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String values = objectMapper.readValue(l_exportedFile, String.class);
 
-            assertThat("JSON file contains correct verb definition", values.contains(l_verbDefinition2.getTitle()));
-            assertThat("JSON file contains correct api definition", values.contains(l_apiDefinition.getTitle()));
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Map<String, String>> values = objectMapper.readValue(l_exportedFile, List.class);
+
+            assertThat("JSON file contains correct verb definition", values.get(0).keySet().contains(l_verbDefinition2.getTitle()));
+            assertThat("JSON file contains correct api definition", values.get(0).keySet().contains(l_apiDefinition.getTitle()));
 
         } finally {
             l_exportedFile.delete();

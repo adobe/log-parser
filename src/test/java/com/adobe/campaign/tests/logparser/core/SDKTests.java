@@ -14,13 +14,17 @@ import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileExceptio
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -230,10 +234,16 @@ public class SDKTests {
         assertThat("Created JSON file is no Empty", l_exportedFile.length() > 0);
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String values = objectMapper.readValue(l_exportedFile, String.class);
+            String content = Files.readString(l_exportedFile.toPath());
 
-            assertThat("JSON file contains correct verb definition", values.contains("\"timeStamp\" : \"2024-06-13T03:00:19.727Z\""));
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Map<String, String>> values = objectMapper.readValue(l_exportedFile, List.class);
+
+            assertThat("JSON file contains correct verb definition", values.get(0).keySet().contains("timeStamp"));
+            assertThat("JSON file contains correct verb definition and is not prettified", content.contains("\"timeStamp\":\"2024-06-13T03:00:19.727Z\""));
+            assertThat("JSON file does not contain prettified elements", !content.contains("\n"));
+            assertThat("JSON file does not contain prettified elements", !content.contains("\t"));
+            assertThat("JSON file does not contain prettified elements", !content.contains("\\"));
 
         } finally {
             l_exportedFile.delete();
