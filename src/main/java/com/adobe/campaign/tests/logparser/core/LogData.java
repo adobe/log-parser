@@ -29,7 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 /**
  * The main log object that contains the log information
  *
