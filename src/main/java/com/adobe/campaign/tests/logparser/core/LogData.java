@@ -675,9 +675,9 @@ public class LogData<T extends StdLogEntry> {
             //based on the key list
             for (String key : keyList) {
                 filterConditions.put(key, Matchers.equalTo(
-                        (String) v.getValuesMap().get(key) != null ?
-                                (String) v.getValuesMap().get(key) :
-                                (String) v.get(key)));
+                        v.getValuesMap().get(key) != null ?
+                                v.getValuesMap().get(key) :
+                                v.get(key)));
             }
 
             if (!lr_filteredLogData.isEntryPresent(filterConditions)) {
