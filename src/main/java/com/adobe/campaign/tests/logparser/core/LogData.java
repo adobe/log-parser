@@ -26,11 +26,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * The main log object that contains the log information
