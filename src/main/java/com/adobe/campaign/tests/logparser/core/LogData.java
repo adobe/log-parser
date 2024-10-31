@@ -26,8 +26,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * The main log object that contains the log information
@@ -657,4 +660,35 @@ public class LogData<T extends StdLogEntry> {
 
         this.enrichData(l_unsetSearchQuery, in_entryName, in_entryValue);
     }
+
+    /**
+     * This method removes the entries that have the same value, identified
+     * by the list provided in parameter.
+     * @param keyList list of value to create a key to identity a unique entry
+     * @return a new LogData object with the duplicated entries removed
+     */
+    public LogData<T> removeDuplicatedEntries(List<String> keyList) {
+
+        LogData<T> lr_filteredLogData = new LogData<>();
+
+        this.getEntries().forEach((k, v) -> {
+            Map<String, Matcher> filterConditions = new HashMap<>();
+
+            //We create the condition to identify a unique entry
+            //based on the key list
+            for (String key : keyList) {
+                filterConditions.put(key, Matchers.equalTo(
+                        (String) v.getValuesMap().get(key) != null ?
+                                (String) v.getValuesMap().get(key) :
+                                (String) v.get(key)));
+            }
+
+            if (!lr_filteredLogData.isEntryPresent(filterConditions)) {
+                lr_filteredLogData.addEntry(v);
+            }
+        });
+
+        return lr_filteredLogData;
+    }
+
 }
