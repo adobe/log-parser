@@ -1596,4 +1596,50 @@ public class LogDataTest {
         File l_shouldBeEmpty = l_emptyLogData.exportLogDataToJSON(givenFileName);
         assertThat("The returned file should not exist", l_shouldBeEmpty, Matchers.nullValue());
     }
+
+
+    /**
+     * Testing that we correctly create a cube
+     * <p>
+     * Author : gandomi
+     */
+    @Test
+    public void testHelloTomcat() throws StringParseException {
+        ParseDefinition l_pDefinition = new ParseDefinition("Tomcat");
+
+        ParseDefinitionEntry l_part1 = new ParseDefinitionEntry();
+
+        l_part1.setTitle("time");
+        l_part1.setStartStartOfLine();
+        l_part1.setEnd(" |");
+
+        ParseDefinitionEntry l_part2 = new ParseDefinitionEntry();
+
+        l_part2.setTitle("level");
+        l_part2.setStart(" ");
+        l_part2.setEnd(" ");
+
+        ParseDefinitionEntry l_part3 = new ParseDefinitionEntry();
+
+        l_part3.setTitle("source");
+        l_part3.setStart("[");
+        l_part3.setEnd("]");
+
+        ParseDefinitionEntry l_end = new ParseDefinitionEntry();
+
+        l_end.setTitle("source detailed");
+        l_end.setStart(" ");
+        l_end.setEndEOL();
+
+        l_pDefinition.setDefinitionEntries(Arrays.asList(l_part1, l_part2, l_part3, l_end));
+        l_pDefinition.defineKeys(Arrays.asList(l_part1, l_part2));
+
+        final String apacheLogFile = "src/test/resources/logTests.tomcat/catalina.example.log";
+
+        LogData<GenericEntry> l_logData = LogDataFactory.generateLogData(Arrays.asList(apacheLogFile),
+                l_pDefinition);
+
+        l_logData.getEntries().values().stream().forEach(e -> System.out.println(e.fetchPrintOut()));
+
+    }
 }
