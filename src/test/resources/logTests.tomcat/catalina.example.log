@@ -1,5 +1,5 @@
 20-Sep-2024 06:01:02.946 | WARNING [main] org.apache.tomcat.util.net.Acceptor.stopMillis The acceptor thread [http-nio-1234-Acceptor] did not stop cleanly
-29-Oct-2024 09:15:01.048 | SEVERE [http-nio-1234-exec-3] org.apache.catalina.core.StandardWrapperValve.invoke Servlet.service() for servlet [neolanejsp] in context with path [/nl/jsp] threw exception [An exception occurred processing [uploadFile.jsp] at line [82]
+29-Oct-2024 09:15:01.048 | SEVERE [http-nio-1234-exec-3] org.apache.catalina.core.StandardWrapperValve.invoke Servlet.service() for servlet [acmejsp] in context with path [/am/jsp] threw exception [An exception occurred processing [uploadFile.jsp] at line [82]
 
 79: 
 80:   if( strError != null )
@@ -26,7 +26,7 @@ Stacktrace:] with root cause
 		at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
 		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
 		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-		at com.neolane.jssp.HttpHeaderFilter.doFilter(HttpHeaderFilter.java:102)
+		at com.acme.jssp.HttpHeaderFilter.doFilter(HttpHeaderFilter.java:102)
 		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
 		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
 		at org.apache.catalina.filters.SetCharacterEncodingFilter.doFilter(SetCharacterEncodingFilter.java:115)
@@ -48,7 +48,7 @@ Stacktrace:] with root cause
 		at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 		at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 		at java.base/java.lang.Thread.run(Thread.java:829)
-29-Oct-2024 09:15:01.050 | SEVERE [http-nio-1234-exec-11] org.apache.catalina.core.StandardWrapperValve.invoke Servlet.service() for servlet [neolanejsp] in context with path [/nl/jsp] threw exception [An exception occurred processing [uploadFile.jsp] at line [82]
+29-Oct-2024 09:15:01.050 | SEVERE [http-nio-1234-exec-11] org.apache.catalina.core.StandardWrapperValve.invoke Servlet.service() for servlet [acmejsp] in context with path [/am/jsp] threw exception [An exception occurred processing [uploadFile.jsp] at line [82]
 
 79: 
 80:   if( strError != null )
@@ -75,7 +75,7 @@ Stacktrace:] with root cause
 		at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
 		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
 		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-		at com.neolane.jssp.HttpHeaderFilter.doFilter(HttpHeaderFilter.java:102)
+		at com.acme.jssp.HttpHeaderFilter.doFilter(HttpHeaderFilter.java:102)
 		at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
 		at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
 		at org.apache.catalina.filters.SetCharacterEncodingFilter.doFilter(SetCharacterEncodingFilter.java:115)
