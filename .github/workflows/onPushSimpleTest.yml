@@ -33,6 +33,8 @@ jobs:
           distribution: temurin
       - name: list directory
         run: ls -la
+      - name: show path
+        run: pwd
       - name: Build with Maven
         run: mvn --batch-mode clean test
         env:
