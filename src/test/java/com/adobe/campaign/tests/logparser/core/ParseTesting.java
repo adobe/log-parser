@@ -30,7 +30,6 @@ public class ParseTesting {
         @AfterMethod
         @BeforeMethod
         public void afterMethod() {
-                System.clearProperty("PROP_LOGPARSER_FILEENTRY_LIMIT");
                 ParseGuardRails.reset();
         }
 
@@ -1259,11 +1258,8 @@ public class ParseTesting {
 
                 File l_file = new File(bugFile);
                 assertThat("We should have an entry for the file size",
-                                ParseGuardRails.entryLimitations.containsKey(l_file.getAbsolutePath()));
-
-                assertThat("We should have an entry for the file size",
-                                ParseGuardRails.entryLimitations.get(l_file.getAbsolutePath()),
-                                is(equalTo(l_file.length())));
+                                ParseGuardRails.getAnomalyReport().get("entryLimitations")
+                                                .contains(l_file.getAbsolutePath()));
         }
 
         @Test(description = "Related to issue #102, where the parsing stops or no reason")
@@ -1406,8 +1402,8 @@ public class ParseTesting {
                 /*
                  * assertThat("Both strings should correspond",
                  * StringParseFactory.stringsCorrespond(l_storedString, l_candidateString));
-                 * 
-                 * 
+                 *
+                 *
                  */
                 // assertThat("we should get the same value",
                 // StringParseFactory.fetchCorresponding(l_storedString,l_candidateString),
