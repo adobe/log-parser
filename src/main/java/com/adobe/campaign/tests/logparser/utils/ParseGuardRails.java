@@ -31,15 +31,15 @@ public class ParseGuardRails {
 
 
     public static long HEAP_SIZE_AT_START = MemoryUtils.getCurrentHeapSizeMB();
-    public static int FILE_ENTRY_LIMIT = Integer.parseInt(System.getProperty("PROP_LOGPARSER_FILEENTRY_LIMIT", "-1"));
-    public static long HEAP_LIMIT = Integer.parseInt(System.getProperty("PROP_LOGPARSER_HEAP_LIMIT", "-1"));
+    public static int FILE_ENTRY_LIMIT = Integer.parseInt(System.getProperty("LOGPARSER_FILEENTRY_LIMIT", "-1"));
+    public static long HEAP_LIMIT = Integer.parseInt(System.getProperty("LOGPARSER_HEAP_LIMIT", "-1"));
     public static double MEMORY_LIMIT_PERCENTAGE = Double
-            .parseDouble(System.getProperty("PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE", "-1"));
+            .parseDouble(System.getProperty("LOGPARSER_MEMORY_LIMIT_PERCENTAGE", "-1"));
     protected static boolean EXCEPTION_ON_MEMORY_LIMIT = Boolean
-            .parseBoolean(System.getProperty("PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT", "false"));
+            .parseBoolean(System.getProperty("LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT", "false"));
 
     protected static long FILE_SIZE_LIMIT = Long
-            .parseLong(System.getProperty("PROP_LOGPARSER_FILESIZE_LIMIT", "-1"));
+            .parseLong(System.getProperty("LOGPARSER_FILESIZE_LIMIT", "-1"));
     protected static int MEASUREMENT_SCALE = 1024 * 1024;
 
     public static void reset() {

@@ -551,21 +551,21 @@ The following table lists all available guard rail properties and their default 
 
 | Property                                 | Description                                            | Affects                                         | Scale      | Default Value |
 | ---------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- | ---------- | ------------- |
-| PROP_LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | File parsing                                    | Count      | -1 (disabled) |
-| PROP_LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
-| PROP_LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
-| PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | File parsing, FilterBy, Search, enrich, groupBy | Percentage | -1 (disabled) |
-| PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Memory Checks                                   | Boolean    | false         |
+| LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | File parsing                                    | Count      | -1 (disabled) |
+| LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
+| LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
+| LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | File parsing, FilterBy, Search, enrich, groupBy | Percentage | -1 (disabled) |
+| LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Memory Checks                                   | Boolean    | false         |
 
 ### File Entry Limitations
 
-For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _PROP_LOGPARSER_FILEENTRY_LIMIT_ .
+For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _LOGPARSER_FILEENTRY_LIMIT_ .
 
 When set, the log parser stops parsing after reaching the limit in a file, and moves to the next file. Whenever this happens we log a WARNING and add the skipped file to our internal list of issues.
 
 ### File Size Limitations
 
-For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _PROP_LOGPARSER_FILESIZE_LIMIT_ .
+For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _LOGPARSER_FILESIZE_LIMIT_ .
 
 When set, the we create a warning regarding the file size, and store it among the file size issues.
 
@@ -575,10 +575,10 @@ Although we will not stop a process from executing due to memory issues, we prov
 
 These limitations are set with the following System properties:
 
-- _PROP_LOGPARSER_HEAP_LIMIT_ : Setting a limit above which we log these occurences.
-- _PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE_ : A percentage of the occupied memory in reference to the max memory.
+- _LOGPARSER_HEAP_LIMIT_ : Setting a limit above which we log these occurences.
+- _LOGPARSER_MEMORY_LIMIT_PERCENTAGE_ : A percentage of the occupied memory in reference to the max memory.
 
-We also have the possibility of throwing an exception iin the case of surpassing the memory rules. This is activated by setting the System property _PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT_ to true.
+We also have the possibility of throwing an exception iin the case of surpassing the memory rules. This is activated by setting the System property _LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT_ to true.
 
 You can also call the memory guard rails in your own implementation by calling `ParseGuardRails.checkMemoryLimits()`. This will check both heap and memory percentage limits.
 
