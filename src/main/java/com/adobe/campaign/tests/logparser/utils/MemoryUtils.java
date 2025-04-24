@@ -35,9 +35,4 @@ public class MemoryUtils {
         long usedMemory = allocatedMemory - freeMemory;
         return ((double) usedMemory / maxMemory) * 100;
     }
-
-    public static double getRemainingMemoryPercentage() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRemainingMemoryPercentage'");
-    }
 }

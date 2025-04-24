@@ -102,10 +102,11 @@ public class StringParseFactory {
                     }
 
                 }
-
             } catch (IOException e) {
                 log.error("The given file {} could not be found.", l_currentLogFile);
             }
+
+            ParseGuardRails.checkMemoryLimits("Parsing file " + new File(l_currentLogFile).getName());
 
         }
 

@@ -10,7 +10,9 @@ package com.adobe.campaign.tests.logparser.utils;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,10 +38,14 @@ public class ParseGuardRails {
     protected static long FILE_SIZE_LIMIT = Long
             .parseLong(System.getProperty("PROP_LOGPARSER_FILESIZE_LIMIT", "-1"));
     protected static int MEASUREMENT_SCALE = 1024 * 1024;
+    protected static Map<String, Long> heapLimitations = new HashMap<>();
+    protected static Map<String, Double> memoryLimitations = new HashMap<>();
 
     public static void reset() {
         fileSizeLimitations.clear();
         entryLimitations.clear();
+        heapLimitations.clear();
+        memoryLimitations.clear();
         FILE_ENTRY_LIMIT = -1;
         HEAP_LIMIT = -1;
         MEMORY_LIMIT_PERCENTAGE = -1;
@@ -86,24 +92,38 @@ public class ParseGuardRails {
      * @throws MemoryLimitExceededException if EXCEPTION_ON_MEMORY_LIMIT is true and
      *                                      a limit is reached
      */
-    public static boolean checkMemoryLimits() {
+    public static boolean checkMemoryLimits(String location) {
+        if (location == null) {
+            location = String.valueOf(System.currentTimeMillis());
+        }
+
         if (hasReachedHeapLimit()) {
-            String message = "Heap limit of " + HEAP_LIMIT + " MB has been reached";
+            String message = "Heap limit of " + HEAP_LIMIT + " MB has been reached at " + location;
             log.warn(message);
+            heapLimitations.put(location, Runtime.getRuntime().totalMemory());
+            System.gc();
+
             if (EXCEPTION_ON_MEMORY_LIMIT) {
                 throw new MemoryLimitExceededException(message);
             }
             return true;
         }
         if (hasReachedMemoryLimit()) {
-            String message = "Memory usage limit of " + MEMORY_LIMIT_PERCENTAGE + "% has been reached";
+            String message = "Memory usage limit of " + MEMORY_LIMIT_PERCENTAGE + "% has been reached at " + location;
             log.warn(message);
+            memoryLimitations.put(location, MemoryUtils.getUsedMemoryPercentage());
+            System.gc();
+
             if (EXCEPTION_ON_MEMORY_LIMIT) {
                 throw new MemoryLimitExceededException(message);
             }
             return true;
         }
         return false;
+    }
+
+    public static boolean checkMemoryLimits() {
+        return checkMemoryLimits(null);
     }
 
     /**
@@ -142,4 +162,21 @@ public class ParseGuardRails {
     private static boolean hasReachedFileSizeLimit(long length) {
         return FILE_SIZE_LIMIT > -1 && (length / MEASUREMENT_SCALE) >= FILE_SIZE_LIMIT;
     }
+
+    /**
+     * Returns a map containing all anomalies discovered during parsing
+     * 
+     * @return Map containing all limitation reports
+     */
+    public static Map<String, Set<String>> getAnomalyReport() {
+        Map<String, Set<String>> report = new HashMap<>();
+
+        report.put("heapLimitations", heapLimitations.keySet());
+        report.put("memoryLimitations", memoryLimitations.keySet());
+        report.put("fileSizeLimitations", fileSizeLimitations.keySet());
+        report.put("entryLimitations", entryLimitations.keySet());
+
+        return report;
+    }
+
 }

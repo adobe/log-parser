@@ -13,6 +13,7 @@ import com.adobe.campaign.tests.logparser.exceptions.LogDataExportToFileExceptio
 import com.adobe.campaign.tests.logparser.exceptions.LogParserPostManipulationException;
 import com.adobe.campaign.tests.logparser.utils.HTMLReportUtils;
 import com.adobe.campaign.tests.logparser.utils.LogParserFileUtils;
+import com.adobe.campaign.tests.logparser.utils.ParseGuardRails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -276,7 +277,7 @@ public class LogData<T extends StdLogEntry> {
 
             lr_cubeData.addEntry(lt_cubeEntry);
         }
-
+        ParseGuardRails.checkMemoryLimits("Grouping data");
         return lr_cubeData;
     }
 
@@ -335,7 +336,7 @@ public class LogData<T extends StdLogEntry> {
                 lr_filteredLogData.addEntry(this.get(lt_logDataKey));
             }
         }
-
+        ParseGuardRails.checkMemoryLimits("Filtering data");
         return lr_filteredLogData;
     }
 
@@ -695,6 +696,9 @@ public class LogData<T extends StdLogEntry> {
                         e.getValue().put(in_entryName, in_entryValue);
                     });
                 });
+
+        ParseGuardRails.checkMemoryLimits("Enriching data");
+
     }
 
     /**

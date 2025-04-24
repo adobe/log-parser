@@ -123,6 +123,7 @@ public class ParseGuardRailsTest {
     public void testCheckMemoryLimits_WhenNoLimitsSet() {
         assertThat("Should not reach limit when not set",
                 ParseGuardRails.checkMemoryLimits(), is(false));
+
     }
 
     @Test
@@ -130,6 +131,20 @@ public class ParseGuardRailsTest {
         ParseGuardRails.HEAP_LIMIT = 0; // Set limit to 0 to force reaching it
         assertThat("Should reach limit when heap limit is reached",
                 ParseGuardRails.checkMemoryLimits(), is(true));
+
+        assertThat("Should have anomaly report", ParseGuardRails.getAnomalyReport().size(), is(4));
+        assertThat("Should have heap limitation", ParseGuardRails.getAnomalyReport().get("heapLimitations").size(),
+                is(1));
+
+        assertThat("Should have memory limitation", ParseGuardRails.getAnomalyReport().get("memoryLimitations").size(),
+                is(0));
+
+        assertThat("Should have file size limitation",
+                ParseGuardRails.getAnomalyReport().get("fileSizeLimitations").size(),
+                is(0));
+
+        assertThat("Should have entry limitation", ParseGuardRails.getAnomalyReport().get("entryLimitations").size(),
+                is(0));
     }
 
     @Test
@@ -137,6 +152,9 @@ public class ParseGuardRailsTest {
         ParseGuardRails.MEMORY_LIMIT_PERCENTAGE = 0.0; // Set limit to 0% to force reaching it
         assertThat("Should reach limit when memory limit is reached",
                 ParseGuardRails.checkMemoryLimits(), is(true));
+
+        assertThat("Should have memory limitations", ParseGuardRails.memoryLimitations.size(), is(1));
+        assertThat("Should no have heap limitations", ParseGuardRails.heapLimitations.isEmpty());
     }
 
     @Test
