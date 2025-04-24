@@ -51,18 +51,25 @@ The basic method for using this library is, that you create a definition for you
   - [Exporting Results to an HTML File](#exporting-results-to-an-html-file)
   - [Exporting Results to an JSON File](#exporting-results-to-an-json-file)
 - [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
+- [Memory Guard Rails](#memory-guard-rails)
+  - [Guard Rail Properties](#guard-rail-properties)
+  - [File Entry Limitations](#file-entry-limitations)
+  - [File Size Limitations](#file-size-limitations)
+  - [Memory Limitations](#memory-limitations)
 - [Changelog](#changelog)
-_ [1.11.2](#1112)
-_ [1.11.0](#1110)
-_ [1.0.10](#1010)
-_ [1.0.8.2](#1082)
-_ [1.0.8](#108)
-_ [1.0.7](#107)
-_ [1.0.6](#106)
-_ [1.0.5](#105)
-_ [1.0.4](#104)
-_ [1.0.3](#103) \* [1.0.1](#101)
-<!-- TOC -->
+  - [1.11.3 (In-Progress)](#1113-in-progress)
+  - [1.11.2](#1112)
+  - [1.11.0](#1110)
+  - [1.0.10](#1010)
+  - [1.0.8.2](#1082)
+  - [1.0.8](#108)
+  - [1.0.7](#107)
+  - [1.0.6](#106)
+  - [1.0.5](#105)
+  - [1.0.4](#104)
+  - [1.0.3](#103)
+  - [1.0.1](#101)
+  <!-- TOC -->
 
 ## Installation
 
@@ -548,7 +555,7 @@ The following table lists all available guard rail properties and their default 
 | PROP_LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
 | PROP_LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
 | PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | File parsing, FilterBy, Search, enrich, groupBy | Percentage | -1 (disabled) |
-| PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Error handling                                  | Boolean    | false         |
+| PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Memory Checks                                   | Boolean    | false         |
 
 ### File Entry Limitations
 
@@ -573,7 +580,13 @@ These limitations are set with the following System properties:
 
 We also have the possibility of throwing an exception iin the case of surpassing the memory rules. This is activated by setting the System property _PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT_ to true.
 
+You can also call the memory guard rails in your own implementation by calling `ParseGuardRails.checkMemoryLimits()`. This will check both heap and memory percentage limits.
+
 ## Changelog
+
+### 1.11.3 (In-Progress)
+
+- [#203](https://github.com/adobe/log-parser/issues/203) Have added possibilities, to control, log memory consumption.
 
 ### 1.11.2
 
