@@ -128,6 +128,9 @@ public class ParseGuardRailsTest {
 
     @Test
     public void testCheckMemoryLimits_WhenHeapLimitReached() {
+
+        ParseGuardRails.HEAP_SIZE_AT_START = -20; // Set heap size to -20 to force exceeding it
+
         ParseGuardRails.HEAP_LIMIT = 0; // Set limit to 0 to force reaching it
         assertThat("Should reach limit when heap limit is reached",
                 ParseGuardRails.checkMemoryLimits(), is(true));
