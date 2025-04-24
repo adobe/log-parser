@@ -542,13 +542,13 @@ As of 1.11.3 we have introduced a series of guard rails. These allow you to cont
 
 The following table lists all available guard rail properties and their default values:
 
-| Property                                 | Description                                            | Default Value |
-| ---------------------------------------- | ------------------------------------------------------ | ------------- |
-| PROP_LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | -1 (disabled) |
-| PROP_LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | -1 (disabled) |
-| PROP_LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | -1 (disabled) |
-| PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | -1 (disabled) |
-| PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | false         |
+| Property                                 | Description                                            | Affects                                         | Scale      | Default Value |
+| ---------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- | ---------- | ------------- |
+| PROP_LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | File parsing                                    | Count      | -1 (disabled) |
+| PROP_LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
+| PROP_LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
+| PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | File parsing, FilterBy, Search, enrich, groupBy | Percentage | -1 (disabled) |
+| PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Error handling                                  | Boolean    | false         |
 
 ### File Entry Limitations
 
