@@ -23,16 +23,21 @@ public class MemoryUtils {
     }
 
     /**
-     * Gets the remaining system memory as a percentage
+     * Gets the occupied system memory as a percentage
      * 
-     * @return the remaining system memory as a percentage (0-100)
+     * @return the occupied system memory as a percentage (0-100)
      */
-    public static double getRemainingMemoryPercentage() {
+    public static double getUsedMemoryPercentage() {
         Runtime runtime = Runtime.getRuntime();
         long maxMemory = runtime.maxMemory();
         long allocatedMemory = runtime.totalMemory();
         long freeMemory = runtime.freeMemory();
         long usedMemory = allocatedMemory - freeMemory;
-        return ((double) (maxMemory - usedMemory) / maxMemory) * 100;
+        return ((double) usedMemory / maxMemory) * 100;
+    }
+
+    public static double getRemainingMemoryPercentage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRemainingMemoryPercentage'");
     }
 }

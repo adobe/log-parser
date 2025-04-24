@@ -21,6 +21,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
+import com.adobe.campaign.tests.logparser.utils.ParseGuardRails;
 
 public class ParseTesting {
         // private final String STD_GREP_STRING =
@@ -1256,12 +1257,13 @@ public class ParseTesting {
                 assertThat(l_entries, is(notNullValue()));
                 assertThat("We should have entries", l_entries.size(), Matchers.equalTo(10));
 
+                File l_file = new File(bugFile);
                 assertThat("We should have an entry for the file size",
-                                ParseGuardRails.fileSizeLimitations.containsKey(bugFile), is(true));
+                                ParseGuardRails.entryLimitations.containsKey(l_file.getAbsolutePath()));
 
                 assertThat("We should have an entry for the file size",
-                                ParseGuardRails.fileSizeLimitations.get(bugFile),
-                                is(equalTo(new File(bugFile).length())));
+                                ParseGuardRails.entryLimitations.get(l_file.getAbsolutePath()),
+                                is(equalTo(l_file.length())));
         }
 
         @Test(description = "Related to issue #102, where the parsing stops or no reason")

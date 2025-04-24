@@ -11,6 +11,7 @@ package com.adobe.campaign.tests.logparser.core;
 import com.adobe.campaign.tests.logparser.exceptions.LogParserSDKDefinitionException;
 import com.adobe.campaign.tests.logparser.exceptions.StringParseException;
 import com.adobe.campaign.tests.logparser.utils.MemoryUtils;
+import com.adobe.campaign.tests.logparser.utils.ParseGuardRails;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,8 +76,10 @@ public class StringParseFactory {
             int lt_foundEntryCount = 0;
 
             int i = 0;
-            totalBytesAnalyzed += new File(l_currentLogFile).length();
+            long fileLength = new File(l_currentLogFile).length();
+            totalBytesAnalyzed += fileLength;
             log.info("Parsing file {}", l_currentLogFile);
+            ParseGuardRails.checkFileSizeLimits(new File(l_currentLogFile));
 
             try (BufferedReader reader = new BufferedReader(new FileReader(l_currentLogFile))) {
                 String lt_nextLine;
@@ -94,15 +97,7 @@ public class StringParseFactory {
                     l_foundEntries.put(l_currentLogFile, lt_foundEntryCount);
 
                     // Check if we've hit the entry limit for this file
-                    if (ParseGuardRails.hasReachedEntryLimit(lt_foundEntryCount)) {
-                        log.warn("Reached entry limit of {} for file {}. Skipping the remaining lines.",
-                                ParseGuardRails.FILE_ENTRY_LIMIT, l_currentLogFile);
-
-                        // Add file size info to map
-                        ParseGuardRails.fileSizeLimitations.put(l_currentLogFile, new File(l_currentLogFile).length());
-
-                        // Force garbage collection
-                        System.gc();
+                    if (ParseGuardRails.checkEntryLimits(new File(l_currentLogFile), lt_foundEntryCount)) {
                         break;
                     }
 
