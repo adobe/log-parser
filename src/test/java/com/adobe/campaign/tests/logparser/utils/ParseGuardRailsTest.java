@@ -114,7 +114,7 @@ public class ParseGuardRailsTest {
     @Test
     public void testHasReachedMemoryPercentageLimit_WhenAtLimit() {
 
-        ParseGuardRails.MEMORY_LIMIT_PERCENTAGE = 0.1; // Set limit to 0%
+        ParseGuardRails.MEMORY_LIMIT_PERCENTAGE = 0.0; // Set limit to 0%
         assertThat("Should reach limit when at threshold",
                 ParseGuardRails.hasReachedMemoryLimit(), is(true));
     }

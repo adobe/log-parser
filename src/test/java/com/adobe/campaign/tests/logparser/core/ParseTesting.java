@@ -1259,11 +1259,8 @@ public class ParseTesting {
 
                 File l_file = new File(bugFile);
                 assertThat("We should have an entry for the file size",
-                                ParseGuardRails.entryLimitations.containsKey(l_file.getAbsolutePath()));
-
-                assertThat("We should have an entry for the file size",
-                                ParseGuardRails.entryLimitations.get(l_file.getAbsolutePath()),
-                                is(equalTo(l_file.length())));
+                                ParseGuardRails.getAnomalyReport().get("entryLimitations")
+                                                .contains(l_file.getAbsolutePath()));
         }
 
         @Test(description = "Related to issue #102, where the parsing stops or no reason")

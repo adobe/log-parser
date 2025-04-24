@@ -24,8 +24,11 @@ import com.adobe.campaign.tests.logparser.exceptions.MemoryLimitExceededExceptio
  */
 public class ParseGuardRails {
     private static final Logger log = LogManager.getLogger();
-    public static final Map<String, Long> fileSizeLimitations = new HashMap<>();
-    public static final Map<String, Long> entryLimitations = new HashMap<>();
+    protected static final Map<String, Long> fileSizeLimitations = new HashMap<>();
+    protected static final Map<String, Long> entryLimitations = new HashMap<>();
+    protected static Map<String, Long> heapLimitations = new HashMap<>();
+    protected static Map<String, Double> memoryLimitations = new HashMap<>();
+
 
     public static long HEAP_SIZE_AT_START = MemoryUtils.getCurrentHeapSizeMB();
     public static int FILE_ENTRY_LIMIT = Integer.parseInt(System.getProperty("PROP_LOGPARSER_FILEENTRY_LIMIT", "-1"));
@@ -38,9 +41,7 @@ public class ParseGuardRails {
     protected static long FILE_SIZE_LIMIT = Long
             .parseLong(System.getProperty("PROP_LOGPARSER_FILESIZE_LIMIT", "-1"));
     protected static int MEASUREMENT_SCALE = 1024 * 1024;
-    protected static Map<String, Long> heapLimitations = new HashMap<>();
-    protected static Map<String, Double> memoryLimitations = new HashMap<>();
-
+    
     public static void reset() {
         fileSizeLimitations.clear();
         entryLimitations.clear();
