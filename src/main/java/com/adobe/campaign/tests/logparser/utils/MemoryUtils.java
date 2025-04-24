@@ -21,4 +21,18 @@ public class MemoryUtils {
     public static long getCurrentHeapSizeMB() {
         return Runtime.getRuntime().totalMemory() / (1024 * 1024);
     }
+
+    /**
+     * Gets the remaining system memory as a percentage
+     * 
+     * @return the remaining system memory as a percentage (0-100)
+     */
+    public static double getRemainingMemoryPercentage() {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long usedMemory = allocatedMemory - freeMemory;
+        return ((double) (maxMemory - usedMemory) / maxMemory) * 100;
+    }
 }
