@@ -173,21 +173,15 @@ public class ParseGuardRails {
     public static Map<String, Set<String>> getAnomalyReport() {
         Map<String, Set<String>> report = new HashMap<>();
 
-        if (heapLimitations.size() > 0) {
-            report.put("heapLimitations", heapLimitations.keySet());
-        }
-
-        if (memoryLimitations.size() > 0) {
-            report.put("memoryLimitations", memoryLimitations.keySet());
-        }
-
-        if (fileSizeLimitations.size() > 0) {
-            report.put("fileSizeLimitations", fileSizeLimitations.keySet());
-        }
-
-        if (entryLimitations.size() > 0) {
-            report.put("entryLimitations", entryLimitations.keySet());
-        }
+        Map.of(
+                "heapLimitations", heapLimitations,
+                "memoryLimitations", memoryLimitations,
+                "fileSizeLimitations", fileSizeLimitations,
+                "entryLimitations", entryLimitations).forEach((key, map) -> {
+                    if (!map.isEmpty()) {
+                        report.put(key, map.keySet());
+                    }
+                });
 
         return report;
     }
