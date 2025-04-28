@@ -242,4 +242,24 @@ public class ParseGuardRailsTest {
         assertThat("Should not have old content",
                 report.containsKey("test"), is(false));
     }
+
+    @Test
+    public void testExportAnomalyReport_WhenIOExceptionOccurs() throws IOException {
+        // Create some anomalies
+        ParseGuardRails.HEAP_LIMIT = 1;
+        ParseGuardRails.HEAP_SIZE_AT_START = -20;
+        ParseGuardRails.checkMemoryLimits();
+
+        // Create a file that will cause an IOException when trying to write
+        File reportFile = new File(ANOMALY_REPORT_PATH);
+        reportFile.createNewFile();
+        reportFile.setReadOnly();
+
+        // This should log an error but not throw an exception
+        ParseGuardRails.exportAnomalyReport();
+
+        // Clean up
+        reportFile.setWritable(true);
+        reportFile.delete();
+    }
 }
