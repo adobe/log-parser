@@ -12,31 +12,43 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertThrows;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.hamcrest.Matchers;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.adobe.campaign.tests.logparser.exceptions.MemoryLimitExceededException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ParseGuardRailsTest {
 
     private Path tempFile;
+    private static final String ANOMALY_REPORT_PATH = "anomalies.json";
 
     @BeforeMethod
     public void setup() throws IOException {
         ParseGuardRails.reset();
-
+        System.clearProperty("EXCEPTION_ON_MEMORY_LIMIT");
         tempFile = Files.createTempFile("test", ".log");
+        // Clean up any existing anomaly report
+        new File(ANOMALY_REPORT_PATH).delete();
     }
 
     @AfterMethod
     public void cleanup() throws IOException {
         ParseGuardRails.reset();
+        System.clearProperty("EXCEPTION_ON_MEMORY_LIMIT");
         Files.deleteIfExists(tempFile);
+        // Clean up the anomaly report
+        new File(ANOMALY_REPORT_PATH).delete();
     }
 
     @Test
@@ -135,19 +147,18 @@ public class ParseGuardRailsTest {
         assertThat("Should reach limit when heap limit is reached",
                 ParseGuardRails.checkMemoryLimits(), is(true));
 
-        assertThat("Should have anomaly report", ParseGuardRails.getAnomalyReport().size(), is(4));
+        assertThat("Should have anomaly report", ParseGuardRails.getAnomalyReport().size(), is(1));
         assertThat("Should have heap limitation", ParseGuardRails.getAnomalyReport().get("heapLimitations").size(),
                 is(1));
 
-        assertThat("Should have memory limitation", ParseGuardRails.getAnomalyReport().get("memoryLimitations").size(),
-                is(0));
+        assertThat("Should not have a memory limitation",
+                !ParseGuardRails.getAnomalyReport().containsKey("memoryLimitations"));
 
         assertThat("Should have file size limitation",
-                ParseGuardRails.getAnomalyReport().get("fileSizeLimitations").size(),
-                is(0));
+                !ParseGuardRails.getAnomalyReport().containsKey("fileSizeLimitations"));
 
-        assertThat("Should have entry limitation", ParseGuardRails.getAnomalyReport().get("entryLimitations").size(),
-                is(0));
+        assertThat("Should have entry limitation",
+                !ParseGuardRails.getAnomalyReport().containsKey("entryLimitations"));
     }
 
     @Test
@@ -178,5 +189,57 @@ public class ParseGuardRailsTest {
 
         ParseGuardRails.MEMORY_LIMIT_PERCENTAGE = 0.0; // Set limit to 0% to force reaching it
         assertThrows(MemoryLimitExceededException.class, () -> ParseGuardRails.checkMemoryLimits());
+    }
+
+    @Test
+    public void testExportAnomalyReport_WhenNoAnomalies() {
+        ParseGuardRails.exportAnomalyReport();
+        assertThat("Should not create file when no anomalies",
+                (new File(ANOMALY_REPORT_PATH)).exists(), is(false));
+    }
+
+    @Test
+    public void testExportAnomalyReport_WhenHasAnomalies() throws IOException {
+        // Create some anomalies
+        ParseGuardRails.HEAP_LIMIT = 1;
+        ParseGuardRails.HEAP_SIZE_AT_START = -20;
+        ParseGuardRails.checkMemoryLimits();
+
+        ParseGuardRails.exportAnomalyReport();
+
+        // Verify file exists
+        File reportFile = new File(ANOMALY_REPORT_PATH);
+        assertThat("Should create file when anomalies exist",
+                reportFile.exists(), is(true));
+
+        // Verify content
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, List<String>> report = mapper.readValue(reportFile, Map.class);
+        assertThat("Should have heap limitations",
+                report.containsKey("heapLimitations"));
+        assertThat("Should have at least one heap limitation",
+                report.get("heapLimitations").size(), Matchers.greaterThan(0));
+    }
+
+    @Test
+    public void testExportAnomalyReport_WhenFileExists() throws IOException {
+        // Create initial file
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Set<String>> initialData = Map.of("test", Set.of("data"));
+        mapper.writeValue(new File(ANOMALY_REPORT_PATH), initialData);
+
+        // Create some anomalies
+        ParseGuardRails.HEAP_LIMIT = 1;
+        ParseGuardRails.HEAP_SIZE_AT_START = -20;
+        ParseGuardRails.checkMemoryLimits();
+
+        ParseGuardRails.exportAnomalyReport();
+
+        // Verify file was replaced
+        Map<String, Set<String>> report = mapper.readValue(new File(ANOMALY_REPORT_PATH), Map.class);
+        assertThat("Should have replaced old content",
+                report.containsKey("heapLimitations"), is(true));
+        assertThat("Should not have old content",
+                report.containsKey("test"), is(false));
     }
 }

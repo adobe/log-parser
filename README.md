@@ -14,62 +14,62 @@ The basic method for using this library is, that you create a definition for you
 ## Table of contents
 
 <!-- TOC -->
-
-- [Installation](#installation)
-  - [Maven](#maven)
-- [Running the Log Parser](#running-the-log-parser)
-- [Parse Definitions](#parse-definitions)
-  - [Defining a Parsing](#defining-a-parsing)
-  - [Defining an Entry](#defining-an-entry)
-  - [How parsing works](#how-parsing-works)
-    - [Anonymizing Data](#anonymizing-data)
-  - [Code Example](#code-example)
-  - [Import and Export of Parse Definitions](#import-and-export-of-parse-definitions)
-  - [Importing a JSON File](#importing-a-json-file)
-- [Extracting Data from Logs](#extracting-data-from-logs)
-  - [Using the Standard Method](#using-the-standard-method)
-  - [Using the Log-Parser as an SDK](#using-the-log-parser-as-an-sdk)
-    - [Writing your own SDK](#writing-your-own-sdk)
-      - [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
-      - [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
-      - [Declaring the Key](#declaring-the-key)
-      - [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
-      - [Assisting Exports](#assisting-exports)
-- [Code Structure](#code-structure)
-- [Searching and organizing log data](#searching-and-organizing-log-data)
-  - [Search and Filter Mechanisms](#search-and-filter-mechanisms)
-    - [Defining a Search Term](#defining-a-search-term)
-  - [Enriching Log Data](#enriching-log-data)
-  - [GroupBy Mechanisms](#groupby-mechanisms)
-    - [Passing a list](#passing-a-list)
-    - [Chaining GroupBy](#chaining-groupby)
-  - [Comparing Log Data](#comparing-log-data)
-    - [Creating a Differentiation Report](#creating-a-differentiation-report)
-- [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
-- [Exporting Parse Results](#exporting-parse-results)
-  - [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
-  - [Exporting Results to an HTML File](#exporting-results-to-an-html-file)
-  - [Exporting Results to an JSON File](#exporting-results-to-an-json-file)
-- [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
-- [Memory Guard Rails](#memory-guard-rails)
-  - [Guard Rail Properties](#guard-rail-properties)
-  - [File Entry Limitations](#file-entry-limitations)
-  - [File Size Limitations](#file-size-limitations)
-  - [Memory Limitations](#memory-limitations)
-- [Changelog](#changelog)
-  - [1.11.3 (In-Progress)](#1113-in-progress)
-  - [1.11.2](#1112)
-  - [1.11.0](#1110)
-  - [1.0.10](#1010)
-  - [1.0.8.2](#1082)
-  - [1.0.8](#108)
-  - [1.0.7](#107)
-  - [1.0.6](#106)
-  - [1.0.5](#105)
-  - [1.0.4](#104)
-  - [1.0.3](#103)
-  - [1.0.1](#101)
-  <!-- TOC -->
+  * [Installation](#installation)
+    * [Maven](#maven)
+  * [Running the Log Parser](#running-the-log-parser)
+  * [Parse Definitions](#parse-definitions)
+    * [Defining a Parsing](#defining-a-parsing)
+    * [Defining an Entry](#defining-an-entry)
+    * [How parsing works](#how-parsing-works)
+      * [Anonymizing Data](#anonymizing-data)
+    * [Code Example](#code-example)
+    * [Import and Export of Parse Definitions](#import-and-export-of-parse-definitions)
+    * [Importing a JSON File](#importing-a-json-file)
+  * [Extracting Data from Logs](#extracting-data-from-logs)
+    * [Using the Standard Method](#using-the-standard-method)
+    * [Using the Log-Parser as an SDK](#using-the-log-parser-as-an-sdk)
+      * [Writing your own SDK](#writing-your-own-sdk)
+        * [Declaring a Default and Copy Constructor](#declaring-a-default-and-copy-constructor)
+        * [Declaring the transformation Rules in setValuesFromMap](#declaring-the-transformation-rules-in-setvaluesfrommap)
+        * [Declaring the Key](#declaring-the-key)
+        * [Declare the HeaderMap, and ValueMap](#declare-the-headermap-and-valuemap)
+        * [Assisting Exports](#assisting-exports)
+  * [Code Structure](#code-structure)
+  * [Searching and organizing log data](#searching-and-organizing-log-data)
+    * [Search and Filter Mechanisms](#search-and-filter-mechanisms)
+      * [Defining a Search Term](#defining-a-search-term)
+    * [Enriching Log Data](#enriching-log-data)
+    * [GroupBy Mechanisms](#groupby-mechanisms)
+      * [Passing a list](#passing-a-list)
+      * [Chaining GroupBy](#chaining-groupby)
+    * [Comparing Log Data](#comparing-log-data)
+      * [Creating a Differentiation Report](#creating-a-differentiation-report)
+  * [Assertions and LogDataAssertions](#assertions-and-logdataassertions)
+  * [Exporting Parse Results](#exporting-parse-results)
+    * [Exporting Results to a CSV File](#exporting-results-to-a-csv-file)
+    * [Exporting Results to an HTML File](#exporting-results-to-an-html-file)
+    * [Exporting Results to an JSON File](#exporting-results-to-an-json-file)
+  * [Command-line Execution of the Log-Parser](#command-line-execution-of-the-log-parser)
+  * [Memory Guard Rails](#memory-guard-rails)
+    * [Guard Rail Properties](#guard-rail-properties)
+    * [File Entry Limitations](#file-entry-limitations)
+    * [File Size Limitations](#file-size-limitations)
+    * [Memory Limitations](#memory-limitations)
+    * [Exporting Anomalies Report](#exporting-anomalies-report)
+  * [Changelog](#changelog)
+    * [1.11.3 (In-Progress)](#1113--in-progress-)
+    * [1.11.2](#1112)
+    * [1.11.0](#1110)
+    * [1.0.10](#1010)
+    * [1.0.8.2](#1082)
+    * [1.0.8](#108)
+    * [1.0.7](#107)
+    * [1.0.6](#106)
+    * [1.0.5](#105)
+    * [1.0.4](#104)
+    * [1.0.3](#103)
+    * [1.0.1](#101)
+<!-- TOC -->
 
 ## Installation
 
@@ -549,8 +549,8 @@ As of 1.11.3 we have introduced a series of guard rails. These allow you to cont
 
 The following table lists all available guard rail properties and their default values:
 
-| Property                                 | Description                                            | Affects                                         | Scale      | Default Value |
-| ---------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- | ---------- | ------------- |
+| Property                            | Description                                            | Affects                                         | Scale      | Default Value |
+| ----------------------------------- | ------------------------------------------------------ | ----------------------------------------------- | ---------- | ------------- |
 | LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | File parsing                                    | Count      | -1 (disabled) |
 | LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
 | LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
@@ -581,6 +581,10 @@ These limitations are set with the following System properties:
 We also have the possibility of throwing an exception iin the case of surpassing the memory rules. This is activated by setting the System property _LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT_ to true.
 
 You can also call the memory guard rails in your own implementation by calling `ParseGuardRails.checkMemoryLimits()`. This will check both heap and memory percentage limits.
+
+### Exporting Anomalies Report
+
+We have the possibility of exporting the anomalies report. This is done by calling the method `LogData#exportAnomaliesReport(String fileName)`. If you do not give an argument `LogData#exportAnomaliesReport()` will export the anomalies to a file called anomalies.json.
 
 ## Changelog
 

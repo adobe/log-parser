@@ -9,11 +9,13 @@
 package com.adobe.campaign.tests.logparser.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +30,6 @@ public class ParseGuardRails {
     protected static Map<String, Long> entryLimitations = new HashMap<>();
     protected static Map<String, Long> heapLimitations = new HashMap<>();
     protected static Map<String, Double> memoryLimitations = new HashMap<>();
-
 
     public static long HEAP_SIZE_AT_START = MemoryUtils.getCurrentHeapSizeMB();
     public static int FILE_ENTRY_LIMIT = Integer.parseInt(System.getProperty("LOGPARSER_FILEENTRY_LIMIT", "-1"));
@@ -172,12 +173,48 @@ public class ParseGuardRails {
     public static Map<String, Set<String>> getAnomalyReport() {
         Map<String, Set<String>> report = new HashMap<>();
 
-        report.put("heapLimitations", heapLimitations.keySet());
-        report.put("memoryLimitations", memoryLimitations.keySet());
-        report.put("fileSizeLimitations", fileSizeLimitations.keySet());
-        report.put("entryLimitations", entryLimitations.keySet());
+        if (heapLimitations.size() > 0) {
+            report.put("heapLimitations", heapLimitations.keySet());
+        }
+
+        if (memoryLimitations.size() > 0) {
+            report.put("memoryLimitations", memoryLimitations.keySet());
+        }
+
+        if (fileSizeLimitations.size() > 0) {
+            report.put("fileSizeLimitations", fileSizeLimitations.keySet());
+        }
+
+        if (entryLimitations.size() > 0) {
+            report.put("entryLimitations", entryLimitations.keySet());
+        }
 
         return report;
     }
 
+    /**
+     * Exports the anomaly report to a JSON file
+     * The file will be created if it doesn't exist, or replaced if it does
+     * Only exports if there are anomalies to report
+     */
+    public static void exportAnomalyReport() {
+        exportAnomalyReport("./anomalies.json");
+    }
+
+    /**
+     * Exports the anomaly report to a JSON file at the specified path
+     * 
+     * @param filePath The path where to save the anomaly report
+     */
+    public static void exportAnomalyReport(String filePath) {
+        Map<String, Set<String>> report = getAnomalyReport();
+        if (!report.isEmpty()) {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.writeValue(new File(filePath), report);
+            } catch (IOException e) {
+                log.error("Failed to export anomaly report to {}", filePath, e);
+            }
+        }
+    }
 }
