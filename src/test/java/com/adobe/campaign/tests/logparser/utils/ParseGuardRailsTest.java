@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ParseGuardRailsTest {
 
     private Path tempFile;
-    private static final String ANOMALY_REPORT_PATH = "anomalies.json";
+    private static final String ANOMALY_REPORT_PATH = ParseGuardRails.ANOMALY_REPORT_PATH;
 
     @BeforeMethod
     public void setup() throws IOException {

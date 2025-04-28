@@ -31,6 +31,7 @@ public class ParseGuardRails {
     protected static Map<String, Long> heapLimitations = new HashMap<>();
     protected static Map<String, Double> memoryLimitations = new HashMap<>();
 
+    public static final String ANOMALY_REPORT_PATH = "./logParserAnomalies.json";
     public static long HEAP_SIZE_AT_START = MemoryUtils.getCurrentHeapSizeMB();
     public static int FILE_ENTRY_LIMIT = Integer.parseInt(System.getProperty("LOGPARSER_FILEENTRY_LIMIT", "-1"));
     public static long HEAP_LIMIT = Integer.parseInt(System.getProperty("LOGPARSER_HEAP_LIMIT", "-1"));
@@ -192,7 +193,7 @@ public class ParseGuardRails {
      * Only exports if there are anomalies to report
      */
     public static void exportAnomalyReport() {
-        exportAnomalyReport("./anomalies.json");
+        exportAnomalyReport(ANOMALY_REPORT_PATH);
     }
 
     /**
