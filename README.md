@@ -56,20 +56,21 @@ The basic method for using this library is, that you create a definition for you
   - [File Entry Limitations](#file-entry-limitations)
   - [File Size Limitations](#file-size-limitations)
   - [Memory Limitations](#memory-limitations)
+  - [Exporting Anomalies Report](#exporting-anomalies-report)
 - [Changelog](#changelog)
-  - [1.11.3 (In-Progress)](#1113-in-progress)
-  - [1.11.2](#1112)
-  - [1.11.0](#1110)
-  - [1.0.10](#1010)
-  - [1.0.8.2](#1082)
-  - [1.0.8](#108)
-  - [1.0.7](#107)
-  - [1.0.6](#106)
-  - [1.0.5](#105)
-  - [1.0.4](#104)
-  - [1.0.3](#103)
-  - [1.0.1](#101)
-  <!-- TOC -->
+_ [1.11.3 (In-Progress)](#1113--in-progress-)
+_ [1.11.2](#1112)
+_ [1.11.0](#1110)
+_ [1.0.10](#1010)
+_ [1.0.8.2](#1082)
+_ [1.0.8](#108)
+_ [1.0.7](#107)
+_ [1.0.6](#106)
+_ [1.0.5](#105)
+_ [1.0.4](#104)
+_ [1.0.3](#103)
+_ [1.0.1](#101)
+<!-- TOC -->
 
 ## Installation
 
@@ -549,23 +550,23 @@ As of 1.11.3 we have introduced a series of guard rails. These allow you to cont
 
 The following table lists all available guard rail properties and their default values:
 
-| Property                                 | Description                                            | Affects                                         | Scale      | Default Value |
-| ---------------------------------------- | ------------------------------------------------------ | ----------------------------------------------- | ---------- | ------------- |
-| PROP_LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | File parsing                                    | Count      | -1 (disabled) |
-| PROP_LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
-| PROP_LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
-| PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | File parsing, FilterBy, Search, enrich, groupBy | Percentage | -1 (disabled) |
-| PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Memory Checks                                   | Boolean    | false         |
+| Property                            | Description                                            | Affects                                         | Scale      | Default Value |
+| ----------------------------------- | ------------------------------------------------------ | ----------------------------------------------- | ---------- | ------------- |
+| LOGPARSER_FILEENTRY_LIMIT           | Maximum number of entries to parse per file            | File parsing                                    | Count      | -1 (disabled) |
+| LOGPARSER_FILESIZE_LIMIT            | Maximum file size in MB to parse                       | File parsing                                    | Megabytes  | -1 (disabled) |
+| LOGPARSER_HEAP_LIMIT                | Maximum heap size increase in MB before warning        | File parsing, FilterBy, Search, enrich, groupBy | Megabytes  | -1 (disabled) |
+| LOGPARSER_MEMORY_LIMIT_PERCENTAGE   | Maximum percentage of memory usage before warning      | File parsing, FilterBy, Search, enrich, groupBy | Percentage | -1 (disabled) |
+| LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT | Whether to throw exception when memory limits exceeded | Memory Checks                                   | Boolean    | false         |
 
 ### File Entry Limitations
 
-For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _PROP_LOGPARSER_FILEENTRY_LIMIT_ .
+For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _LOGPARSER_FILEENTRY_LIMIT_ .
 
 When set, the log parser stops parsing after reaching the limit in a file, and moves to the next file. Whenever this happens we log a WARNING and add the skipped file to our internal list of issues.
 
 ### File Size Limitations
 
-For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _PROP_LOGPARSER_FILESIZE_LIMIT_ .
+For whatever reason, you may want to set a limit on the number of entries you can extract from a file. This cab be done by setting the system property _LOGPARSER_FILESIZE_LIMIT_ .
 
 When set, the we create a warning regarding the file size, and store it among the file size issues.
 
@@ -575,12 +576,16 @@ Although we will not stop a process from executing due to memory issues, we prov
 
 These limitations are set with the following System properties:
 
-- _PROP_LOGPARSER_HEAP_LIMIT_ : Setting a limit above which we log these occurences.
-- _PROP_LOGPARSER_MEMORY_LIMIT_PERCENTAGE_ : A percentage of the occupied memory in reference to the max memory.
+- _LOGPARSER_HEAP_LIMIT_ : Setting a limit above which we log these occurences.
+- _LOGPARSER_MEMORY_LIMIT_PERCENTAGE_ : A percentage of the occupied memory in reference to the max memory.
 
-We also have the possibility of throwing an exception iin the case of surpassing the memory rules. This is activated by setting the System property _PROP_LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT_ to true.
+We also have the possibility of throwing an exception iin the case of surpassing the memory rules. This is activated by setting the System property _LOGPARSER_EXCEPTION_ON_MEMORY_LIMIT_ to true.
 
 You can also call the memory guard rails in your own implementation by calling `ParseGuardRails.checkMemoryLimits()`. This will check both heap and memory percentage limits.
+
+### Exporting Anomalies Report
+
+We have the possibility of exporting the anomalies report. This is done by calling the method `LogData#exportAnomaliesReport(String fileName)`. If you do not give an argument `LogData#exportAnomaliesReport()` will export the anomalies to a file called anomalies.json.
 
 ## Changelog
 

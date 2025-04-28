@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
  */
 public class LogData<T extends StdLogEntry> {
 
+    public static final String STD_LOG_ERROR_ON_EMPTY_LOG_DATA = "No Log data to export. Please load the log data before re-attempting";
     protected static Logger log = LogManager.getLogger();
 
     /**
@@ -418,7 +419,7 @@ public class LogData<T extends StdLogEntry> {
                     .fetchEscapedTitle()
                     + "-export.csv");
         } else {
-            log.warn("No Log data to export. Please load the log data before re-attempting");
+            log.warn(STD_LOG_ERROR_ON_EMPTY_LOG_DATA);
             return null;
         }
 
@@ -437,7 +438,7 @@ public class LogData<T extends StdLogEntry> {
         if (l_firstEntry != null) {
             return exportLogDataToCSV(l_firstEntry.fetchHeaders(), in_fileName);
         } else {
-            log.warn("No Log data to export. Please load the log data before re-attempting");
+            log.warn(STD_LOG_ERROR_ON_EMPTY_LOG_DATA);
             return null;
         }
     }
@@ -484,7 +485,7 @@ public class LogData<T extends StdLogEntry> {
         T l_firstEntry = this.fetchFirst();
 
         if (l_firstEntry == null) {
-            log.error("No Log data to export. Please load the log data before re-attempting");
+            log.error(STD_LOG_ERROR_ON_EMPTY_LOG_DATA);
             return null;
         }
         return exportLogDataToHTML(l_firstEntry.fetchHeaders(), in_reportTitle,
@@ -548,7 +549,7 @@ public class LogData<T extends StdLogEntry> {
             return exportLogDataToJSON(l_firstEntry.fetchHeaders(),
                     l_firstEntry.getParseDefinition().fetchEscapedTitle() + "-export.json");
         } else {
-            log.warn("No Log data to export. Please load the log data before re-attempting");
+            log.warn(STD_LOG_ERROR_ON_EMPTY_LOG_DATA);
             return null;
         }
     }
@@ -565,7 +566,7 @@ public class LogData<T extends StdLogEntry> {
         if (l_firstEntry != null) {
             return exportLogDataToJSON(l_firstEntry.fetchHeaders(), in_jsonFileName);
         } else {
-            log.warn("No Log data to export. Please load the log data before re-attempting");
+            log.warn(STD_LOG_ERROR_ON_EMPTY_LOG_DATA);
             return null;
         }
     }
