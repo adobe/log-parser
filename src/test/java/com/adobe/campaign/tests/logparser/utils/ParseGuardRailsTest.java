@@ -262,4 +262,61 @@ public class ParseGuardRailsTest {
         reportFile.setWritable(true);
         reportFile.delete();
     }
+
+    @Test
+    public void testAreGuardRailsSet_WhenNoRailsSet() {
+        // Reset all guard rails to default values
+        ParseGuardRails.reset();
+
+        assertThat("Should return false when no guard rails are set",
+                ParseGuardRails.areGuardRailsSet(), is(false));
+    }
+
+    @Test
+    public void testAreGuardRailsSet_WhenFileEntryLimitSet() {
+        ParseGuardRails.reset();
+        ParseGuardRails.FILE_ENTRY_LIMIT = 1000;
+
+        assertThat("Should return true when file entry limit is set",
+                ParseGuardRails.areGuardRailsSet(), is(true));
+    }
+
+    @Test
+    public void testAreGuardRailsSet_WhenHeapLimitSet() {
+        ParseGuardRails.reset();
+        ParseGuardRails.HEAP_LIMIT = 500;
+
+        assertThat("Should return true when heap limit is set",
+                ParseGuardRails.areGuardRailsSet(), is(true));
+    }
+
+    @Test
+    public void testAreGuardRailsSet_WhenMemoryPercentageSet() {
+        ParseGuardRails.reset();
+        ParseGuardRails.MEMORY_LIMIT_PERCENTAGE = 80.0;
+
+        assertThat("Should return true when memory percentage is set",
+                ParseGuardRails.areGuardRailsSet(), is(true));
+    }
+
+    @Test
+    public void testAreGuardRailsSet_WhenFileSizeLimitSet() {
+        ParseGuardRails.reset();
+        ParseGuardRails.FILE_SIZE_LIMIT = 100;
+
+        assertThat("Should return true when file size limit is set",
+                ParseGuardRails.areGuardRailsSet(), is(true));
+    }
+
+    @Test
+    public void testAreGuardRailsSet_WhenMultipleRailsSet() {
+        ParseGuardRails.reset();
+        ParseGuardRails.FILE_ENTRY_LIMIT = 1000;
+        ParseGuardRails.HEAP_LIMIT = 500;
+        ParseGuardRails.MEMORY_LIMIT_PERCENTAGE = 80.0;
+        ParseGuardRails.FILE_SIZE_LIMIT = 100;
+
+        assertThat("Should return true when multiple guard rails are set",
+                ParseGuardRails.areGuardRailsSet(), is(true));
+    }
 }

@@ -585,7 +585,7 @@ You can also call the memory guard rails in your own implementation by calling `
 
 ### Exporting Anomalies Report
 
-We have the possibility of exporting the anomalies report. This is done by calling the method `LogData#exportAnomaliesReport(String fileName)`. If you do not give an argument `LogData#exportAnomaliesReport()` will export the anomalies to a file called anomalies.json.
+We have the possibility of exporting the anomalies report. This is done by calling the method `LogData#exportAnomaliesReport(String fileName)`. If you do not give an argument `LogData#exportAnomaliesReport()` will export the anomalies to a file called `logParserAnomalies.json`.
 
 ## Changelog
 
