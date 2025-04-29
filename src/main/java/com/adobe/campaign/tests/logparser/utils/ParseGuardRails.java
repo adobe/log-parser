@@ -51,7 +51,7 @@ public class ParseGuardRails {
     public static boolean areGuardRailsSet() {
         return FILE_ENTRY_LIMIT > -1 ||
                 HEAP_LIMIT > -1 ||
-                MEMORY_LIMIT_PERCENTAGE > -1 ||
+                MEMORY_LIMIT_PERCENTAGE > -1.00 ||
                 FILE_SIZE_LIMIT > -1;
     }
 
@@ -75,6 +75,7 @@ public class ParseGuardRails {
         MEMORY_LIMIT_PERCENTAGE = -1;
         MEASUREMENT_SCALE = 1024 * 1024;
         EXCEPTION_ON_MEMORY_LIMIT = false;
+        FILE_SIZE_LIMIT = -1;
     }
 
     /**
