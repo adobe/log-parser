@@ -43,6 +43,28 @@ public class ParseGuardRails {
             .parseLong(System.getProperty("LOGPARSER_FILESIZE_LIMIT", "-1"));
     protected static int MEASUREMENT_SCALE = 1024 * 1024;
 
+    /**
+     * Checks if any guard rails have been set
+     * 
+     * @return true if any guard rail is set, false otherwise
+     */
+    public static boolean areGuardRailsSet() {
+        return FILE_ENTRY_LIMIT > -1 ||
+                HEAP_LIMIT > -1 ||
+                MEMORY_LIMIT_PERCENTAGE > -1 ||
+                FILE_SIZE_LIMIT > -1;
+    }
+
+    /**
+     * Logs an info message if no guard rails are set
+     */
+    public static void checkGuardRailsStatus() {
+        if (!areGuardRailsSet()) {
+            log.info(
+                    "No Memory Guard Rails detected. You can add them if you are dealing with large files or if you want to limit the memory usage.");
+        }
+    }
+
     public static void reset() {
         fileSizeLimitations.clear();
         entryLimitations.clear();

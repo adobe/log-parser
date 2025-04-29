@@ -251,6 +251,8 @@ public class StringParseFactory {
         Map<String, String> lr_stringParseResult = new HashMap<>();
         String l_currentStringState = in_logString;
 
+        ParseGuardRails.checkGuardRailsStatus();
+
         for (ParseDefinitionEntry lt_parseRule : in_parsRuleList) {
 
             lr_stringParseResult.put(lt_parseRule.getTitle(), fetchValue(l_currentStringState, lt_parseRule));
