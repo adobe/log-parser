@@ -591,6 +591,12 @@ We have the possibility of exporting the anomalies report. This is done by calli
 ### 1.11.3
 
 - [#203](https://github.com/adobe/log-parser/issues/203) Have added possibilities, to control, log memory consumption.
+- Updated Dependencies:
+  - commons-io: 2.19.0
+  - commons-csv: 1.14.0
+  - testng: 7.11.0
+  - jackson-databind: 2.19.0
+  - log4j: 2.24.3
 
 ### 1.11.2
 
