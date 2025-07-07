@@ -588,6 +588,9 @@ We have the possibility of exporting the anomalies report. This is done by calli
 
 ## Changelog
 
+### 1.11.4
+- updated dependencies
+
 ### 1.11.3
 
 - [#203](https://github.com/adobe/log-parser/issues/203) Have added possibilities, to control, log memory consumption.
